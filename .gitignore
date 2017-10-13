@@ -44,3 +44,7 @@ project/.sbtserver
 
 # Application
 yourgame.log
+
+# Linux
+_linux/
+codestyles/
