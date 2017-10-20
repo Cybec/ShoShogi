@@ -1,4 +1,4 @@
-package de.htwg.se.ShoShogi
+package de.htwg.se.ShoShogi.Worksheets
 
 object HelloWorld {
   def main(args: Array[String]) {
