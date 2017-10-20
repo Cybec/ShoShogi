@@ -1,6 +1,4 @@
-![GitHub Logo](/Cybec.png)
-
-Sho - Shogi
+![GitHub Logo](/Cybec.png) Sho - Shogi
 =========================
 
 ICON: http://www.flaticon.com/free-icon/japan_197604#
