@@ -26,7 +26,7 @@ class Controller(var board: Board[Piece], val player_1: Player, val player_2: Pl
     board = board.replaceCell(8, 0, Lancer(player_1))
     board = board.replaceCell(1, 1, Bishop(player_1))
     board = board.replaceCell(7, 1, Rook(player_1))
-    for(i <- 0 to 8) {board = board.replaceCell(i, 2, Pawn(player_1))}
+    for (i <- 0 to 8) { board = board.replaceCell(i, 2, Pawn(player_1)) }
 
     //Steine fuer Spieler 2
     board = board.replaceCell(0, 8, Lancer(player_2))
@@ -40,8 +40,7 @@ class Controller(var board: Board[Piece], val player_1: Player, val player_2: Pl
     board = board.replaceCell(8, 8, Lancer(player_2))
     board = board.replaceCell(1, 7, Bishop(player_2))
     board = board.replaceCell(7, 7, Rook(player_2))
-    for(i <- 0 to 8) {board = board.replaceCell(i, 6, Pawn(player_2))}
-
+    for (i <- 0 to 8) { board = board.replaceCell(i, 6, Pawn(player_2)) }
 
     notifyObservers
   }
