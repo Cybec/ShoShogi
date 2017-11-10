@@ -1,13 +1,13 @@
 package de.htwg.se.ShoShogi.model
 
-case class Board[T](rows: Vector[Vector[T]]) {
-  def this(size: Int, filling: T) = this(Vector.tabulate(size, size) { (row, col) => filling })
+case class Board[Piece](rows: Vector[Vector[Piece]]) {
+  def this(size: Int, filling: Piece) = this(Vector.tabulate(size, size) { (row, col) => filling })
 
   val size: Int = rows.size
 
-  def cell(row: Int, col: Int): T = rows(row)(col)
+  def cell(row: Int, col: Int): Piece = rows(row)(col)
 
-  def replaceCell(col: Int, row: Int, cell: T): Board[T] = copy(rows.updated(row, rows(row).updated(col, cell)))
+  def replaceCell(col: Int, row: Int, cell: Piece): Board[Piece] = copy(rows.updated(row, rows(row).updated(col, cell)))
 
   override def toString: String = {
     var index: Int = 0

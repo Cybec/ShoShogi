@@ -3,7 +3,6 @@ package de.htwg.se.ShoShogi.aview
 import de.htwg.se.ShoShogi.controller.Controller
 import de.htwg.se.ShoShogi.util.Observer
 
-
 class Tui(controller: Controller) extends Observer {
 
   controller.add(this)
@@ -15,7 +14,6 @@ class Tui(controller: Controller) extends Observer {
       case "s" =>
     }
   }
-
 
   override def update: Unit = println(controller.boardToString)
 }
