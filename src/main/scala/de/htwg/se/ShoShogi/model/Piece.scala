@@ -32,8 +32,10 @@ case class King(player: Player)
   * Role:     Gibt die moeglichen Bewegungsfelder zurueck
   * Return:   List[(Int, Int)] mit den Koordinaten */
   def getMoveSet(pos: (Int, Int)): List[(Int, Int)] = {
-    var a: List[(Int, Int)] = a :+ ((9999, 9999))
-    a
+    //Jede Richtung ein Feld
+    List((pos._1, pos._2 + 1), (pos._1 - 1, pos._2 + 1), (pos._1 - 1, pos._2),
+      (pos._1 - 1, pos._2 - 1), (pos._1, pos._2 - 1), (pos._1 - 1, pos._2 + 1),
+      (pos._1 + 1, pos._2), (pos._1 + 1, pos._2 + 1))
   }
 }
 
@@ -60,8 +62,8 @@ case class GoldenGeneral(player: Player)
   * Role:     Gibt die moeglichen Bewegungsfelder zurueck
   * Return:   List[(Int, Int)] mit den Koordinaten */
   def getMoveSet(pos: (Int, Int)): List[(Int, Int)] = {
-    var a: List[(Int, Int)] = a :+ ((9999, 9999))
-    a
+    List((pos._1, pos._2 + 1), (pos._1 - 1, pos._2 + 1), (pos._1 - 1, pos._2),
+      (pos._1, pos._2 - 1), (pos._1 + 1, pos._2), (pos._1 + 1, pos._2 + 1))
   }
 }
 
@@ -79,7 +81,7 @@ case class SilverGeneral(player: Player)
   * Role:     Stuft das Piece auf
   * Return:   Gibt das Promotete Piece zurueck*/
   def promotePiece: Option[Piece] = {
-    Some(new PromotedSilver(player))
+    Some(PromotedSilver(player))
   }
 
   var token: String = "SG"
@@ -88,8 +90,8 @@ case class SilverGeneral(player: Player)
   * Role:     Gibt die moeglichen Bewegungsfelder zurueck
   * Return:   List[(Int, Int)] mit den Koordinaten */
   def getMoveSet(pos: (Int, Int)): List[(Int, Int)] = {
-    var a: List[(Int, Int)] = a :+ ((9999, 9999))
-    a
+    List((pos._1, pos._2 + 1), (pos._1 - 1, pos._2 + 1), (pos._1 - 1, pos._2 - 1),
+      (pos._1 - 1, pos._2 + 1), (pos._1 + 1, pos._2 + 1))
   }
 }
 
@@ -105,8 +107,8 @@ case class PromotedSilver(player: Player)
   var token: String = "PS"
 
   def getMoveSet(pos: (Int, Int)): List[(Int, Int)] = {
-    var a: List[(Int, Int)] = a :+ ((9999, 9999))
-    a
+    List((pos._1, pos._2 + 1), (pos._1 - 1, pos._2 + 1), (pos._1 - 1, pos._2),
+      (pos._1, pos._2 - 1), (pos._1 + 1, pos._2), (pos._1 + 1, pos._2 + 1))
   }
 }
 
@@ -124,7 +126,7 @@ case class Knight(player: Player)
   * Role:     Stuft das Piece auf
   * Return:   Gibt das Promotete Piece zurueck*/
   def promotePiece: Option[Piece] = {
-    Some(new PromotedKnight(player))
+    Some(PromotedKnight(player))
   }
 
   var token: String = "KN"
@@ -133,8 +135,7 @@ case class Knight(player: Player)
   * Role:     Gibt die moeglichen Bewegungsfelder zurueck
   * Return:   List[(Int, Int)] mit den Koordinaten */
   def getMoveSet(pos: (Int, Int)): List[(Int, Int)] = {
-    var a: List[(Int, Int)] = a :+ ((9999, 9999))
-    a
+    List((pos._1 - 1, pos._2 + 2), (pos._1 + 1, pos._2 + 2))
   }
 }
 
@@ -150,26 +151,26 @@ case class PromotedKnight(player: Player)
   var token: String = "PK"
 
   def getMoveSet(pos: (Int, Int)): List[(Int, Int)] = {
-    var a: List[(Int, Int)] = a :+ ((9999, 9999))
-    a
+    List((pos._1, pos._2 + 1), (pos._1 - 1, pos._2 + 1), (pos._1 - 1, pos._2),
+      (pos._1, pos._2 - 1), (pos._1 + 1, pos._2), (pos._1 + 1, pos._2 + 1))
   }
 }
 
 //endregion
 
-//region Lance
+//region Lancer
 
 /*Author:   Mert, Nick
 * Role:     Erstellt eine Lancer-Figur */
 case class Lancer(player: Player)
-  extends Piece("Lance", player: Player) {
+  extends Piece("Lancer", player: Player) {
   var hasPromotion: Boolean = true
 
   /*Author:   Mert, Nick
   * Role:     Stuft das Piece auf
   * Return:   Gibt das Promotete Piece zurueck*/
   def promotePiece: Option[Piece] = {
-    Some(new PromotedLancer(player))
+    Some(PromotedLancer(player))
   }
 
   var token: String = "L"
@@ -178,8 +179,9 @@ case class Lancer(player: Player)
   * Role:     Gibt die moeglichen Bewegungsfelder zurueck
   * Return:   List[(Int, Int)] mit den Koordinaten */
   def getMoveSet(pos: (Int, Int)): List[(Int, Int)] = {
-    var a: List[(Int, Int)] = a :+ ((9999, 9999))
-    a
+    List((pos._1, pos._2 + 1), (pos._1, pos._2 + 2), (pos._1, pos._2 + 3),
+      (pos._1, pos._2 + 4), (pos._1, pos._2 + 5), (pos._1, pos._2 + 6),
+      (pos._1, pos._2 + 7), (pos._1, pos._2 + 8))
   }
 }
 
@@ -195,8 +197,8 @@ case class PromotedLancer(player: Player)
   var token: String = "PL"
 
   def getMoveSet(pos: (Int, Int)): List[(Int, Int)] = {
-    var a: List[(Int, Int)] = a :+ ((9999, 9999))
-    a
+    List((pos._1, pos._2 + 1), (pos._1 - 1, pos._2 + 1), (pos._1 - 1, pos._2),
+      (pos._1, pos._2 - 1), (pos._1 + 1, pos._2), (pos._1 + 1, pos._2 + 1))
   }
 }
 
@@ -214,7 +216,7 @@ case class Bishop(player: Player)
   * Role:     Stuft das Piece auf
   * Return:   Gibt das Promotete Piece zurueck*/
   def promotePiece: Option[Piece] = {
-    Some(new PromotedBishop(player))
+    Some(PromotedBishop(player))
   }
 
   var token: String = "B"
@@ -223,8 +225,15 @@ case class Bishop(player: Player)
   * Role:     Gibt die moeglichen Bewegungsfelder zurueck
   * Return:   List[(Int, Int)] mit den Koordinaten */
   def getMoveSet(pos: (Int, Int)): List[(Int, Int)] = {
-    var a: List[(Int, Int)] = a :+ ((9999, 9999))
-    a
+    var moves: List[(Int, Int)] = List()
+    val maxMoveRange = 9
+    for (i <- maxMoveRange) {
+      moves :::= List((pos._1 - i, pos._2 + i))
+      moves :::= List((pos._1 + i, pos._2 + i))
+      moves :::= List((pos._1 - i, pos._2 - i))
+      moves :::= List((pos._1 + i, pos._2 - i))
+    }
+    moves
   }
 }
 
@@ -240,8 +249,16 @@ case class PromotedBishop(player: Player)
   var token: String = "PB"
 
   def getMoveSet(pos: (Int, Int)): List[(Int, Int)] = {
-    var a: List[(Int, Int)] = a :+ ((9999, 9999))
-    a
+    var moves: List[(Int, Int)] = List()
+    val maxMoveRange = 9
+    for (i <- maxMoveRange) {
+      moves :::= List((pos._1 - i, pos._2 + i))
+      moves :::= List((pos._1 + i, pos._2 + i))
+      moves :::= List((pos._1 - i, pos._2 - i))
+      moves :::= List((pos._1 + i, pos._2 - i))
+    }
+    moves :::= List((pos._1, pos._2 + 1), (pos._1 - 1, pos._2), (pos._1, pos._2 - 1), (pos._1 + 1, pos._2))
+    moves
   }
 }
 
@@ -259,7 +276,7 @@ case class Rook(player: Player)
   * Role:     Stuft das Piece auf
   * Return:   Gibt das Promotete Piece zurueck*/
   def promotePiece: Option[Piece] = {
-    Some(new PromotedRook(player))
+    Some(PromotedRook(player))
   }
 
   var token: String = "R"
@@ -268,8 +285,15 @@ case class Rook(player: Player)
   * Role:     Gibt die moeglichen Bewegungsfelder zurueck
   * Return:   List[(Int, Int)] mit den Koordinaten */
   def getMoveSet(pos: (Int, Int)): List[(Int, Int)] = {
-    var a: List[(Int, Int)] = a :+ ((9999, 9999))
-    a
+    var moves: List[(Int, Int)] = List()
+    val maxMoveRange = 9
+    for (i <- maxMoveRange) {
+      moves :::= List((pos._1, pos._2 + i))
+      moves :::= List((pos._1 - i, pos._2))
+      moves :::= List((pos._1, pos._2 - i))
+      moves :::= List((pos._1 + i, pos._2))
+    }
+    moves
   }
 }
 
@@ -285,8 +309,16 @@ case class PromotedRook(player: Player)
   var token: String = "PR"
 
   def getMoveSet(pos: (Int, Int)): List[(Int, Int)] = {
-    var a: List[(Int, Int)] = a :+ ((9999, 9999))
-    a
+    var moves: List[(Int, Int)] = List()
+    val maxMoveRange = 9
+    for (i <- maxMoveRange) {
+      moves :::= List((pos._1, pos._2 + i))
+      moves :::= List((pos._1 - i, pos._2))
+      moves :::= List((pos._1, pos._2 - i))
+      moves :::= List((pos._1 + i, pos._2))
+    }
+    moves :::= List((pos._1 - 1, pos._2 + 1), (pos._1 - 1, pos._2 + 1), (pos._1 + 1, pos._2 - 1), (pos._1 + 1, pos._2 + 1))
+    moves
   }
 }
 
@@ -304,7 +336,7 @@ case class Pawn(player: Player)
   * Role:     Stuft das Piece auf
   * Return:   Gibt das Promotete Piece zurueck*/
   def promotePiece: Option[Piece] = {
-    Some(new PromotedPawn(player))
+    Some(PromotedPawn(player))
   }
 
   var token: String = "P"
@@ -313,8 +345,7 @@ case class Pawn(player: Player)
   * Role:     Gibt die moeglichen Bewegungsfelder zurueck
   * Return:   List[(Int, Int)] mit den Koordinaten */
   def getMoveSet(pos: (Int, Int)): List[(Int, Int)] = {
-    var a: List[(Int, Int)] = a :+ ((9999, 9999))
-    a
+    List((pos._1, pos._2 + 1))
   }
 }
 
@@ -330,12 +361,12 @@ case class PromotedPawn(player: Player)
   var token: String = "PP"
 
   def getMoveSet(pos: (Int, Int)): List[(Int, Int)] = {
-    var a: List[(Int, Int)] = a :+ ((9999, 9999))
-    a
+    List((pos._1, pos._2 + 1), (pos._1 - 1, pos._2 + 1), (pos._1 - 1, pos._2),
+      (pos._1, pos._2 - 1), (pos._1 + 1, pos._2), (pos._1 + 1, pos._2 + 1))
   }
 }
-//endregion
 
+//endregion
 
 
 //region EmptyPiece
