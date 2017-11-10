@@ -160,8 +160,8 @@ case class PromotedKnight(player: Player)
 //region Lance
 
 /*Author:   Mert, Nick
-* Role:     Erstellt eine Lance-Figur */
-case class Lance(player: Player)
+* Role:     Erstellt eine Lancer-Figur */
+case class Lancer(player: Player)
   extends Piece("Lance", player: Player) {
   var hasPromotion: Boolean = true
 
@@ -169,7 +169,7 @@ case class Lance(player: Player)
   * Role:     Stuft das Piece auf
   * Return:   Gibt das Promotete Piece zurueck*/
   def promotePiece: Option[Piece] = {
-    Some(new PromotedLance(player))
+    Some(new PromotedLancer(player))
   }
 
   var token: String = "L"
@@ -184,8 +184,8 @@ case class Lance(player: Player)
 }
 
 
-case class PromotedLance(player: Player)
-  extends Piece("PromotedLance", player: Player) {
+case class PromotedLancer(player: Player)
+  extends Piece("PromotedLancer", player: Player) {
   var hasPromotion: Boolean = false
 
   def promotePiece: Option[Piece] = {
@@ -332,6 +332,31 @@ case class PromotedPawn(player: Player)
   def getMoveSet(pos: (Int, Int)): List[(Int, Int)] = {
     var a: List[(Int, Int)] = a :+ ((9999, 9999))
     a
+  }
+}
+//endregion
+
+
+
+//region EmptyPiece
+case class EmptyPiece()
+  extends Piece("", new Player("", false)) {
+  var hasPromotion: Boolean = false
+
+  /*Author:   Mert, Nick
+  * Role:     Stuft das Piece auf
+  * Return:   Gibt das Promotete Piece zurueck*/
+  def promotePiece: Option[Piece] = {
+    None
+  }
+
+  var token: String = ""
+
+  /*Author:   Mert, Nick
+  * Role:     Gibt die moeglichen Bewegungsfelder zurueck
+  * Return:   List[(Int, Int)] mit den Koordinaten */
+  def getMoveSet(pos: (Int, Int)): List[(Int, Int)] = {
+    List()
   }
 }
 //endregion
