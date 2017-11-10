@@ -1,4 +1,4 @@
-package de.htwg.se.ShoShogi
+package de.htwg.se.ShoShogi.Worksheets
 
 object HelloWorld {
   def main(args: Array[String]) {
@@ -14,8 +14,7 @@ object HelloWorld {
     val numList = List(1, 2, 3, 4, 5, 6, 7, 8, 9)
     var i = 0
 
-    val ret
-    = for (
+    val ret = for (
       i <- numList if i != 3; if i < 5
     ) yield i
 

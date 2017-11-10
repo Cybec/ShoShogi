@@ -44,3 +44,15 @@ project/.sbtserver
 
 # Application
 yourgame.log
+
+# Linux
+_linux/
+
+# AutoAdd
+codestyles/
+/ignore.xml
+/editor.xml
+/ide.general.xml
+/debugger.xml
+/scala.xml
+/keymaps/
