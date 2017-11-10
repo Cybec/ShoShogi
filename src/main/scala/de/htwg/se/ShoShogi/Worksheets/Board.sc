@@ -78,5 +78,6 @@ case class Board[T](rows: Vector[Vector[T]]) {
 
 
 val board1 = new Board[Piece](2, King(new Player("Hans", true)))
-val board2 = new Board[Piece](9, new EmptyPiece)
+var board2 = new Board[Piece](3, new EmptyPiece)
 
+board2 = board2.replaceCell(2,2, King(new Player("HansPeter", true)))
