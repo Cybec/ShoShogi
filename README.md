@@ -1,6 +1,14 @@
-[![Build Status](https://travis-ci.org/me431zey/ShoShogi.svg?branch=master)](https://travis-ci.org/me431zey/ShoShogi)
+[![Build Status](https://travis-ci.org/me431zey/ShoShogi.svg?branch=master)](https://travis-ci.org/me431zey/ShoShogi) ---------- me431zey/ShoShogi
 
-![GitHub Logo](/Cybec.png) 
+[![Build Status](https://travis-ci.org/Cybec/ShoShogi.svg?branch=master)](https://travis-ci.org/Cybec/ShoShogi) ---------- Cybec/ShoShogi
+
+
+[![Coverage Status](https://coveralls.io/repos/github/me431zey/ShoShogi/badge.svg?branch=shogi)](https://coveralls.io/github/me431zey/ShoShogi?branch=shogi) ---------- me431zey/ShoShogi
+
+[![Coverage Status](https://coveralls.io/repos/github/Cybec/ShoShogi/badge.svg)](https://coveralls.io/github/Cybec/ShoShogi) ---------- Cybec/ShoShogi
+
+
+![GitHub Logo](./Cybec.png) 
 # Sho - Shogi
 =========================
 
