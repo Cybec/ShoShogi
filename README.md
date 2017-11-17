@@ -2,6 +2,9 @@
 
 [![Build Status](https://travis-ci.org/Cybec/ShoShogi.svg?branch=master)](https://travis-ci.org/Cybec/ShoShogi) ---------- Cybec/ShoShogi
 
+Coverage:
+[![Coverage Status](https://coveralls.io/repos/github/me431zey/ShoShogi/badge.svg)](https://coveralls.io/github/me431zey/ShoShogi)
+
 ![GitHub Logo](./Cybec.png) 
 # Sho - Shogi
 =========================
