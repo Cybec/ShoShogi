@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/Cybec/ShoShogi.svg?branch=master)](https://travis-ci.org/Cybec/ShoShogi)
+
 ![GitHub Logo](/Cybec.png) 
 # Sho - Shogi
 =========================
