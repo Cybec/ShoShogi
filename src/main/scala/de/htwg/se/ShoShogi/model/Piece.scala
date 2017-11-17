@@ -1,6 +1,6 @@
 package de.htwg.se.ShoShogi.model
 
-abstract class Piece(name: String, player: Player) {
+abstract class Piece(name: String, val player: Player) {
 
   def promotePiece: Option[Piece]
 
@@ -15,7 +15,7 @@ abstract class Piece(name: String, player: Player) {
 
 /*Author:   Mert, Nick
 * Role:     Erstellt eine King-Figur */
-case class King(player: Player)
+case class King(override val player: Player)
     extends Piece("King", player: Player) {
   var hasPromotion: Boolean = false
 
@@ -45,7 +45,7 @@ case class King(player: Player)
 
 /*Author:   Mert, Nick
 * Role:     Erstellt eine GoldenGeneral-Figur */
-case class GoldenGeneral(player: Player)
+case class GoldenGeneral(override val player: Player)
     extends Piece("GoldenGeneral", player: Player) {
   var hasPromotion: Boolean = false
 
@@ -73,7 +73,7 @@ case class GoldenGeneral(player: Player)
 
 /*Author:   Mert, Nick
 * Role:     Erstellt eine SilverGeneral-Figur */
-case class SilverGeneral(player: Player)
+case class SilverGeneral(override val player: Player)
     extends Piece("SilverGeneral", player: Player) {
   var hasPromotion: Boolean = true
 
@@ -95,7 +95,7 @@ case class SilverGeneral(player: Player)
   }
 }
 
-case class PromotedSilver(player: Player)
+case class PromotedSilver(override val player: Player)
     extends Piece("PromotedSilver", player: Player) {
   var hasPromotion: Boolean = false
 
@@ -117,7 +117,7 @@ case class PromotedSilver(player: Player)
 
 /*Author:   Mert, Nick
 * Role:     Erstellt eine Knight-Figur */
-case class Knight(player: Player)
+case class Knight(override val player: Player)
     extends Piece("Knight", player: Player) {
   var hasPromotion: Boolean = true
 
@@ -138,7 +138,7 @@ case class Knight(player: Player)
   }
 }
 
-case class PromotedKnight(player: Player)
+case class PromotedKnight(override val player: Player)
     extends Piece("PromotedKnight", player: Player) {
   var hasPromotion: Boolean = false
 
@@ -160,7 +160,7 @@ case class PromotedKnight(player: Player)
 
 /*Author:   Mert, Nick
 * Role:     Erstellt eine Lancer-Figur */
-case class Lancer(player: Player)
+case class Lancer(override val player: Player)
     extends Piece("Lancer", player: Player) {
   var hasPromotion: Boolean = true
 
@@ -183,7 +183,7 @@ case class Lancer(player: Player)
   }
 }
 
-case class PromotedLancer(player: Player)
+case class PromotedLancer(override val player: Player)
     extends Piece("PromotedLancer", player: Player) {
   var hasPromotion: Boolean = false
 
@@ -205,7 +205,7 @@ case class PromotedLancer(player: Player)
 
 /*Author:   Mert, Nick
 * Role:     Erstellt eine Bishop-Figur */
-case class Bishop(player: Player)
+case class Bishop(override val player: Player)
     extends Piece("Bishop", player: Player) {
   var hasPromotion: Boolean = true
 
@@ -234,7 +234,7 @@ case class Bishop(player: Player)
   }
 }
 
-case class PromotedBishop(player: Player)
+case class PromotedBishop(override val player: Player)
     extends Piece("PromotedBishop", player: Player) {
   var hasPromotion: Boolean = false
 
@@ -264,7 +264,7 @@ case class PromotedBishop(player: Player)
 
 /*Author:   Mert, Nick
 * Role:     Erstellt eine Rook-Figur */
-case class Rook(player: Player)
+case class Rook(override val player: Player)
     extends Piece("Rook", player: Player) {
   var hasPromotion: Boolean = true
 
@@ -293,7 +293,7 @@ case class Rook(player: Player)
   }
 }
 
-case class PromotedRook(player: Player)
+case class PromotedRook(override val player: Player)
     extends Piece("PromotedRook", player: Player) {
   var hasPromotion: Boolean = false
 
@@ -323,7 +323,7 @@ case class PromotedRook(player: Player)
 
 /*Author:   Mert, Nick
 * Role:     Erstellt eine Pawn-Figur */
-case class Pawn(player: Player)
+case class Pawn(override val player: Player)
     extends Piece("Pawn", player: Player) {
   var hasPromotion: Boolean = true
 
@@ -344,7 +344,7 @@ case class Pawn(player: Player)
   }
 }
 
-case class PromotedPawn(player: Player)
+case class PromotedPawn(override val player: Player)
     extends Piece("PromotedPawn", player: Player) {
   var hasPromotion: Boolean = false
 
