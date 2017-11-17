@@ -6,7 +6,7 @@ import de.htwg.se.ShoShogi.model.{ Board, EmptyPiece, Player }
 
 object ShoShogi {
   val boardSize = 9
-  val controller = new Controller(new Board(boardSize, new EmptyPiece), Player("Mert", true), Player("Mert", false))
+  val controller = new Controller(new Board(boardSize, new EmptyPiece), Player("Player1", true), Player("Player2", false))
   val tui = new Tui(controller)
   controller.notifyObservers
 
@@ -14,6 +14,7 @@ object ShoShogi {
     var input: String = ""
 
     do {
+      tui.printInputMenu()
       input = scala.io.StdIn.readLine()
       tui.processInputLine(input)
     } while (input != "q")
