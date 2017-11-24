@@ -32,8 +32,8 @@ class Tui(controller: Controller) extends Observer {
         menuMap = menuMapInGame
       }
       case "mv" =>
-      case "pmv" => printPossibleMoves(controller.possibleMoves(0, 1))
-      case default => printString(default + "Is not a valid input!\n")
+      case "pmv" => printPossibleMoves(controller.possibleMoves(0, 0))
+      case default => printString("\"" + default + "\" is not a valid input!\n")
     }
   }
 
