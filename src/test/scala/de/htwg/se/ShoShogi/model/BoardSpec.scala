@@ -26,6 +26,9 @@ class BoardSpec extends WordSpec with Matchers {
       "wrong access on cells" in {
         smallBoard.cell(-1, 0) should be(None)
       }
+      "have a nice String representation" in {
+        smallBoard.toString.contains(0)
+      }
     }
     "using an actuall playfield" should {
       var board = new Board[Piece](9, new EmptyPiece)
