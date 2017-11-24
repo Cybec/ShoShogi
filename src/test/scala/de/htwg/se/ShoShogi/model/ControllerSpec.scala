@@ -30,6 +30,11 @@ class ControllerSpec extends WordSpec with Matchers {
         observer.updated should be(true)
         controller.board.size should be(9)
       }
+      "remove from Observerlist" in {
+        val i = controller.subscribers.length
+        controller.remove(observer)
+        controller.subscribers.length should be(i-1)
+      }
     }
   }
 }
