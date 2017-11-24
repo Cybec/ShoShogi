@@ -26,7 +26,7 @@ case class King(override val player: Player)
     None
   }
 
-  override def toString: String = "K"
+  override def toString: String = "K "
 
   /*Author:   Mert, Nick
   * Role:     Gibt die moeglichen Bewegungsfelder zurueck
