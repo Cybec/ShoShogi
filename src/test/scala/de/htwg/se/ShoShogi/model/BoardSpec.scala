@@ -14,7 +14,7 @@ class BoardSpec extends WordSpec with Matchers {
       "be creted with the lenght of its edges as size. Testing size 1, 2 and 9" in {
         smallBoard.size should be(1)
         biggerBoard.size should be(2)
-        board.size should be(81)
+        board.size should be(9)
       }
       "give access to its cells" in {
         smallBoard.cell(0, 0) should be(Some(smallBoard.rows(0)(0)))
@@ -42,7 +42,7 @@ class BoardSpec extends WordSpec with Matchers {
         board = board.replaceCell(i, 2, Pawn(player_1))
       }
       "fields in uasble field" in {
-        board.cell(0, 0) should be(Some(board.rows(0)(0)))
+        board.cell(0, 0).contains(Lancer) should be(Lancer)
       }
     }
   }
