@@ -40,7 +40,7 @@ case class King(player: Player)
 }
 
 case class EmptyPiece()
-  extends Piece("King", new Player("", false)) {
+  extends Piece("King2", new Player("", false)) {
   var hasPromotion: Boolean = false
 
   /*Author:   Mert, Nick
