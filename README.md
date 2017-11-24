@@ -1,3 +1,7 @@
+[![Build Status](https://travis-ci.org/me431zey/ShoShogi.svg?branch=shogi-ni431str)](https://travis-ci.org/me431zey/ShoShogi) ---------- me431zey/shogi-ni431str
+
+[![Build Status](https://travis-ci.org/me431zey/ShoShogi.svg?branch=shogi-me431zey)](https://travis-ci.org/me431zey/ShoShogi) ---------- me431zey/shogi-me431zey
+
 [![Build Status](https://travis-ci.org/me431zey/ShoShogi.svg?branch=master)](https://travis-ci.org/me431zey/ShoShogi) ---------- me431zey/ShoShogi
 
 [![Build Status](https://travis-ci.org/Cybec/ShoShogi.svg?branch=master)](https://travis-ci.org/Cybec/ShoShogi) ---------- Cybec/ShoShogi
