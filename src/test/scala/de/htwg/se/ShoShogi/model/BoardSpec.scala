@@ -23,6 +23,12 @@ class BoardSpec extends WordSpec with Matchers {
         biggerBoard.cell(1, 0) should be(Some(biggerBoard.rows(1)(0)))
         biggerBoard.cell(1, 1) should be(Some(biggerBoard.rows(1)(1)))
       }
+      "wrong access on cells" in {
+        smallBoard.cell(-1, 0) should be(None)
+      }
+      "have a nice String representation" in {
+        smallBoard.toString.contains(0)
+      }
     }
     "using an actuall playfield" should {
       var board = new Board[Piece](9, new EmptyPiece)
@@ -56,10 +62,7 @@ class BoardSpec extends WordSpec with Matchers {
         board.rows(2)(0) should be(Pawn(player_1))
         board.rows(2)(8) should be(Pawn(player_1))
       }
-      "have a nice String representation" in {
-
-      }
-
+      //TODO:"have a nice String representation" in {}
     }
   }
 }
