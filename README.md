@@ -8,7 +8,7 @@
 [![Coverage Status](https://coveralls.io/repos/github/Cybec/ShoShogi/badge.svg)](https://coveralls.io/github/Cybec/ShoShogi) ---------- Cybec/ShoShogi
 
 
-![GitHub Logo](./Cybec.png) 
+![GitHub Logo](./cybec.png) 
 # Sho - Shogi
 =========================
 
