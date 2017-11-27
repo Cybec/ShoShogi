@@ -6,7 +6,7 @@ import de.htwg.se.ShoShogi.util.Observer
 
 import scala.language.reflectiveCalls
 import org.junit.runner.RunWith
-import org.scalatest.{Matchers, WordSpec}
+import org.scalatest.{ Matchers, WordSpec }
 import org.scalatest.junit.JUnitRunner
 
 @RunWith(classOf[JUnitRunner])
@@ -33,7 +33,7 @@ class ControllerSpec extends WordSpec with Matchers {
       "remove from Observerlist" in {
         val i = controller.subscribers.length
         controller.remove(observer)
-        controller.subscribers.length should be(i-1)
+        controller.subscribers.length should be(i - 1)
       }
     }
   }

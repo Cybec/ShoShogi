@@ -5,6 +5,7 @@ import de.htwg.se.ShoShogi.util.Observable
 
 import scala.collection.mutable.ListBuffer
 
+//noinspection ScalaStyle
 class Controller(var board: Board[Piece], val player_1: Player, val player_2: Player) extends Observable {
   val boardSize = 9
 
