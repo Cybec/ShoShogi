@@ -27,8 +27,8 @@ class Controller(var board: Board[Piece], val player_1: Player, val player_2: Pl
     board = board.replaceCell(6, 0, SilverGeneral(player_1))
     board = board.replaceCell(7, 0, Knight(player_1))
     board = board.replaceCell(8, 0, Lancer(player_1))
-    board = board.replaceCell(1, 1, Bishop(player_1))
-    board = board.replaceCell(7, 1, Rook(player_1))
+    board = board.replaceCell(7, 1, Bishop(player_1))
+    board = board.replaceCell(1, 1, Rook(player_1))
     for (i <- 0 to 8) {
       board = board.replaceCell(i, 2, Pawn(player_1))
     }
@@ -55,24 +55,10 @@ class Controller(var board: Board[Piece], val player_1: Player, val player_2: Pl
   def boardToString(): String = board.toString
 
   def possibleMoves(pos: (Int, Int)): List[(Int, Int)] = {
-    var moveList = ListBuffer[(Int, Int)]()
-
+    notifyObservers
     board.cell(pos._1, pos._2) match {
-      case Some(piece) => {
-        for ((s, o) <- piece.getMoveSet(pos._1, pos._2)) {
-          board.cell(s, o) match {
-            case Some(pieceDestiCell) => {
-              if (pieceDestiCell.player != piece.player) {
-                moveList.+=((s, o))
-              }
-            }
-            case None =>
-          }
-        }
-      }
-      case None =>
+      case Some(piece) => piece.getMoveSet((pos._1, pos._2), board)
+      case None => List()
     }
-
-    moveList.toList
   }
 }
