@@ -1,14 +1,16 @@
 package de.htwg.se.ShoShogi.model
 
+import scala.collection.mutable.ListBuffer
+
 abstract class Piece(name: String, val player: Player) {
 
   def promotePiece: Option[Piece]
 
-  var hasPromotion: Boolean
+  val hasPromotion: Boolean
 
   override def toString: String
 
-  def getMoveSet(pos: (Int, Int)): List[(Int, Int)]
+  def getMoveSet(pos: (Int, Int), board: Board[Piece]): List[(Int, Int)]
 }
 
 //region King
@@ -17,7 +19,7 @@ abstract class Piece(name: String, val player: Player) {
 * Role:     Erstellt eine King-Figur */
 case class King(override val player: Player)
     extends Piece("King", player: Player) {
-  var hasPromotion: Boolean = false
+  val hasPromotion: Boolean = false
 
   /*Author:   Mert, Nick
   * Role:     Stuft das Piece auf
@@ -31,11 +33,20 @@ case class King(override val player: Player)
   /*Author:   Mert, Nick
   * Role:     Gibt die moeglichen Bewegungsfelder zurueck
   * Return:   List[(Int, Int)] mit den Koordinaten */
-  def getMoveSet(pos: (Int, Int)): List[(Int, Int)] = {
+  def getMoveSet(pos: (Int, Int), board: Board[Piece]): List[(Int, Int)] = {
     //Jede Richtung ein Feld
-    List((pos._1, pos._2 + 1), (pos._1 - 1, pos._2 + 1), (pos._1 - 1, pos._2),
-      (pos._1 - 1, pos._2 - 1), (pos._1, pos._2 - 1), (pos._1 - 1, pos._2 + 1),
-      (pos._1 + 1, pos._2), (pos._1 + 1, pos._2 + 1))
+    var moveList = ListBuffer[(Int, Int)]()
+
+    for (x <- (pos._1 - 1) to (pos._1 + 1)) {
+      for (y <- (pos._2 - 1) to (pos._2 + 1)) {
+        if (x != pos._1 || y != pos._2) {
+          board.cell(x, y).foreach(i => if (i.player != this.player) {
+            moveList.+=((x, y))
+          })
+        }
+      }
+    }
+    moveList.toList
   }
 }
 
@@ -47,7 +58,7 @@ case class King(override val player: Player)
 * Role:     Erstellt eine GoldenGeneral-Figur */
 case class GoldenGeneral(override val player: Player)
     extends Piece("GoldenGeneral", player: Player) {
-  var hasPromotion: Boolean = false
+  val hasPromotion: Boolean = false
 
   /*Author:   Mert, Nick
   * Role:     Stuft das Piece auf
@@ -61,7 +72,7 @@ case class GoldenGeneral(override val player: Player)
   /*Author:   Mert, Nick
   * Role:     Gibt die moeglichen Bewegungsfelder zurueck
   * Return:   List[(Int, Int)] mit den Koordinaten */
-  def getMoveSet(pos: (Int, Int)): List[(Int, Int)] = {
+  def getMoveSet(pos: (Int, Int), board: Board[Piece]): List[(Int, Int)] = {
     List((pos._1, pos._2 + 1), (pos._1 - 1, pos._2 + 1), (pos._1 - 1, pos._2),
       (pos._1, pos._2 - 1), (pos._1 + 1, pos._2), (pos._1 + 1, pos._2 + 1))
   }
@@ -75,7 +86,7 @@ case class GoldenGeneral(override val player: Player)
 * Role:     Erstellt eine SilverGeneral-Figur */
 case class SilverGeneral(override val player: Player)
     extends Piece("SilverGeneral", player: Player) {
-  var hasPromotion: Boolean = true
+  val hasPromotion: Boolean = true
 
   /*Author:   Mert, Nick
   * Role:     Stuft das Piece auf
@@ -89,7 +100,7 @@ case class SilverGeneral(override val player: Player)
   /*Author:   Mert, Nick
   * Role:     Gibt die moeglichen Bewegungsfelder zurueck
   * Return:   List[(Int, Int)] mit den Koordinaten */
-  def getMoveSet(pos: (Int, Int)): List[(Int, Int)] = {
+  def getMoveSet(pos: (Int, Int), board: Board[Piece]): List[(Int, Int)] = {
     List((pos._1, pos._2 + 1), (pos._1 - 1, pos._2 + 1), (pos._1 - 1, pos._2 - 1),
       (pos._1 - 1, pos._2 + 1), (pos._1 + 1, pos._2 + 1))
   }
@@ -97,7 +108,7 @@ case class SilverGeneral(override val player: Player)
 
 case class PromotedSilver(override val player: Player)
     extends Piece("PromotedSilver", player: Player) {
-  var hasPromotion: Boolean = false
+  val hasPromotion: Boolean = false
 
   def promotePiece: Option[Piece] = {
     None
@@ -105,7 +116,7 @@ case class PromotedSilver(override val player: Player)
 
   override def toString: String = "PS"
 
-  def getMoveSet(pos: (Int, Int)): List[(Int, Int)] = {
+  def getMoveSet(pos: (Int, Int), board: Board[Piece]): List[(Int, Int)] = {
     List((pos._1, pos._2 + 1), (pos._1 - 1, pos._2 + 1), (pos._1 - 1, pos._2),
       (pos._1, pos._2 - 1), (pos._1 + 1, pos._2), (pos._1 + 1, pos._2 + 1))
   }
@@ -119,7 +130,7 @@ case class PromotedSilver(override val player: Player)
 * Role:     Erstellt eine Knight-Figur */
 case class Knight(override val player: Player)
     extends Piece("Knight", player: Player) {
-  var hasPromotion: Boolean = true
+  val hasPromotion: Boolean = true
 
   /*Author:   Mert, Nick
   * Role:     Stuft das Piece auf
@@ -133,14 +144,14 @@ case class Knight(override val player: Player)
   /*Author:   Mert, Nick
   * Role:     Gibt die moeglichen Bewegungsfelder zurueck
   * Return:   List[(Int, Int)] mit den Koordinaten */
-  def getMoveSet(pos: (Int, Int)): List[(Int, Int)] = {
+  def getMoveSet(pos: (Int, Int), board: Board[Piece]): List[(Int, Int)] = {
     List((pos._1 - 1, pos._2 + 2), (pos._1 + 1, pos._2 + 2))
   }
 }
 
 case class PromotedKnight(override val player: Player)
     extends Piece("PromotedKnight", player: Player) {
-  var hasPromotion: Boolean = false
+  val hasPromotion: Boolean = false
 
   def promotePiece: Option[Piece] = {
     None
@@ -148,7 +159,7 @@ case class PromotedKnight(override val player: Player)
 
   override def toString: String = "PK"
 
-  def getMoveSet(pos: (Int, Int)): List[(Int, Int)] = {
+  def getMoveSet(pos: (Int, Int), board: Board[Piece]): List[(Int, Int)] = {
     List((pos._1, pos._2 + 1), (pos._1 - 1, pos._2 + 1), (pos._1 - 1, pos._2),
       (pos._1, pos._2 - 1), (pos._1 + 1, pos._2), (pos._1 + 1, pos._2 + 1))
   }
@@ -162,7 +173,7 @@ case class PromotedKnight(override val player: Player)
 * Role:     Erstellt eine Lancer-Figur */
 case class Lancer(override val player: Player)
     extends Piece("Lancer", player: Player) {
-  var hasPromotion: Boolean = true
+  val hasPromotion: Boolean = true
 
   /*Author:   Mert, Nick
   * Role:     Stuft das Piece auf
@@ -176,7 +187,7 @@ case class Lancer(override val player: Player)
   /*Author:   Mert, Nick
   * Role:     Gibt die moeglichen Bewegungsfelder zurueck
   * Return:   List[(Int, Int)] mit den Koordinaten */
-  def getMoveSet(pos: (Int, Int)): List[(Int, Int)] = {
+  def getMoveSet(pos: (Int, Int), board: Board[Piece]): List[(Int, Int)] = {
     List((pos._1, pos._2 + 1), (pos._1, pos._2 + 2), (pos._1, pos._2 + 3),
       (pos._1, pos._2 + 4), (pos._1, pos._2 + 5), (pos._1, pos._2 + 6),
       (pos._1, pos._2 + 7), (pos._1, pos._2 + 8))
@@ -185,7 +196,7 @@ case class Lancer(override val player: Player)
 
 case class PromotedLancer(override val player: Player)
     extends Piece("PromotedLancer", player: Player) {
-  var hasPromotion: Boolean = false
+  val hasPromotion: Boolean = false
 
   def promotePiece: Option[Piece] = {
     None
@@ -193,7 +204,7 @@ case class PromotedLancer(override val player: Player)
 
   override def toString: String = "PL"
 
-  def getMoveSet(pos: (Int, Int)): List[(Int, Int)] = {
+  def getMoveSet(pos: (Int, Int), board: Board[Piece]): List[(Int, Int)] = {
     List((pos._1, pos._2 + 1), (pos._1 - 1, pos._2 + 1), (pos._1 - 1, pos._2),
       (pos._1, pos._2 - 1), (pos._1 + 1, pos._2), (pos._1 + 1, pos._2 + 1))
   }
@@ -207,7 +218,7 @@ case class PromotedLancer(override val player: Player)
 * Role:     Erstellt eine Bishop-Figur */
 case class Bishop(override val player: Player)
     extends Piece("Bishop", player: Player) {
-  var hasPromotion: Boolean = true
+  val hasPromotion: Boolean = true
 
   /*Author:   Mert, Nick
   * Role:     Stuft das Piece auf
@@ -221,7 +232,7 @@ case class Bishop(override val player: Player)
   /*Author:   Mert, Nick
   * Role:     Gibt die moeglichen Bewegungsfelder zurueck
   * Return:   List[(Int, Int)] mit den Koordinaten */
-  def getMoveSet(pos: (Int, Int)): List[(Int, Int)] = {
+  def getMoveSet(pos: (Int, Int), board: Board[Piece]): List[(Int, Int)] = {
     var moves: List[(Int, Int)] = List()
     val maxMoveRange: Int = 9
     for (i <- 1 to maxMoveRange) {
@@ -236,7 +247,7 @@ case class Bishop(override val player: Player)
 
 case class PromotedBishop(override val player: Player)
     extends Piece("PromotedBishop", player: Player) {
-  var hasPromotion: Boolean = false
+  val hasPromotion: Boolean = false
 
   def promotePiece: Option[Piece] = {
     None
@@ -244,7 +255,7 @@ case class PromotedBishop(override val player: Player)
 
   override def toString: String = "PB"
 
-  def getMoveSet(pos: (Int, Int)): List[(Int, Int)] = {
+  def getMoveSet(pos: (Int, Int), board: Board[Piece]): List[(Int, Int)] = {
     var moves: List[(Int, Int)] = List()
     val maxMoveRange: Int = 9
     for (i <- 1 to maxMoveRange) {
@@ -266,7 +277,7 @@ case class PromotedBishop(override val player: Player)
 * Role:     Erstellt eine Rook-Figur */
 case class Rook(override val player: Player)
     extends Piece("Rook", player: Player) {
-  var hasPromotion: Boolean = true
+  val hasPromotion: Boolean = true
 
   /*Author:   Mert, Nick
   * Role:     Stuft das Piece auf
@@ -280,7 +291,7 @@ case class Rook(override val player: Player)
   /*Author:   Mert, Nick
   * Role:     Gibt die moeglichen Bewegungsfelder zurueck
   * Return:   List[(Int, Int)] mit den Koordinaten */
-  def getMoveSet(pos: (Int, Int)): List[(Int, Int)] = {
+  def getMoveSet(pos: (Int, Int), board: Board[Piece]): List[(Int, Int)] = {
     var moves: List[(Int, Int)] = List()
     val maxMoveRange: Int = 9
     for (i <- 1 to maxMoveRange) {
@@ -295,7 +306,7 @@ case class Rook(override val player: Player)
 
 case class PromotedRook(override val player: Player)
     extends Piece("PromotedRook", player: Player) {
-  var hasPromotion: Boolean = false
+  val hasPromotion: Boolean = false
 
   def promotePiece: Option[Piece] = {
     None
@@ -303,7 +314,7 @@ case class PromotedRook(override val player: Player)
 
   override def toString: String = "PR"
 
-  def getMoveSet(pos: (Int, Int)): List[(Int, Int)] = {
+  def getMoveSet(pos: (Int, Int), board: Board[Piece]): List[(Int, Int)] = {
     var moves: List[(Int, Int)] = List()
     val maxMoveRange: Int = 9
     for (i <- 1 to maxMoveRange) {
@@ -325,7 +336,7 @@ case class PromotedRook(override val player: Player)
 * Role:     Erstellt eine Pawn-Figur */
 case class Pawn(override val player: Player)
     extends Piece("Pawn", player: Player) {
-  var hasPromotion: Boolean = true
+  val hasPromotion: Boolean = true
 
   /*Author:   Mert, Nick
   * Role:     Stuft das Piece auf
@@ -339,14 +350,14 @@ case class Pawn(override val player: Player)
   /*Author:   Mert, Nick
   * Role:     Gibt die moeglichen Bewegungsfelder zurueck
   * Return:   List[(Int, Int)] mit den Koordinaten */
-  def getMoveSet(pos: (Int, Int)): List[(Int, Int)] = {
+  def getMoveSet(pos: (Int, Int), board: Board[Piece]): List[(Int, Int)] = {
     List((pos._1, pos._2 + 1))
   }
 }
 
 case class PromotedPawn(override val player: Player)
     extends Piece("PromotedPawn", player: Player) {
-  var hasPromotion: Boolean = false
+  val hasPromotion: Boolean = false
 
   def promotePiece: Option[Piece] = {
     None
@@ -354,7 +365,7 @@ case class PromotedPawn(override val player: Player)
 
   override def toString: String = "PP"
 
-  def getMoveSet(pos: (Int, Int)): List[(Int, Int)] = {
+  def getMoveSet(pos: (Int, Int), board: Board[Piece]): List[(Int, Int)] = {
     List((pos._1, pos._2 + 1), (pos._1 - 1, pos._2 + 1), (pos._1 - 1, pos._2),
       (pos._1, pos._2 - 1), (pos._1 + 1, pos._2), (pos._1 + 1, pos._2 + 1))
   }
@@ -365,7 +376,7 @@ case class PromotedPawn(override val player: Player)
 //region EmptyPiece
 case class EmptyPiece()
     extends Piece("", new Player("", false)) {
-  var hasPromotion: Boolean = false
+  val hasPromotion: Boolean = false
 
   /*Author:   Mert, Nick
   * Role:     Stuft das Piece auf
@@ -379,7 +390,7 @@ case class EmptyPiece()
   /*Author:   Mert, Nick
   * Role:     Gibt die moeglichen Bewegungsfelder zurueck
   * Return:   List[(Int, Int)] mit den Koordinaten */
-  def getMoveSet(pos: (Int, Int)): List[(Int, Int)] = {
+  def getMoveSet(pos: (Int, Int), board: Board[Piece]): List[(Int, Int)] = {
     List()
   }
 }

@@ -258,24 +258,24 @@ class PieceSpec extends WordSpec with Matchers {
     }
   }
 
-  "A EmptyPiece" when {
-    "new" should {
-      val piece = EmptyPiece()
-      "have a Player" in {
-        piece.player should be(new Player("", false))
-      }
-      "should not have a promotion" in {
-        piece.hasPromotion should be(false)
-      }
-      "promotion should be none" in {
-        piece.promotePiece should be(None)
-      }
-      "have a nice String representation" in {
-        piece.toString should be("  ")
-      }
-      "MoveSet should be" in {
-        piece.getMoveSet(0, 0) should be(List())
-      }
-    }
-  }
+  //  "A EmptyPiece" when {
+  //    "new" should {
+  //      val piece = EmptyPiece()
+  //      "have a Player" in {
+  //        piece.player should be(new Player("", false))
+  //      }
+  //      "should not have a promotion" in {
+  //        piece.hasPromotion should be(false)
+  //      }
+  //      "promotion should be none" in {
+  //        piece.promotePiece should be(None)
+  //      }
+  //      "have a nice String representation" in {
+  //        piece.toString should be("  ")
+  //      }
+  //      "MoveSet should be" in {
+  //        piece.getMoveSet(0, 0) should be(List())
+  //      }
+  //    }
+  //  }
 }
