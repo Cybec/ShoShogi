@@ -4,8 +4,18 @@ import de.htwg.se.ShoShogi.controller.Controller
 import de.htwg.se.ShoShogi.util.Observer
 
 class Tui(controller: Controller) extends Observer {
-
   controller.add(this)
+  val yAxis = Map(
+    "a" -> 0,
+    "b" -> 1,
+    "c" -> 2,
+    "d" -> 3,
+    "e" -> 4,
+    "f" -> 5,
+    "g" -> 6,
+    "h" -> 7,
+    "i" -> 8
+  )
   val menuMapStart = Map(
     "q" -> "quit",
     "n" -> "new"
@@ -32,14 +42,15 @@ class Tui(controller: Controller) extends Observer {
         menuMap = menuMapInGame
       }
       case "mv" =>
-      case "pmv" => printPossibleMoves(controller.possibleMoves(0, 0))
+      case "pmv" => printPossibleMoves(controller.possibleMoves(4, 0))
       case default => printString("\"" + default + "\" is not a valid input!\n")
     }
   }
 
   def printPossibleMoves(moveList: List[(Int, Int)]): Unit = {
     val moveListString = new StringBuilder
-    for ((k, v) <- moveList) moveListString.append("(").append(k).append(", ").append(v).append(")").append("---")
+    moveListString.append("Possible moves: ")
+    for ((k, v) <- moveList) moveListString.append("(").append(k).append(", ").append(v).append(")").append("   ")
     moveListString.append("\n")
     printString(moveListString.toString())
   }
