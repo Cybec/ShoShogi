@@ -1,8 +1,8 @@
 package de.htwg.se.ShoShogi.model
 
+import org.scalatest.{Matchers, WordSpec}
 import de.htwg.se.ShoShogi.aview.Tui
 import de.htwg.se.ShoShogi.controller.Controller
-import org.scalatest._
 import org.junit.runner.RunWith
 import org.scalatest.junit.JUnitRunner
 
@@ -30,11 +30,5 @@ class TuiSpec extends WordSpec with Matchers {
         tui.parseArguments(Array("pmv", " ", " ", " ", " ", " ca", " ", " ")) should be(None)
       }
     }
-    "printPossibleMoves called" should {
-      "print for \"pmv 0a\"" in {
-        tui.printPossibleMoves(controller.possibleMoves(0, 0)) should be("Possible moves: (0, 1)   ")
-      }
-    }
   }
-
 }
