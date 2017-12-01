@@ -45,7 +45,6 @@ class PieceSpec extends WordSpec with Matchers {
     board = board.replaceCell(i, 6, Pawn(player_2))
   }
 
-
   "A King" when {
     "new" should {
       val piece = King(player_1)
@@ -69,7 +68,7 @@ class PieceSpec extends WordSpec with Matchers {
         piece2.getMoveSet((4, 8), board) should be(List[(Int, Int)]((3, 7), (4, 7), (5, 7)))
       }
       "have a List of Moves (4,4) " in {
-        piece2.getMoveSet((4, 4), board) should be(List[(Int, Int)]((3, 3), (3, 4), (3, 5),  (4, 3), (4, 5), (5, 3), (5, 4), (5, 5)))
+        piece2.getMoveSet((4, 4), board) should be(List[(Int, Int)]((3, 3), (3, 4), (3, 5), (4, 3), (4, 5), (5, 3), (5, 4), (5, 5)))
       }
     }
   }
@@ -97,7 +96,7 @@ class PieceSpec extends WordSpec with Matchers {
         piece2.getMoveSet((3, 8), board) should be(List[(Int, Int)]((2, 7), (3, 7), (4, 7)))
       }
       "have a List of Moves (4,4) " in {
-        piece2.getMoveSet((4, 4), board) should be(List[(Int, Int)]((3, 4), (3, 3),  (4, 3), (5, 3), (5, 4), (4, 5)))
+        piece2.getMoveSet((4, 4), board) should be(List[(Int, Int)]((3, 4), (3, 3), (4, 3), (5, 3), (5, 4), (4, 5)))
       }
     }
   }
@@ -119,13 +118,13 @@ class PieceSpec extends WordSpec with Matchers {
         piece.toString should be("SG")
       }
       "have a List of Moves (2, 0)" in {
-        piece.getMoveSet((2, 0), board) should be(List[(Int, Int)]((3,1), (2, 1)))
+        piece.getMoveSet((2, 0), board) should be(List[(Int, Int)]((3, 1), (2, 1)))
       }
       "have a List of Moves (2, 8)" in {
         piece2.getMoveSet((2, 8), board) should be(List[(Int, Int)]((3, 7), (2, 7)))
       }
       "have a List of Moves (4,4) " in {
-        piece2.getMoveSet((4, 4), board) should be(List[(Int, Int)]( (3, 3), (3, 5), (5, 5), (5, 3), (4, 3)))
+        piece2.getMoveSet((4, 4), board) should be(List[(Int, Int)]((3, 3), (3, 5), (5, 5), (5, 3), (4, 3)))
       }
     }
   }
@@ -153,7 +152,7 @@ class PieceSpec extends WordSpec with Matchers {
         piece2.getMoveSet((3, 8), board) should be(List[(Int, Int)]((2, 7), (3, 7), (4, 7)))
       }
       "have a List of Moves (4,4) " in {
-        piece2.getMoveSet((4, 4), board) should be(List[(Int, Int)]((3, 4), (3, 3),  (4, 3), (5, 3), (5, 4), (4, 5)))
+        piece2.getMoveSet((4, 4), board) should be(List[(Int, Int)]((3, 4), (3, 3), (4, 3), (5, 3), (5, 4), (4, 5)))
       }
     }
   }
@@ -213,10 +212,10 @@ class PieceSpec extends WordSpec with Matchers {
         piece.toString should be("L ")
       }
       "have a List of Moves (0, 0)" in {
-        piece.getMoveSet((0, 0), board) should be(List[(Int, Int)]((0,1)))
+        piece.getMoveSet((0, 0), board) should be(List[(Int, Int)]((0, 1)))
       }
       "have a List of Moves (0, 8)" in {
-        piece2.getMoveSet((0, 8), board) should be(List[(Int, Int)]((0,7)))
+        piece2.getMoveSet((0, 8), board) should be(List[(Int, Int)]((0, 7)))
       }
       "have a List of Moves (0, 5) " in {
         piece2.getMoveSet((0, 5), board) should be(List[(Int, Int)]((0, 4), (0, 3), (0, 2)))
