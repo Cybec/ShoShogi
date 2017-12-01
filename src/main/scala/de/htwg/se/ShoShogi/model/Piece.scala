@@ -37,14 +37,16 @@ case class King(override val player: Player)
     //Jede Richtung ein Feld
     var moveList = ListBuffer[(Int, Int)]()
 
-    for (x <- (pos._1 - 1) to (pos._1 + 1)) {
-      for (y <- (pos._2 - 1) to (pos._2 + 1)) {
-        if (x != pos._1 || y != pos._2) {
-          board.cell(x, y).foreach(i => if (i.player != this.player) {
-            moveList.+=((x, y))
-          })
-        }
+    for (
+      x <- (pos._1 - 1) to (pos._1 + 1);
+      y <- (pos._2 - 1) to (pos._2 + 1)
+    ) {
+      if (x != pos._1 || y != pos._2) {
+        board.cell(x, y).foreach(i => if (i.player != this.player) {
+          moveList.+=((x, y))
+        })
       }
+
     }
     moveList.toList
   }
