@@ -29,6 +29,16 @@ class ControllerSpec extends WordSpec with Matchers {
     }
   }
   "Controller" when {
+    "called printPossibleMoves" should {
+      "print wrong cell numbers" in {
+        controller.possibleMoves(-1, 0) should be(List())
+        controller.possibleMoves(0, -1) should be(List())
+        controller.possibleMoves(9, 0) should be(List())
+        controller.possibleMoves(0, 9) should be(List())
+      }
+    }
+  }
+  "Controller" when {
     "called createEmptyBoard" should {
       "create an empty Board with size" in {
         controller.createEmptyBoard()
