@@ -1,6 +1,6 @@
 package de.htwg.se.ShoShogi.model
 
-import org.scalatest.{Matchers, WordSpec}
+import org.scalatest.{ Matchers, WordSpec }
 import de.htwg.se.ShoShogi.aview.Tui
 import de.htwg.se.ShoShogi.controller.Controller
 import org.junit.runner.RunWith

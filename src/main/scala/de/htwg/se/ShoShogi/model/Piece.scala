@@ -34,7 +34,7 @@ abstract class Piece(name: String, val player: Player) {
 /*Author:   Mert, Nick
 * Role:     Erstellt eine King-Figur */
 case class King(override val player: Player)
-  extends Piece("King", player: Player) {
+    extends Piece("King", player: Player) {
   val hasPromotion: Boolean = false
 
   /*Author:   Mert, Nick
@@ -70,7 +70,7 @@ case class King(override val player: Player)
 /*Author:   Mert, Nick
 * Role:     Erstellt eine GoldenGeneral-Figur */
 case class GoldenGeneral(override val player: Player)
-  extends Piece("GoldenGeneral", player: Player) {
+    extends Piece("GoldenGeneral", player: Player) {
   val hasPromotion: Boolean = false
 
   /*Author:   Mert, Nick
@@ -113,7 +113,7 @@ case class GoldenGeneral(override val player: Player)
 /*Author:   Mert, Nick
 * Role:     Erstellt eine SilverGeneral-Figur */
 case class SilverGeneral(override val player: Player)
-  extends Piece("SilverGeneral", player: Player) {
+    extends Piece("SilverGeneral", player: Player) {
   val hasPromotion: Boolean = true
 
   /*Author:   Mert, Nick
@@ -146,7 +146,7 @@ case class SilverGeneral(override val player: Player)
 }
 
 case class PromotedSilver(override val player: Player)
-  extends Piece("PromotedSilver", player: Player) {
+    extends Piece("PromotedSilver", player: Player) {
   val hasPromotion: Boolean = false
 
   def promotePiece: Option[Piece] = {
@@ -183,7 +183,7 @@ case class PromotedSilver(override val player: Player)
 /*Author:   Mert, Nick
 * Role:     Erstellt eine Knight-Figur */
 case class Knight(override val player: Player)
-  extends Piece("Knight", player: Player) {
+    extends Piece("Knight", player: Player) {
   val hasPromotion: Boolean = true
 
   /*Author:   Mert, Nick
@@ -204,7 +204,7 @@ case class Knight(override val player: Player)
 }
 
 case class PromotedKnight(override val player: Player)
-  extends Piece("PromotedKnight", player: Player) {
+    extends Piece("PromotedKnight", player: Player) {
   val hasPromotion: Boolean = false
 
   def promotePiece: Option[Piece] = {
@@ -226,7 +226,7 @@ case class PromotedKnight(override val player: Player)
 /*Author:   Mert, Nick
 * Role:     Erstellt eine Lancer-Figur */
 case class Lancer(override val player: Player)
-  extends Piece("Lancer", player: Player) {
+    extends Piece("Lancer", player: Player) {
   val hasPromotion: Boolean = true
 
   /*Author:   Mert, Nick
@@ -251,7 +251,7 @@ case class Lancer(override val player: Player)
 }
 
 case class PromotedLancer(override val player: Player)
-  extends Piece("PromotedLancer", player: Player) {
+    extends Piece("PromotedLancer", player: Player) {
   val hasPromotion: Boolean = false
 
   def promotePiece: Option[Piece] = {
@@ -273,7 +273,7 @@ case class PromotedLancer(override val player: Player)
 /*Author:   Mert, Nick
 * Role:     Erstellt eine Bishop-Figur */
 case class Bishop(override val player: Player)
-  extends Piece("Bishop", player: Player) {
+    extends Piece("Bishop", player: Player) {
   val hasPromotion: Boolean = true
 
   /*Author:   Mert, Nick
@@ -302,7 +302,7 @@ case class Bishop(override val player: Player)
 }
 
 case class PromotedBishop(override val player: Player)
-  extends Piece("PromotedBishop", player: Player) {
+    extends Piece("PromotedBishop", player: Player) {
   val hasPromotion: Boolean = false
 
   def promotePiece: Option[Piece] = {
@@ -332,7 +332,7 @@ case class PromotedBishop(override val player: Player)
 /*Author:   Mert, Nick
 * Role:     Erstellt eine Rook-Figur */
 case class Rook(override val player: Player)
-  extends Piece("Rook", player: Player) {
+    extends Piece("Rook", player: Player) {
   val hasPromotion: Boolean = true
 
   /*Author:   Mert, Nick
@@ -361,7 +361,7 @@ case class Rook(override val player: Player)
 }
 
 case class PromotedRook(override val player: Player)
-  extends Piece("PromotedRook", player: Player) {
+    extends Piece("PromotedRook", player: Player) {
   val hasPromotion: Boolean = false
 
   def promotePiece: Option[Piece] = {
@@ -391,7 +391,7 @@ case class PromotedRook(override val player: Player)
 /*Author:   Mert, Nick
 * Role:     Erstellt eine Pawn-Figur */
 case class Pawn(override val player: Player)
-  extends Piece("Pawn", player: Player) {
+    extends Piece("Pawn", player: Player) {
   val hasPromotion: Boolean = true
 
   /*Author:   Mert, Nick
@@ -412,7 +412,7 @@ case class Pawn(override val player: Player)
 }
 
 case class PromotedPawn(override val player: Player)
-  extends Piece("PromotedPawn", player: Player) {
+    extends Piece("PromotedPawn", player: Player) {
   val hasPromotion: Boolean = false
 
   def promotePiece: Option[Piece] = {
@@ -431,7 +431,7 @@ case class PromotedPawn(override val player: Player)
 
 //region EmptyPiece
 case class EmptyPiece()
-  extends Piece("", new Player("", false)) {
+    extends Piece("", new Player("", false)) {
   val hasPromotion: Boolean = false
 
   /*Author:   Mert, Nick
