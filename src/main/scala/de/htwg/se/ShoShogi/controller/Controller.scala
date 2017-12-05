@@ -5,6 +5,8 @@ import de.htwg.se.ShoShogi.util.Observable
 
 import scala.collection.mutable.ListBuffer
 
+// TODO 1: schauen ob vals und vars aus dem classenparameter entfernt werden köennen
+
 //noinspection ScalaStyle
 class Controller(var board: Board[Piece], val player_1: Player, val player_2: Player) extends Observable {
   val boardSize = 9
