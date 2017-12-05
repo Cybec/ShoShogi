@@ -4,6 +4,7 @@ import org.scalatest._
 import org.junit.runner.RunWith
 import org.scalatest.junit.JUnitRunner
 
+//noinspection ScalaStyle
 @RunWith(classOf[JUnitRunner])
 class BoardSpec extends WordSpec with Matchers {
   "A Board is the playingfield of Shogi. A Board" when {
@@ -62,7 +63,6 @@ class BoardSpec extends WordSpec with Matchers {
         board.board(0)(2) should be(Pawn(player_1))
         board.board(8)(2) should be(Pawn(player_1))
       }
-      //TODO:"have a nice String representation" in {}
     }
   }
 }

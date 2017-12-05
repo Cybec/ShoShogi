@@ -1,5 +1,8 @@
 package de.htwg.se.ShoShogi.model
 
+// TODO: Pattern welches die selbe funktion aufruft ein anderen spieler übergibt und so entscheidet aus welchem Container er etwas rausholt
+// TODO: Container neue Classe? mit funktionen?
+
 case class Board[Piece](board: Vector[Vector[Piece]]) {
   def this(size: Int, filling: Piece) = this(Vector.tabulate(size, size) { (row, col) => filling })
 
