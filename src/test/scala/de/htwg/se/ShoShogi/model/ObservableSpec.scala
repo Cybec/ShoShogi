@@ -1,13 +1,11 @@
 package de.htwg.se.ShoShogi.model
 
-import com.sun.corba.se.impl.orb.ParserTable.TestContactInfoListFactory
-import de.htwg.se.ShoShogi.ShoShogi.boardSize
-import de.htwg.se.ShoShogi.controller.Controller
-import de.htwg.se.ShoShogi.util.{ Observable, Observer }
+
+import de.htwg.se.ShoShogi.util.{Observable, Observer}
 
 import scala.language.reflectiveCalls
 import org.junit.runner.RunWith
-import org.scalatest.{ Matchers, WordSpec }
+import org.scalatest.{Matchers, WordSpec}
 import org.scalatest.junit.JUnitRunner
 
 //noinspection ScalaStyle
