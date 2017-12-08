@@ -430,7 +430,7 @@ case class Pawn(override val player: Player)
   * Role:     Gibt die moeglichen Bewegungsfelder zurueck
   * Return:   List[(Int, Int)] mit den Koordinaten */
   def getMoveSet(pos: (Int, Int), board: Board[Piece]): List[(Int, Int)] = {
-    if(this.player.first) {
+    if (this.player.first) {
       rekMoveSet(board, (pos._1, pos._2 + 1), 1, (0, 1))
     } else {
       rekMoveSet(board, (pos._1, pos._2 - 1), 1, (0, -1))
