@@ -4,17 +4,19 @@ package de.htwg.se.ShoShogi.model
 // TODO: Container neue Classe? mit funktionen?
 
 case class Board[Piece](board: Vector[Vector[Piece]]) {
-  private var container = new Array[Vector[Piece]](2)
+  private val container: Array[Vector[Piece]] = Array(Vector.empty[Piece], Vector.empty[Piece])
 
   def getContainer(): Array[Vector[Piece]] = {
     container.clone
   }
 
   def addToPlayerContainer(player: Player, piece: Piece): Unit = {
-    if (player.first) {
-      container(0) :+ piece
-    } else {
-      container(1) :+ piece
+    if (!piece.isInstanceOf[EmptyPiece]) {
+      if (player.first) {
+        container(0) = container(0) :+ piece
+      } else {
+        container(1) = container(1) :+ piece
+      }
     }
   }
 
