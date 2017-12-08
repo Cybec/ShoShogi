@@ -1,11 +1,10 @@
 package de.htwg.se.ShoShogi.model
 
-
-import de.htwg.se.ShoShogi.util.{Observable, Observer}
+import de.htwg.se.ShoShogi.util.{ Observable, Observer }
 
 import scala.language.reflectiveCalls
 import org.junit.runner.RunWith
-import org.scalatest.{Matchers, WordSpec}
+import org.scalatest.{ Matchers, WordSpec }
 import org.scalatest.junit.JUnitRunner
 
 //noinspection ScalaStyle

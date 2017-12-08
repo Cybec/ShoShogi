@@ -42,21 +42,37 @@ class Tui(controller: Controller) extends Observer {
         menuMap = menuMapInGame
       }
       case "mv" =>
+        parseArguments(inputArray) match {
+          case Some(value) => controller.movePiece((value(0)._1, value(0)._2), (value(1)._1, value(1)._2))
+          case _ => printString("Could not read input: ".concat(input))
+        }
       case "pmv" =>
         parseArguments(inputArray) match {
-          case Some(value) => printPossibleMoves(controller.possibleMoves(value._1, value._2))
+          case Some(value) => printPossibleMoves(controller.possibleMoves(value(0)._1, value(0)._2))
           case _ => printString("Could not read input: ".concat(input))
         }
       case default => printString("\"" + default + "\" is not a valid input!\n")
     }
   }
 
-  def parseArguments(inputArray: Array[String]): Option[(Int, Int)] = {
+  def parseArguments(inputArray: Array[String]): Option[Vector[(Int, Int)]] = {
     val position = inputArray.mkString(" ").replace("pmv", "").trim.toList
     if (position.length == 2) {
       try {
         if ("1234567890".contains(position(0))) {
-          Some(position(0).toInt - '0', yAxis.getOrElse(position(1), -1))
+          Some(Vector[(Int, Int)]((position(0).toInt - '0', yAxis.getOrElse(position(1), -1))))
+        } else {
+          None
+        }
+      }
+    } else if (position.length == 4) {
+      try {
+        if ("1234567890".contains(position(0)) && "1234567890".contains(position(2))) {
+          val tempVec = Vector.empty[(Int, Int)]
+          tempVec :+ (position(0).toInt - '0', yAxis.getOrElse(position(1), -1))
+          tempVec :+ (position(2).toInt - '0', yAxis.getOrElse(position(3), -1))
+
+          Some(tempVec)
         } else {
           None
         }
