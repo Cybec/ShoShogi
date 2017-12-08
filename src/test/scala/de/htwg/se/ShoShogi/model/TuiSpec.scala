@@ -15,13 +15,13 @@ class TuiSpec extends WordSpec with Matchers {
   "A Tui" when {
     "parseArguments called" should {
       "give back \"pmv     0a  \"" in {
-        tui.parseArguments(Array("pmv", " ", " ", " ", " ", " 0a", " ", " ")) should be(Some((0, 0)))
+        tui.parseArguments(Array("pmv", " ", " ", " ", " ", " 0a", " ", " ")) should be(Some(Vector((0, 0))))
       }
       "give back \"pmv     8h  \"" in {
-        tui.parseArguments(Array("pmv", " ", " ", " ", " ", " 8h", " ", " ")) should be(Some((8, 7)))
+        tui.parseArguments(Array("pmv", " ", " ", " ", " ", " 8h", " ", " ")) should be(Some(Vector((8, 7))))
       }
       "give back \"pmv     4d  \"" in {
-        tui.parseArguments(Array("pmv", " ", " ", " ", " ", " 4d", " ", " ")) should be(Some((4, 3)))
+        tui.parseArguments(Array("pmv", " ", " ", " ", " ", " 4d", " ", " ")) should be(Some(Vector((4, 3))))
       }
       "give back \"pmv     0ca  \"" in {
         tui.parseArguments(Array("pmv", " ", " ", " ", " ", " 0ca", " ", " ")) should be(None)

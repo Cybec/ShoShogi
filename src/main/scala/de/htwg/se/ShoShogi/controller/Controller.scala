@@ -10,6 +10,7 @@ import scala.collection.mutable.ListBuffer
 //noinspection ScalaStyle
 class Controller(var board: Board[Piece], val player_1: Player, val player_2: Player) extends Observable {
   val boardSize = 9
+  var container = board.getContainer()
 
   def createEmptyBoard(): Unit = {
     board = new Board[Piece](boardSize, new EmptyPiece)
@@ -61,6 +62,23 @@ class Controller(var board: Board[Piece], val player_1: Player, val player_2: Pl
     board.cell(pos._1, pos._2) match {
       case Some(piece) => piece.getMoveSet((pos._1, pos._2), board)
       case None => List()
+    }
+  }
+
+  def movePiece(currentPos: (Int, Int), destination: (Int, Int)): Boolean = {
+    if (possibleMoves(currentPos).contains(destination)) {
+      val tempPieceDestination = board.cell(destination._1, destination._2).getOrElse(return false)
+      val tempPieceCurrent = board.cell(currentPos._1, currentPos._2).getOrElse(return false)
+
+      board = board.replaceCell(destination._1, destination._2, tempPieceCurrent)
+      board = board.replaceCell(currentPos._1, currentPos._2, new EmptyPiece)
+
+      board.addToPlayerContainer(tempPieceCurrent.player, tempPieceDestination)
+
+      notifyObservers
+      true
+    } else {
+      false
     }
   }
 }

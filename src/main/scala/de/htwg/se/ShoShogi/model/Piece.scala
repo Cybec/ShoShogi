@@ -180,6 +180,7 @@ case class PromotedSilver(override val player: Player)
 
 //region Knight
 
+//noinspection ScalaStyle
 /*Author:   Mert, Nick
 * Role:     Erstellt eine Knight-Figur */
 case class Knight(override val player: Player)
@@ -199,7 +200,15 @@ case class Knight(override val player: Player)
   * Role:     Gibt die moeglichen Bewegungsfelder zurueck
   * Return:   List[(Int, Int)] mit den Koordinaten */
   def getMoveSet(pos: (Int, Int), board: Board[Piece]): List[(Int, Int)] = {
-    List((pos._1 - 1, pos._2 + 2), (pos._1 + 1, pos._2 + 2))
+    rekMoveSet(board, (pos._1 - 1, pos._2 + 2), 1, (-1, 2)) :::
+      rekMoveSet(board, (pos._1 + 1, pos._2 + 2), 1, (1, 2)) :::
+      rekMoveSet(board, (pos._1 + 2, pos._2 + 1), 1, (2, 1)) :::
+      rekMoveSet(board, (pos._1 + 2, pos._2 - 1), 1, (2, -1)) :::
+      rekMoveSet(board, (pos._1 - 1, pos._2 - 2), 1, (-1, -2)) :::
+      rekMoveSet(board, (pos._1 + 1, pos._2 - 2), 1, (1, -2)) :::
+      rekMoveSet(board, (pos._1 - 2, pos._2 + 1), 1, (-2, 1)) :::
+      rekMoveSet(board, (pos._1 - 2, pos._2 - 1), 1, (-2, -1))
+
   }
 }
 
@@ -214,8 +223,22 @@ case class PromotedKnight(override val player: Player)
   override def toString: String = "PK"
 
   def getMoveSet(pos: (Int, Int), board: Board[Piece]): List[(Int, Int)] = {
-    List((pos._1, pos._2 + 1), (pos._1 - 1, pos._2 + 1), (pos._1 - 1, pos._2),
-      (pos._1, pos._2 - 1), (pos._1 + 1, pos._2), (pos._1 + 1, pos._2 + 1))
+    if (this.player.first) {
+      rekMoveSet(board, (pos._1 - 1, pos._2), 1, (-1, 0)) :::
+        rekMoveSet(board, (pos._1 - 1, pos._2 + 1), 1, (-1, 1)) :::
+        rekMoveSet(board, (pos._1, pos._2 + 1), 1, (0, 1)) :::
+        rekMoveSet(board, (pos._1 + 1, pos._2 + 1), 1, (-1, 1)) :::
+        rekMoveSet(board, (pos._1 + 1, pos._2), 1, (1, 0)) :::
+        rekMoveSet(board, (pos._1, pos._2 - 1), 1, (1, 1))
+    } else {
+
+      rekMoveSet(board, (pos._1 - 1, pos._2), 1, (-1, 0)) :::
+        rekMoveSet(board, (pos._1 - 1, pos._2 - 1), 1, (-1, -1)) :::
+        rekMoveSet(board, (pos._1, pos._2 - 1), 1, (0, -1)) :::
+        rekMoveSet(board, (pos._1 + 1, pos._2 - 1), 1, (1, -1)) :::
+        rekMoveSet(board, (pos._1 + 1, pos._2), 1, (1, 0)) :::
+        rekMoveSet(board, (pos._1, pos._2 + 1), 1, (0, 1))
+    }
   }
 }
 
@@ -261,8 +284,22 @@ case class PromotedLancer(override val player: Player)
   override def toString: String = "PL"
 
   def getMoveSet(pos: (Int, Int), board: Board[Piece]): List[(Int, Int)] = {
-    List((pos._1, pos._2 + 1), (pos._1 - 1, pos._2 + 1), (pos._1 - 1, pos._2),
-      (pos._1, pos._2 - 1), (pos._1 + 1, pos._2), (pos._1 + 1, pos._2 + 1))
+    if (this.player.first) {
+      rekMoveSet(board, (pos._1 - 1, pos._2), 1, (-1, 0)) :::
+        rekMoveSet(board, (pos._1 - 1, pos._2 + 1), 1, (-1, 1)) :::
+        rekMoveSet(board, (pos._1, pos._2 + 1), 1, (0, 1)) :::
+        rekMoveSet(board, (pos._1 + 1, pos._2 + 1), 1, (-1, 1)) :::
+        rekMoveSet(board, (pos._1 + 1, pos._2), 1, (1, 0)) :::
+        rekMoveSet(board, (pos._1, pos._2 - 1), 1, (1, 1))
+    } else {
+
+      rekMoveSet(board, (pos._1 - 1, pos._2), 1, (-1, 0)) :::
+        rekMoveSet(board, (pos._1 - 1, pos._2 - 1), 1, (-1, -1)) :::
+        rekMoveSet(board, (pos._1, pos._2 - 1), 1, (0, -1)) :::
+        rekMoveSet(board, (pos._1 + 1, pos._2 - 1), 1, (1, -1)) :::
+        rekMoveSet(board, (pos._1 + 1, pos._2), 1, (1, 0)) :::
+        rekMoveSet(board, (pos._1, pos._2 + 1), 1, (0, 1))
+    }
   }
 }
 
@@ -289,15 +326,10 @@ case class Bishop(override val player: Player)
   * Role:     Gibt die moeglichen Bewegungsfelder zurueck
   * Return:   List[(Int, Int)] mit den Koordinaten */
   def getMoveSet(pos: (Int, Int), board: Board[Piece]): List[(Int, Int)] = {
-    var moves: List[(Int, Int)] = List()
-    val maxMoveRange: Int = 9
-    for (i <- 1 to maxMoveRange) {
-      moves :::= List((pos._1 - i, pos._2 + i))
-      moves :::= List((pos._1 + i, pos._2 + i))
-      moves :::= List((pos._1 - i, pos._2 - i))
-      moves :::= List((pos._1 + i, pos._2 - i))
-    }
-    moves
+    rekMoveSet(board, (pos._1 - 1, pos._2 - 1), board.size, (-1, -1)) :::
+      rekMoveSet(board, (pos._1 - 1, pos._2 + 1), board.size, (-1, 1)) :::
+      rekMoveSet(board, (pos._1 + 1, pos._2 + 1), board.size, (1, 1)) :::
+      rekMoveSet(board, (pos._1 + 1, pos._2 - 1), board.size, (1, -1))
   }
 }
 
@@ -312,16 +344,14 @@ case class PromotedBishop(override val player: Player)
   override def toString: String = "PB"
 
   def getMoveSet(pos: (Int, Int), board: Board[Piece]): List[(Int, Int)] = {
-    var moves: List[(Int, Int)] = List()
-    val maxMoveRange: Int = 9
-    for (i <- 1 to maxMoveRange) {
-      moves :::= List((pos._1 - i, pos._2 + i))
-      moves :::= List((pos._1 + i, pos._2 + i))
-      moves :::= List((pos._1 - i, pos._2 - i))
-      moves :::= List((pos._1 + i, pos._2 - i))
-    }
-    moves :::= List((pos._1, pos._2 + 1), (pos._1 - 1, pos._2), (pos._1, pos._2 - 1), (pos._1 + 1, pos._2))
-    moves
+    rekMoveSet(board, (pos._1 - 1, pos._2 - 1), board.size, (-1, -1)) :::
+      rekMoveSet(board, (pos._1 - 1, pos._2 + 1), board.size, (-1, 1)) :::
+      rekMoveSet(board, (pos._1 + 1, pos._2 + 1), board.size, (1, 1)) :::
+      rekMoveSet(board, (pos._1 + 1, pos._2 - 1), board.size, (1, -1)) :::
+      rekMoveSet(board, (pos._1, pos._2 + 1), 1, (0, 1)) :::
+      rekMoveSet(board, (pos._1 + 1, pos._2), 1, (1, 0)) :::
+      rekMoveSet(board, (pos._1, pos._2 - 1), 1, (0, -1)) :::
+      rekMoveSet(board, (pos._1 - 1, pos._2), 1, (-1, 0))
   }
 }
 
@@ -348,15 +378,10 @@ case class Rook(override val player: Player)
   * Role:     Gibt die moeglichen Bewegungsfelder zurueck
   * Return:   List[(Int, Int)] mit den Koordinaten */
   def getMoveSet(pos: (Int, Int), board: Board[Piece]): List[(Int, Int)] = {
-    var moves: List[(Int, Int)] = List()
-    val maxMoveRange: Int = 9
-    for (i <- 1 to maxMoveRange) {
-      moves :::= List((pos._1, pos._2 + i))
-      moves :::= List((pos._1 - i, pos._2))
-      moves :::= List((pos._1, pos._2 - i))
-      moves :::= List((pos._1 + i, pos._2))
-    }
-    moves
+    rekMoveSet(board, (pos._1, pos._2 + 1), board.size, (0, 1)) :::
+      rekMoveSet(board, (pos._1 + 1, pos._2), board.size, (1, 0)) :::
+      rekMoveSet(board, (pos._1, pos._2 - 1), board.size, (0, -1)) :::
+      rekMoveSet(board, (pos._1 - 1, pos._2), board.size, (-1, 0))
   }
 }
 
@@ -371,16 +396,14 @@ case class PromotedRook(override val player: Player)
   override def toString: String = "PR"
 
   def getMoveSet(pos: (Int, Int), board: Board[Piece]): List[(Int, Int)] = {
-    var moves: List[(Int, Int)] = List()
-    val maxMoveRange: Int = 9
-    for (i <- 1 to maxMoveRange) {
-      moves :::= List((pos._1, pos._2 + i))
-      moves :::= List((pos._1 - i, pos._2))
-      moves :::= List((pos._1, pos._2 - i))
-      moves :::= List((pos._1 + i, pos._2))
-    }
-    moves :::= List((pos._1 - 1, pos._2 + 1), (pos._1 - 1, pos._2 + 1), (pos._1 + 1, pos._2 - 1), (pos._1 + 1, pos._2 + 1))
-    moves
+    rekMoveSet(board, (pos._1, pos._2 + 1), board.size, (0, 1)) :::
+      rekMoveSet(board, (pos._1 + 1, pos._2), board.size, (1, 0)) :::
+      rekMoveSet(board, (pos._1, pos._2 - 1), board.size, (0, -1)) :::
+      rekMoveSet(board, (pos._1 - 1, pos._2), board.size, (-1, 0)) :::
+      rekMoveSet(board, (pos._1 - 1, pos._2 - 1), 1, (-1, -1)) :::
+      rekMoveSet(board, (pos._1 - 1, pos._2 + 1), 1, (-1, 1)) :::
+      rekMoveSet(board, (pos._1 + 1, pos._2 + 1), 1, (1, 1)) :::
+      rekMoveSet(board, (pos._1 + 1, pos._2 - 1), 1, (1, -1))
   }
 }
 
@@ -407,7 +430,11 @@ case class Pawn(override val player: Player)
   * Role:     Gibt die moeglichen Bewegungsfelder zurueck
   * Return:   List[(Int, Int)] mit den Koordinaten */
   def getMoveSet(pos: (Int, Int), board: Board[Piece]): List[(Int, Int)] = {
-    List((pos._1, pos._2 + 1))
+    if (this.player.first) {
+      rekMoveSet(board, (pos._1, pos._2 + 1), 1, (0, 1))
+    } else {
+      rekMoveSet(board, (pos._1, pos._2 - 1), 1, (0, -1))
+    }
   }
 }
 
@@ -422,8 +449,22 @@ case class PromotedPawn(override val player: Player)
   override def toString: String = "PP"
 
   def getMoveSet(pos: (Int, Int), board: Board[Piece]): List[(Int, Int)] = {
-    List((pos._1, pos._2 + 1), (pos._1 - 1, pos._2 + 1), (pos._1 - 1, pos._2),
-      (pos._1, pos._2 - 1), (pos._1 + 1, pos._2), (pos._1 + 1, pos._2 + 1))
+    if (this.player.first) {
+      rekMoveSet(board, (pos._1 - 1, pos._2), 1, (-1, 0)) :::
+        rekMoveSet(board, (pos._1 - 1, pos._2 + 1), 1, (-1, 1)) :::
+        rekMoveSet(board, (pos._1, pos._2 + 1), 1, (0, 1)) :::
+        rekMoveSet(board, (pos._1 + 1, pos._2 + 1), 1, (-1, 1)) :::
+        rekMoveSet(board, (pos._1 + 1, pos._2), 1, (1, 0)) :::
+        rekMoveSet(board, (pos._1, pos._2 - 1), 1, (1, 1))
+    } else {
+
+      rekMoveSet(board, (pos._1 - 1, pos._2), 1, (-1, 0)) :::
+        rekMoveSet(board, (pos._1 - 1, pos._2 - 1), 1, (-1, -1)) :::
+        rekMoveSet(board, (pos._1, pos._2 - 1), 1, (0, -1)) :::
+        rekMoveSet(board, (pos._1 + 1, pos._2 - 1), 1, (1, -1)) :::
+        rekMoveSet(board, (pos._1 + 1, pos._2), 1, (1, 0)) :::
+        rekMoveSet(board, (pos._1, pos._2 + 1), 1, (0, 1))
+    }
   }
 }
 

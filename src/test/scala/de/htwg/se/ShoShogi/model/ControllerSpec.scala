@@ -9,8 +9,6 @@ import org.junit.runner.RunWith
 import org.scalatest.{ Matchers, WordSpec }
 import org.scalatest.junit.JUnitRunner
 
-//TODO 1: Controller testen
-
 //noinspection ScalaStyle
 @RunWith(classOf[JUnitRunner])
 class ControllerSpec extends WordSpec with Matchers {
