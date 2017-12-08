@@ -56,7 +56,7 @@ class Tui(controller: Controller) extends Observer {
   }
 
   def parseArguments(inputArray: Array[String]): Option[Vector[(Int, Int)]] = {
-    val position = inputArray.mkString(" ").replace("pmv", "").trim.toList
+    val position = inputArray.mkString("").replace("pmv", "").replace("mv", "").trim.toList
     if (position.length == 2) {
       try {
         if ("1234567890".contains(position(0))) {
@@ -68,9 +68,9 @@ class Tui(controller: Controller) extends Observer {
     } else if (position.length == 4) {
       try {
         if ("1234567890".contains(position(0)) && "1234567890".contains(position(2))) {
-          val tempVec = Vector.empty[(Int, Int)]
-          tempVec :+ (position(0).toInt - '0', yAxis.getOrElse(position(1), -1))
-          tempVec :+ (position(2).toInt - '0', yAxis.getOrElse(position(3), -1))
+          var tempVec = Vector.empty[(Int, Int)]
+          tempVec = tempVec :+ (position(0).toInt - '0', yAxis.getOrElse(position(1), -1))
+          tempVec = tempVec :+ (position(2).toInt - '0', yAxis.getOrElse(position(3), -1))
 
           Some(tempVec)
         } else {
@@ -85,7 +85,8 @@ class Tui(controller: Controller) extends Observer {
   def printPossibleMoves(moveList: List[(Int, Int)]): Unit = {
     val moveListString = new StringBuilder
     moveListString.append("Possible moves: ")
-    for ((k, v) <- moveList) moveListString.append("(").append(k).append(", ").append(v).append(")").append("   ")
+    for ((k, v) <- moveList) moveListString.append("(").append(k).append(", ")
+      .append(yAxis.find(_._2 == v).getOrElse((' ', -1))._1).append(")").append("   ")
     moveListString.append("\n")
     printString(moveListString.toString())
   }
