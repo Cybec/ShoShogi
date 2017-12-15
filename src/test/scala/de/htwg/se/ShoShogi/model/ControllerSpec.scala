@@ -85,7 +85,8 @@ class ControllerSpec extends WordSpec with Matchers {
       "create an String of the empty Board" in {
         controller.createEmptyBoard()
         controller.boardToString() should be(
-          "   0    1    2    3    4    5    6    7    8 \n \n" +
+          "Captured Player 1: \n" +
+            "   0    1    2    3    4    5    6    7    8 \n \n" +
             "------------------------------------------------\n " +
             "|    |    |    |    |    |    |    |    |    | \ta\n" +
             "------------------------------------------------\n " +
@@ -104,7 +105,8 @@ class ControllerSpec extends WordSpec with Matchers {
             "|    |    |    |    |    |    |    |    |    | \th\n" +
             "------------------------------------------------\n " +
             "|    |    |    |    |    |    |    |    |    | \ti\n" +
-            "------------------------------------------------\n"
+            "------------------------------------------------\n" +
+            "Captured Player 2: \n"
         )
       }
     }
@@ -114,7 +116,8 @@ class ControllerSpec extends WordSpec with Matchers {
       "create an String of the filled Board" in {
         controller.createNewBoard()
         controller.boardToString() should be(
-          "   0    1    2    3    4    5    6    7    8 \n \n" +
+          "Captured Player 1: \n" +
+            "   0    1    2    3    4    5    6    7    8 \n \n" +
             "------------------------------------------------\n " +
             "| L  | KN | SG | GG | K  | GG | SG | KN | L  | \ta\n" +
             "------------------------------------------------\n " +
@@ -133,7 +136,75 @@ class ControllerSpec extends WordSpec with Matchers {
             "|    | B  |    |    |    |    |    | R  |    | \th\n" +
             "------------------------------------------------\n " +
             "| L  | KN | SG | GG | K  | GG | SG | KN | L  | \ti\n" +
-            "------------------------------------------------\n"
+            "------------------------------------------------\n" +
+            "Captured Player 2: \n"
+        )
+      }
+    }
+  }
+  "Controller" when {
+    "called boardToString" should {
+      "create an String of the filled Board with captured" in {
+        controller.createNewBoard()
+        controller.movePiece((2, 6), (2, 5))
+        controller.movePiece((1, 7), (6, 2))
+        controller.boardToString() should be(
+          "Captured Player 1: \n" +
+            "   0    1    2    3    4    5    6    7    8 \n \n" +
+            "------------------------------------------------\n " +
+            "| L  | KN | SG | GG | K  | GG | SG | KN | L  | \ta\n" +
+            "------------------------------------------------\n " +
+            "|    | R  |    |    |    |    |    | B  |    | \tb\n" +
+            "------------------------------------------------\n " +
+            "| P  | P  | P  | P  | P  | P  | B  | P  | P  | \tc\n" +
+            "------------------------------------------------\n " +
+            "|    |    |    |    |    |    |    |    |    | \td\n" +
+            "------------------------------------------------\n " +
+            "|    |    |    |    |    |    |    |    |    | \te\n" +
+            "------------------------------------------------\n " +
+            "|    |    | P  |    |    |    |    |    |    | \tf\n" +
+            "------------------------------------------------\n " +
+            "| P  | P  |    | P  | P  | P  | P  | P  | P  | \tg\n" +
+            "------------------------------------------------\n " +
+            "|    |    |    |    |    |    |    | R  |    | \th\n" +
+            "------------------------------------------------\n " +
+            "| L  | KN | SG | GG | K  | GG | SG | KN | L  | \ti\n" +
+            "------------------------------------------------\n" +
+            "Captured Player 2: P    \n"
+        )
+      }
+    }
+  }
+  "Controller" when {
+    "called boardToString" should {
+      "create an String of the filled Board with captured both" in {
+        controller.createNewBoard()
+        controller.movePiece((2, 6), (2, 5))
+        controller.movePiece((1, 7), (6, 2))
+        controller.movePiece((7, 1), (6, 2))
+        controller.boardToString() should be(
+          "Captured Player 1: B    \n" +
+            "   0    1    2    3    4    5    6    7    8 \n \n" +
+            "------------------------------------------------\n " +
+            "| L  | KN | SG | GG | K  | GG | SG | KN | L  | \ta\n" +
+            "------------------------------------------------\n " +
+            "|    | R  |    |    |    |    |    |    |    | \tb\n" +
+            "------------------------------------------------\n " +
+            "| P  | P  | P  | P  | P  | P  | B  | P  | P  | \tc\n" +
+            "------------------------------------------------\n " +
+            "|    |    |    |    |    |    |    |    |    | \td\n" +
+            "------------------------------------------------\n " +
+            "|    |    |    |    |    |    |    |    |    | \te\n" +
+            "------------------------------------------------\n " +
+            "|    |    | P  |    |    |    |    |    |    | \tf\n" +
+            "------------------------------------------------\n " +
+            "| P  | P  |    | P  | P  | P  | P  | P  | P  | \tg\n" +
+            "------------------------------------------------\n " +
+            "|    |    |    |    |    |    |    | R  |    | \th\n" +
+            "------------------------------------------------\n " +
+            "| L  | KN | SG | GG | K  | GG | SG | KN | L  | \ti\n" +
+            "------------------------------------------------\n" +
+            "Captured Player 2: P    \n"
         )
       }
     }
