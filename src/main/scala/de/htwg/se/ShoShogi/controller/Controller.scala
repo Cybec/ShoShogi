@@ -67,13 +67,14 @@ class Controller(var board: Board[Piece], val player_1: Player, val player_2: Pl
 
   def movePiece(currentPos: (Int, Int), destination: (Int, Int)): Boolean = {
     if (possibleMoves(currentPos).contains(destination)) {
+
       val tempPieceDestination = board.cell(destination._1, destination._2).getOrElse(return false)
       val tempPieceCurrent = board.cell(currentPos._1, currentPos._2).getOrElse(return false)
 
       board = board.replaceCell(destination._1, destination._2, tempPieceCurrent)
       board = board.replaceCell(currentPos._1, currentPos._2, new EmptyPiece)
 
-      board.addToPlayerContainer(tempPieceCurrent.player, tempPieceDestination)
+      board = board.addToPlayerContainer(tempPieceCurrent.player, tempPieceDestination)
 
       notifyObservers
       true
