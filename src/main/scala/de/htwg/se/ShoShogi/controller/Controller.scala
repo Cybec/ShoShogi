@@ -5,8 +5,12 @@ import de.htwg.se.ShoShogi.util.Observable
 
 import scala.collection.mutable.ListBuffer
 
+// TODO 1: schauen ob vals und vars aus dem classenparameter entfernt werden köennen
+
+//noinspection ScalaStyle
 class Controller(var board: Board[Piece], val player_1: Player, val player_2: Player) extends Observable {
   val boardSize = 9
+  var container = board.getContainer()
 
   def createEmptyBoard(): Unit = {
     board = new Board[Piece](boardSize, new EmptyPiece)
@@ -26,8 +30,8 @@ class Controller(var board: Board[Piece], val player_1: Player, val player_2: Pl
     board = board.replaceCell(6, 0, SilverGeneral(player_1))
     board = board.replaceCell(7, 0, Knight(player_1))
     board = board.replaceCell(8, 0, Lancer(player_1))
-    board = board.replaceCell(1, 1, Bishop(player_1))
-    board = board.replaceCell(7, 1, Rook(player_1))
+    board = board.replaceCell(7, 1, Bishop(player_1))
+    board = board.replaceCell(1, 1, Rook(player_1))
     for (i <- 0 to 8) {
       board = board.replaceCell(i, 2, Pawn(player_1))
     }
@@ -54,24 +58,28 @@ class Controller(var board: Board[Piece], val player_1: Player, val player_2: Pl
   def boardToString(): String = board.toString
 
   def possibleMoves(pos: (Int, Int)): List[(Int, Int)] = {
-    var moveList = ListBuffer[(Int, Int)]()
-
+    notifyObservers
     board.cell(pos._1, pos._2) match {
-      case Some(piece) => {
-        for ((s, o) <- piece.getMoveSet(pos._1, pos._2)) {
-          board.cell(s, o) match {
-            case Some(pieceDestiCell) => {
-              if (pieceDestiCell.player != piece.player) {
-                moveList.+=((s, o))
-              }
-            }
-            case None =>
-          }
-        }
-      }
-      case None =>
+      case Some(piece) => piece.getMoveSet((pos._1, pos._2), board)
+      case None => List()
     }
+  }
 
-    moveList.toList
+  def movePiece(currentPos: (Int, Int), destination: (Int, Int)): Boolean = {
+    if (possibleMoves(currentPos).contains(destination)) {
+
+      val tempPieceDestination = board.cell(destination._1, destination._2).getOrElse(return false)
+      val tempPieceCurrent = board.cell(currentPos._1, currentPos._2).getOrElse(return false)
+
+      board = board.replaceCell(destination._1, destination._2, tempPieceCurrent)
+      board = board.replaceCell(currentPos._1, currentPos._2, new EmptyPiece)
+
+      board = board.addToPlayerContainer(tempPieceCurrent.player, tempPieceDestination)
+
+      notifyObservers
+      true
+    } else {
+      false
+    }
   }
 }

@@ -1,16 +1,56 @@
 package de.htwg.se.ShoShogi.model
 
+import de.htwg.se.ShoShogi.aview.Tui
+import de.htwg.se.ShoShogi.controller.Controller
 import org.scalatest._
 import org.junit.runner.RunWith
 import org.scalatest.junit.JUnitRunner
 
 @RunWith(classOf[JUnitRunner])
 class PieceSpec extends WordSpec with Matchers {
+  val boardSize = 9
+  val player_1 = new Player("Player 1", true)
+  val player_2 = new Player("Player 2", false)
+  var board = new Board[Piece](boardSize, new EmptyPiece)
+
+  //Steine fuer Spieler 1
+  board = board.replaceCell(0, 0, Lancer(player_1))
+  board = board.replaceCell(1, 0, Knight(player_1))
+  board = board.replaceCell(2, 0, SilverGeneral(player_1))
+  board = board.replaceCell(3, 0, GoldenGeneral(player_1))
+  board = board.replaceCell(4, 0, King(player_1))
+  board = board.replaceCell(5, 0, GoldenGeneral(player_1))
+  board = board.replaceCell(6, 0, SilverGeneral(player_1))
+  board = board.replaceCell(7, 0, Knight(player_1))
+  board = board.replaceCell(8, 0, Lancer(player_1))
+  board = board.replaceCell(7, 1, Bishop(player_1))
+  board = board.replaceCell(1, 1, Rook(player_1))
+  for (i <- 0 to 8) {
+    board = board.replaceCell(i, 2, Pawn(player_1))
+  }
+
+  //Steine fuer Spieler 2
+  board = board.replaceCell(0, 8, Lancer(player_2))
+  board = board.replaceCell(1, 8, Knight(player_2))
+  board = board.replaceCell(2, 8, SilverGeneral(player_2))
+  board = board.replaceCell(3, 8, GoldenGeneral(player_2))
+  board = board.replaceCell(4, 8, King(player_2))
+  board = board.replaceCell(5, 8, GoldenGeneral(player_2))
+  board = board.replaceCell(6, 8, SilverGeneral(player_2))
+  board = board.replaceCell(7, 8, Knight(player_2))
+  board = board.replaceCell(8, 8, Lancer(player_2))
+  board = board.replaceCell(1, 7, Bishop(player_2))
+  board = board.replaceCell(7, 7, Rook(player_2))
+  for (i <- 0 to 8) {
+    board = board.replaceCell(i, 6, Pawn(player_2))
+  }
+
   "A King" when {
     "new" should {
-      val piece = King(Player("Your Name", true))
+      val piece = King(player_1)
+      val piece2 = King(player_2)
       "have a Player" in {
-        piece.player should be(Player("Your Name", true))
+        piece.player should be(Player("Player 1", true))
       }
       "should not have a promotion" in {
         piece.hasPromotion should be(false)
@@ -21,14 +61,24 @@ class PieceSpec extends WordSpec with Matchers {
       "have a nice String representation" in {
         piece.toString should be("K ")
       }
+      "have a List of Moves (4, 0)" in {
+        piece.getMoveSet((4, 0), board) should be(List[(Int, Int)]((3, 1), (4, 1), (5, 1)))
+      }
+      "have a List of Moves (4, 8)" in {
+        piece2.getMoveSet((4, 8), board) should be(List[(Int, Int)]((3, 7), (4, 7), (5, 7)))
+      }
+      "have a List of Moves (4,4) " in {
+        piece2.getMoveSet((4, 4), board) should be(List[(Int, Int)]((3, 3), (3, 4), (3, 5), (4, 3), (4, 5), (5, 3), (5, 4), (5, 5)))
+      }
     }
   }
 
   "A GoldenGeneral" when {
     "new" should {
-      val piece = GoldenGeneral(Player("Your Name", true))
+      val piece = GoldenGeneral(player_1)
+      val piece2 = GoldenGeneral(player_2)
       "have a Player" in {
-        piece.player should be(Player("Your Name", true))
+        piece.player should be(Player("Player 1", true))
       }
       "should not have a promotion" in {
         piece.hasPromotion should be(false)
@@ -39,14 +89,24 @@ class PieceSpec extends WordSpec with Matchers {
       "have a nice String representation" in {
         piece.toString should be("GG")
       }
+      "have a List of Moves (3, 0)" in {
+        piece.getMoveSet((3, 0), board) should be(List[(Int, Int)]((2, 1), (3, 1), (4, 1)))
+      }
+      "have a List of Moves (3, 8)" in {
+        piece2.getMoveSet((3, 8), board) should be(List[(Int, Int)]((2, 7), (3, 7), (4, 7)))
+      }
+      "have a List of Moves (4,4) " in {
+        piece2.getMoveSet((4, 4), board) should be(List[(Int, Int)]((3, 4), (3, 3), (4, 3), (5, 3), (5, 4), (4, 5)))
+      }
     }
   }
 
   "A SilverGeneral" when {
     "new" should {
-      val piece = SilverGeneral(Player("Your Name", true))
+      val piece = SilverGeneral(player_1)
+      val piece2 = SilverGeneral(player_2)
       "have a Player" in {
-        piece.player should be(Player("Your Name", true))
+        piece.player should be(Player("Player 1", true))
       }
       "should not have a promotion" in {
         piece.hasPromotion should be(true)
@@ -57,14 +117,24 @@ class PieceSpec extends WordSpec with Matchers {
       "have a nice String representation" in {
         piece.toString should be("SG")
       }
+      "have a List of Moves (2, 0)" in {
+        piece.getMoveSet((2, 0), board) should be(List[(Int, Int)]((3, 1), (2, 1)))
+      }
+      "have a List of Moves (2, 8)" in {
+        piece2.getMoveSet((2, 8), board) should be(List[(Int, Int)]((3, 7), (2, 7)))
+      }
+      "have a List of Moves (4,4) " in {
+        piece2.getMoveSet((4, 4), board) should be(List[(Int, Int)]((3, 3), (3, 5), (5, 5), (5, 3), (4, 3)))
+      }
     }
   }
 
   "A PromotedSilver" when {
     "new" should {
-      val piece = PromotedSilver(Player("Your Name", true))
+      val piece = PromotedSilver(player_1)
+      val piece2 = PromotedSilver(player_2)
       "have a Player" in {
-        piece.player should be(Player("Your Name", true))
+        piece.player should be(Player("Player 1", true))
       }
       "should not have a promotion" in {
         piece.hasPromotion should be(false)
@@ -75,14 +145,24 @@ class PieceSpec extends WordSpec with Matchers {
       "have a nice String representation" in {
         piece.toString should be("PS")
       }
+      "have a List of Moves (3, 0)" in {
+        piece.getMoveSet((3, 0), board) should be(List[(Int, Int)]((2, 1), (3, 1), (4, 1)))
+      }
+      "have a List of Moves (3, 8)" in {
+        piece2.getMoveSet((3, 8), board) should be(List[(Int, Int)]((2, 7), (3, 7), (4, 7)))
+      }
+      "have a List of Moves (4,4) " in {
+        piece2.getMoveSet((4, 4), board) should be(List[(Int, Int)]((3, 4), (3, 3), (4, 3), (5, 3), (5, 4), (4, 5)))
+      }
     }
   }
 
   "A Knight" when {
     "new" should {
-      val piece = Knight(Player("Your Name", true))
+      val piece = Knight(player_1)
+      val piece2 = Knight(player_2)
       "have a Player" in {
-        piece.player should be(Player("Your Name", true))
+        piece.player should be(Player("Player 1", true))
       }
       "should not have a promotion" in {
         piece.hasPromotion should be(true)
@@ -93,14 +173,24 @@ class PieceSpec extends WordSpec with Matchers {
       "have a nice String representation" in {
         piece.toString should be("KN")
       }
+      "have a List of Moves (1, 0)" in {
+        piece.getMoveSet((1, 0), board) should be(List[(Int, Int)]((3, 1)))
+      }
+      "have a List of Moves (1, 8)" in {
+        piece2.getMoveSet((1, 8), board) should be(List[(Int, Int)]((3, 7)))
+      }
+      "have a List of Moves (4,4) " in {
+        piece2.getMoveSet((4, 4), board) should be(List[(Int, Int)]((6, 5), (6, 3), (3, 2), (5, 2), (2, 5), (2, 3)))
+      }
     }
   }
 
   "A PromotedKnight" when {
     "new" should {
-      val piece = PromotedKnight(Player("Your Name", true))
+      val piece = PromotedKnight(player_1)
+      val piece2 = PromotedKnight(player_2)
       "have a Player" in {
-        piece.player should be(Player("Your Name", true))
+        piece.player should be(Player("Player 1", true))
       }
       "should not have a promotion" in {
         piece.hasPromotion should be(false)
@@ -111,14 +201,24 @@ class PieceSpec extends WordSpec with Matchers {
       "have a nice String representation" in {
         piece.toString should be("PK")
       }
+      "have a List of Moves (3, 0)" in {
+        piece.getMoveSet((3, 0), board) should be(List[(Int, Int)]((2, 1), (3, 1), (4, 1)))
+      }
+      "have a List of Moves (3, 8)" in {
+        piece2.getMoveSet((3, 8), board) should be(List[(Int, Int)]((2, 7), (3, 7), (4, 7)))
+      }
+      "have a List of Moves (4,4) " in {
+        piece2.getMoveSet((4, 4), board) should be(List[(Int, Int)]((3, 4), (3, 3), (4, 3), (5, 3), (5, 4), (4, 5)))
+      }
     }
   }
 
   "A Lancer" when {
     "new" should {
-      val piece = Lancer(Player("Your Name", true))
+      val piece = Lancer(player_1)
+      val piece2 = Lancer(player_2)
       "have a Player" in {
-        piece.player should be(Player("Your Name", true))
+        piece.player should be(Player("Player 1", true))
       }
       "should not have a promotion" in {
         piece.hasPromotion should be(true)
@@ -129,14 +229,24 @@ class PieceSpec extends WordSpec with Matchers {
       "have a nice String representation" in {
         piece.toString should be("L ")
       }
+      "have a List of Moves (0, 0)" in {
+        piece.getMoveSet((0, 0), board) should be(List[(Int, Int)]((0, 1)))
+      }
+      "have a List of Moves (0, 8)" in {
+        piece2.getMoveSet((0, 8), board) should be(List[(Int, Int)]((0, 7)))
+      }
+      "have a List of Moves (0, 5) " in {
+        piece2.getMoveSet((0, 5), board) should be(List[(Int, Int)]((0, 4), (0, 3), (0, 2)))
+      }
     }
   }
 
   "A PromotedLancer" when {
     "new" should {
-      val piece = PromotedLancer(Player("Your Name", true))
+      val piece = PromotedLancer(player_1)
+      val piece2 = PromotedLancer(player_2)
       "have a Player" in {
-        piece.player should be(Player("Your Name", true))
+        piece.player should be(Player("Player 1", true))
       }
       "should not have a promotion" in {
         piece.hasPromotion should be(false)
@@ -147,14 +257,24 @@ class PieceSpec extends WordSpec with Matchers {
       "have a nice String representation" in {
         piece.toString should be("PL")
       }
+      "have a List of Moves (3, 0)" in {
+        piece.getMoveSet((3, 0), board) should be(List[(Int, Int)]((2, 1), (3, 1), (4, 1)))
+      }
+      "have a List of Moves (3, 8)" in {
+        piece2.getMoveSet((3, 8), board) should be(List[(Int, Int)]((2, 7), (3, 7), (4, 7)))
+      }
+      "have a List of Moves (4,4) " in {
+        piece2.getMoveSet((4, 4), board) should be(List[(Int, Int)]((3, 4), (3, 3), (4, 3), (5, 3), (5, 4), (4, 5)))
+      }
     }
   }
 
   "A Bishop" when {
     "new" should {
-      val piece = Bishop(Player("Your Name", true))
+      val piece = Bishop(player_1)
+      val piece2 = Bishop(player_2)
       "have a Player" in {
-        piece.player should be(Player("Your Name", true))
+        piece.player should be(Player("Player 1", true))
       }
       "should not have a promotion" in {
         piece.hasPromotion should be(true)
@@ -165,14 +285,24 @@ class PieceSpec extends WordSpec with Matchers {
       "have a nice String representation" in {
         piece.toString should be("B ")
       }
+      "have a List of Moves (7, 0)" in {
+        piece.getMoveSet((7, 1), board) should be(List[(Int, Int)]())
+      }
+      "have a List of Moves (1, 7)" in {
+        piece2.getMoveSet((1, 7), board) should be(List[(Int, Int)]())
+      }
+      "have a List of Moves (4,4) " in {
+        piece2.getMoveSet((4, 4), board) should be(List[(Int, Int)]((3, 3), (2, 2), (3, 5), (5, 5), (5, 3), (6, 2)))
+      }
     }
   }
 
   "A PromotedBishop" when {
     "new" should {
-      val piece = PromotedBishop(Player("Your Name", true))
+      val piece = PromotedBishop(player_1)
+      val piece2 = PromotedBishop(player_2)
       "have a Player" in {
-        piece.player should be(Player("Your Name", true))
+        piece.player should be(Player("Player 1", true))
       }
       "should not have a promotion" in {
         piece.hasPromotion should be(false)
@@ -183,14 +313,24 @@ class PieceSpec extends WordSpec with Matchers {
       "have a nice String representation" in {
         piece.toString should be("PB")
       }
+      "have a List of Moves (7, 0)" in {
+        piece.getMoveSet((7, 1), board) should be(List[(Int, Int)]((8, 1), (6, 1)))
+      }
+      "have a List of Moves (1, 7)" in {
+        piece2.getMoveSet((1, 7), board) should be(List[(Int, Int)]((2, 7), (0, 7)))
+      }
+      "have a List of Moves (4,4) " in {
+        piece2.getMoveSet((4, 4), board) should be(List[(Int, Int)]((3, 3), (2, 2), (3, 5), (5, 5), (5, 3), (6, 2), (4, 5), (5, 4), (4, 3), (3, 4)))
+      }
     }
   }
 
   "A Rook" when {
     "new" should {
-      val piece = Rook(Player("Your Name", true))
+      val piece = Rook(player_1)
+      val piece2 = Rook(player_2)
       "have a Player" in {
-        piece.player should be(Player("Your Name", true))
+        piece.player should be(Player("Player 1", true))
       }
       "should not have a promotion" in {
         piece.hasPromotion should be(true)
@@ -201,14 +341,24 @@ class PieceSpec extends WordSpec with Matchers {
       "have a nice String representation" in {
         piece.toString should be("R ")
       }
+      "have a List of Moves (1, 1)" in {
+        piece.getMoveSet((1, 1), board) should be(List[(Int, Int)]((2, 1), (3, 1), (4, 1), (5, 1), (6, 1), (0, 1)))
+      }
+      "have a List of Moves (7, 7)" in {
+        piece2.getMoveSet((7, 7), board) should be(List[(Int, Int)]((8, 7), (6, 7), (5, 7), (4, 7), (3, 7), (2, 7)))
+      }
+      "have a List of Moves (4,4) " in {
+        piece2.getMoveSet((4, 4), board) should be(List[(Int, Int)]((4, 5), (5, 4), (6, 4), (7, 4), (8, 4), (4, 3), (4, 2), (3, 4), (2, 4), (1, 4), (0, 4)))
+      }
     }
   }
 
   "A PromotedRook" when {
     "new" should {
-      val piece = PromotedRook(Player("Your Name", true))
+      val piece = PromotedRook(player_1)
+      val piece2 = PromotedRook(player_2)
       "have a Player" in {
-        piece.player should be(Player("Your Name", true))
+        piece.player should be(Player("Player 1", true))
       }
       "should not have a promotion" in {
         piece.hasPromotion should be(false)
@@ -219,14 +369,24 @@ class PieceSpec extends WordSpec with Matchers {
       "have a nice String representation" in {
         piece.toString should be("PR")
       }
+      "have a List of Moves (1, 1)" in {
+        piece.getMoveSet((1, 1), board) should be(List[(Int, Int)]((2, 1), (3, 1), (4, 1), (5, 1), (6, 1), (0, 1)))
+      }
+      "have a List of Moves (7, 7)" in {
+        piece2.getMoveSet((7, 7), board) should be(List[(Int, Int)]((8, 7), (6, 7), (5, 7), (4, 7), (3, 7), (2, 7)))
+      }
+      "have a List of Moves (4,4) " in {
+        piece2.getMoveSet((4, 4), board) should be(List[(Int, Int)]((4, 5), (5, 4), (6, 4), (7, 4), (8, 4), (4, 3), (4, 2), (3, 4), (2, 4), (1, 4), (0, 4), (3, 3), (3, 5), (5, 5), (5, 3)))
+      }
     }
   }
 
   "A Pawn" when {
     "new" should {
-      val piece = Pawn(Player("Your Name", true))
+      val piece = Pawn(player_1)
+      val piece2 = Pawn(player_2)
       "have a Player" in {
-        piece.player should be(Player("Your Name", true))
+        piece.player should be(Player("Player 1", true))
       }
       "should not have a promotion" in {
         piece.hasPromotion should be(true)
@@ -237,14 +397,24 @@ class PieceSpec extends WordSpec with Matchers {
       "have a nice String representation" in {
         piece.toString should be("P ")
       }
+      "have a List of Moves (1, 1)" in {
+        piece.getMoveSet((1, 2), board) should be(List[(Int, Int)]((1, 3)))
+      }
+      "have a List of Moves (7, 7)" in {
+        piece2.getMoveSet((1, 6), board) should be(List[(Int, Int)]((1, 5)))
+      }
+      "have a List of Moves (4,4) " in {
+        piece2.getMoveSet((4, 4), board) should be(List[(Int, Int)]((4, 3)))
+      }
     }
   }
 
   "A PromotedPawn" when {
     "new" should {
-      val piece = PromotedPawn(Player("Your Name", true))
+      val piece = PromotedPawn(player_1)
+      val piece2 = PromotedPawn(player_2)
       "have a Player" in {
-        piece.player should be(Player("Your Name", true))
+        piece.player should be(Player("Player 1", true))
       }
       "should not have a promotion" in {
         piece.hasPromotion should be(false)
@@ -254,6 +424,15 @@ class PieceSpec extends WordSpec with Matchers {
       }
       "have a nice String representation" in {
         piece.toString should be("PP")
+      }
+      "have a List of Moves (3, 0)" in {
+        piece.getMoveSet((3, 0), board) should be(List[(Int, Int)]((2, 1), (3, 1), (4, 1)))
+      }
+      "have a List of Moves (3, 8)" in {
+        piece2.getMoveSet((3, 8), board) should be(List[(Int, Int)]((2, 7), (3, 7), (4, 7)))
+      }
+      "have a List of Moves (4,4) " in {
+        piece2.getMoveSet((4, 4), board) should be(List[(Int, Int)]((3, 4), (3, 3), (4, 3), (5, 3), (5, 4), (4, 5)))
       }
     }
   }
@@ -273,8 +452,8 @@ class PieceSpec extends WordSpec with Matchers {
       "have a nice String representation" in {
         piece.toString should be("  ")
       }
-      "MoveSet should be" in {
-        piece.getMoveSet(0, 0) should be(List())
+      "have a List of Moves (3, 0)" in {
+        piece.getMoveSet((3, 0), board) should be(List[(Int, Int)]())
       }
     }
   }
