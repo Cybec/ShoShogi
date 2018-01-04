@@ -1,10 +1,11 @@
 package de.htwg.se.ShoShogi.model
 
+import de.htwg.se.ShoShogi.model.Piece
 
 // TODO: Pattern welches die selbe funktion aufruft ein anderen spieler übergibt und so entscheidet aus welchem Container er etwas rausholt
 // TODO: Container neue Classe? mit funktionen?
 
-case class Board[Piece](board: Vector[Vector[Piece]], containerPlayer_0: List[Piece], containerPlayer_1: List[Piece]) {
+case class Board(board: Vector[Vector[Piece]], containerPlayer_0: List[Piece], containerPlayer_1: List[Piece]) {
   def this(size: Int, filling: Piece) = this(Vector.tabulate(size, size) { (row, col) => filling }, List.empty[Piece], List.empty[Piece])
 
   val size: Int = board.size
@@ -13,13 +14,13 @@ case class Board[Piece](board: Vector[Vector[Piece]], containerPlayer_0: List[Pi
     (containerPlayer_0, containerPlayer_1)
   }
 
-  def addToPlayerContainer(player: Player, piece: Piece): Board[Piece] = {
+  def addToPlayerContainer(player: Player, piece: Piece): Board = {
     if (!piece.isInstanceOf[EmptyPiece]) {
       if (player.first) {
-        val newCon: List[Piece] = containerPlayer_0 :+ piece
+        val newCon: List[Piece] = containerPlayer_0 :+ piece.cloneToNewPlayer(player)
         copy(board, newCon, containerPlayer_1)
       } else {
-        val newCon: List[Piece] = containerPlayer_1 :+ piece
+        val newCon: List[Piece] = containerPlayer_1 :+ piece.cloneToNewPlayer(player)
         copy(board, containerPlayer_0, newCon)
       }
     } else {
@@ -27,17 +28,25 @@ case class Board[Piece](board: Vector[Vector[Piece]], containerPlayer_0: List[Pi
     }
   }
 
-  def removeFromPlayerContainer(player: Player, piece: Piece): Board[Piece] = {
+  def getFromPlayerContainer(player: Player)(pred: (Piece) => Boolean): Option[(Board, Piece)] = {
     if (player.first) {
-      val newCon: List[Piece] = for { a <- containerPlayer_0 if a != piece } yield {
-        a
+      val (before, atAndAfter) = containerPlayer_0 span (x => !pred(x))
+      if (atAndAfter.size > 0) {
+        val getPiece: Piece = atAndAfter(0)
+        val newCon: List[Piece] = before ::: atAndAfter.drop(1)
+        Some((copy(board, newCon, containerPlayer_1), getPiece.cloneToNewPlayer(player)))
+      } else {
+        None
       }
-      copy(board, newCon, containerPlayer_1)
     } else {
-      val newCon: List[Piece] = for { a <- containerPlayer_1 if a != piece } yield {
-        a
+      val (before, atAndAfter) = containerPlayer_1 span (x => !pred(x))
+      if (atAndAfter.size > 0) {
+        val getPiece: Piece = atAndAfter(0)
+        val newCon: List[Piece] = before ::: atAndAfter.drop(1)
+        Some((copy(board, containerPlayer_0, newCon), getPiece.cloneToNewPlayer(player)))
+      } else {
+        None
       }
-      copy(board, containerPlayer_0, newCon)
     }
   }
 
@@ -49,7 +58,7 @@ case class Board[Piece](board: Vector[Vector[Piece]], containerPlayer_0: List[Pi
     }
   }
 
-  def replaceCell(col: Int, row: Int, cell: Piece): Board[Piece] =
+  def replaceCell(col: Int, row: Int, cell: Piece): Board =
     copy(board.updated(col, board(col).updated(row, cell)), containerPlayer_0, containerPlayer_1)
 
   override def toString: String = {

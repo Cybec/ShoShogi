@@ -8,17 +8,17 @@ import scala.collection.mutable.ListBuffer
 // TODO 1: schauen ob vals und vars aus dem classenparameter entfernt werden köennen
 
 //noinspection ScalaStyle
-class Controller(var board: Board[Piece], val player_1: Player, val player_2: Player) extends Observable {
+class Controller(var board: Board, val player_1: Player, val player_2: Player) extends Observable {
   val boardSize = 9
   var container = board.getContainer()
 
   def createEmptyBoard(): Unit = {
-    board = new Board[Piece](boardSize, new EmptyPiece)
+    board = new Board(boardSize, new EmptyPiece)
     notifyObservers
   }
 
   def createNewBoard(): Unit = {
-    board = new Board[Piece](boardSize, new EmptyPiece)
+    board = new Board(boardSize, new EmptyPiece)
 
     //Steine fuer Spieler 1
     board = board.replaceCell(0, 0, Lancer(player_1))
