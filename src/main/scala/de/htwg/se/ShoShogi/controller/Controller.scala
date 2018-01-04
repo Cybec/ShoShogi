@@ -58,7 +58,6 @@ class Controller(var board: Board[Piece], val player_1: Player, val player_2: Pl
   def boardToString(): String = board.toString
 
   def possibleMoves(pos: (Int, Int)): List[(Int, Int)] = {
-    notifyObservers
     board.cell(pos._1, pos._2) match {
       case Some(piece) => piece.getMoveSet((pos._1, pos._2), board)
       case None => List()
@@ -75,11 +74,27 @@ class Controller(var board: Board[Piece], val player_1: Player, val player_2: Pl
       board = board.replaceCell(currentPos._1, currentPos._2, new EmptyPiece)
 
       board = board.addToPlayerContainer(tempPieceCurrent.player, tempPieceDestination)
-
+      //promotable(tempPieceDestination, destination)
       notifyObservers
       true
     } else {
       false
     }
+  }
+
+  def promotable(currentPos: (Int, Int), dest: (Int, Int)): Boolean = {
+    val piece = board.cell(currentPos._1, currentPos._2).getOrElse(return false)
+    if ((piece.player == player_1 && piece.hasPromotion && dest._2 > 5) || (piece.player == player_2 && piece.hasPromotion && dest._2 < 3)) {
+      true
+    } else {
+      false
+    }
+  }
+
+  def promotePiece(currentPos: (Int, Int)): Boolean = {
+    var piece = board.cell(currentPos._1, currentPos._2).getOrElse(return false)
+    piece = piece.promotePiece.getOrElse(return false)
+    board = board.replaceCell(currentPos._1, currentPos._2, piece)
+    true
   }
 }
