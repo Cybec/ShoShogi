@@ -87,14 +87,12 @@ class BoardSpec extends WordSpec with Matchers {
 
   "Board" when {
     "something removed from container" should {
-      "have pieces in both container" in {
+      "have less pieces in both container" in {
         var board = new Board(9, new EmptyPiece)
         val player_1 = Player("Nick", true)
         val player_2 = Player("Mert", false)
         var wantedPiece_0: Piece = new EmptyPiece
         var wantedPiece_1: Piece = new EmptyPiece
-        var wantedPiece_2: Piece = new EmptyPiece
-        var wantedPiece_3: Piece = new EmptyPiece
 
         board = board.addToPlayerContainer(player_1, Lancer(player_2))
         board = board.addToPlayerContainer(player_1, Lancer(player_2))
@@ -135,6 +133,54 @@ class BoardSpec extends WordSpec with Matchers {
 
         wantedPiece_0 shouldBe a[Lancer]
         wantedPiece_1 shouldBe a[King]
+      }
+      "return None if there is no such piece" in {
+        var board = new Board(9, new EmptyPiece)
+        val player_1 = Player("Nick", true)
+        val player_2 = Player("Mert", false)
+        var wantedPiece_0: Piece = new EmptyPiece
+        var wantedPiece_1: Piece = new EmptyPiece
+
+        board = board.addToPlayerContainer(player_1, Lancer(player_2))
+        board = board.addToPlayerContainer(player_1, Lancer(player_2))
+        board = board.addToPlayerContainer(player_1, King(player_2))
+        board = board.addToPlayerContainer(player_1, King(player_2))
+        board = board.addToPlayerContainer(player_2, Lancer(player_1))
+        board = board.addToPlayerContainer(player_2, Lancer(player_1))
+        board = board.addToPlayerContainer(player_2, King(player_1))
+        board = board.addToPlayerContainer(player_2, King(player_1))
+
+        board.getContainer() should be((
+          ListBuffer(Lancer(player_1), Lancer(player_1), King(player_1), King(player_1)),
+          ListBuffer(Lancer(player_2), Lancer(player_2), King(player_2), King(player_2))
+        ))
+
+        board.getFromPlayerContainer(player_1) {
+          _.isInstanceOf[Knight]
+        } match {
+          case Some((newBoard, piece)) =>
+            board = newBoard
+            wantedPiece_0 = piece
+          case None =>
+        }
+
+        board.getFromPlayerContainer(player_2) {
+          _.isInstanceOf[Pawn]
+        } match {
+          case Some((newBoard, piece)) =>
+            board = newBoard
+            wantedPiece_1 = piece
+          case None =>
+        }
+
+        board.getContainer() should be((
+          ListBuffer(Lancer(player_1), Lancer(player_1), King(player_1), King(player_1)),
+          ListBuffer(Lancer(player_2), Lancer(player_2), King(player_2), King(player_2))
+        ))
+
+        wantedPiece_0 shouldBe a[EmptyPiece]
+        wantedPiece_1 shouldBe a[EmptyPiece]
+
       }
     }
   }
