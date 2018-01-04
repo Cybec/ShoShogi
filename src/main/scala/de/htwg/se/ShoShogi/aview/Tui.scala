@@ -54,7 +54,7 @@ class Tui(controller: Controller) extends Observer {
           parseArguments(e.input) match {
             case Some(value) =>
               if (controller.promotable((value(0)._1, value(0)._2), (value(1)._1, value(1)._2))) {
-                printString("Do you want to promote your piece?\nYes: y\nNo: n")
+                printString("Do you want to promote your piece? (y/n)")
                 var input = scala.io.StdIn.readLine()
                 if (input == "y") {
                   controller.promotePiece(value(0)._1, value(0)._2)
