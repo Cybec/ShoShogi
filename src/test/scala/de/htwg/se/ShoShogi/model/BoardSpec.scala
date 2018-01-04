@@ -11,9 +11,9 @@ import scala.collection.mutable.ListBuffer
 class BoardSpec extends WordSpec with Matchers {
   "A Board is the playing field of Shogi. A Board" when {
     "to be constructed" should {
-      val smallBoard = new Board[Piece](1, new EmptyPiece)
-      val biggerBoard = new Board[Piece](2, new EmptyPiece)
-      val board = new Board[Piece](9, new EmptyPiece)
+      val smallBoard = new Board(1, new EmptyPiece)
+      val biggerBoard = new Board(2, new EmptyPiece)
+      val board = new Board(9, new EmptyPiece)
       "be created with the length of its edges as size. Testing size 1, 2 and 9" in {
         smallBoard.size should be(1)
         biggerBoard.size should be(2)
@@ -34,7 +34,7 @@ class BoardSpec extends WordSpec with Matchers {
       }
     }
     "using an actual Board" should {
-      var board = new Board[Piece](9, new EmptyPiece)
+      var board = new Board(9, new EmptyPiece)
       val player_1 = Player("Nick", true)
       board = board.replaceCell(0, 0, Lancer(player_1))
       board = board.replaceCell(1, 0, Knight(player_1))
@@ -71,7 +71,7 @@ class BoardSpec extends WordSpec with Matchers {
   "Board" when {
     "something added to container" should {
       "have pieces in both container" in {
-        var board = new Board[Piece](9, new EmptyPiece)
+        var board = new Board(9, new EmptyPiece)
         val player_1 = Player("Nick", true)
         val player_2 = Player("Mert", false)
 
@@ -80,7 +80,61 @@ class BoardSpec extends WordSpec with Matchers {
         board = board.addToPlayerContainer(player_2, Lancer(player_1))
         board = board.addToPlayerContainer(player_2, King(player_1))
 
-        board.getContainer() should be((ListBuffer(Lancer(player_2), King(player_2)), ListBuffer(Lancer(player_1), King(player_1))))
+        board.getContainer() should be((ListBuffer(Lancer(player_1), King(player_1)), ListBuffer(Lancer(player_2), King(player_2))))
+      }
+    }
+  }
+
+  "Board" when {
+    "something removed from container" should {
+      "have pieces in both container" in {
+        var board = new Board(9, new EmptyPiece)
+        val player_1 = Player("Nick", true)
+        val player_2 = Player("Mert", false)
+        var wantedPiece_0: Piece = new EmptyPiece
+        var wantedPiece_1: Piece = new EmptyPiece
+        var wantedPiece_2: Piece = new EmptyPiece
+        var wantedPiece_3: Piece = new EmptyPiece
+
+        board = board.addToPlayerContainer(player_1, Lancer(player_2))
+        board = board.addToPlayerContainer(player_1, Lancer(player_2))
+        board = board.addToPlayerContainer(player_1, King(player_2))
+        board = board.addToPlayerContainer(player_1, King(player_2))
+        board = board.addToPlayerContainer(player_2, Lancer(player_1))
+        board = board.addToPlayerContainer(player_2, Lancer(player_1))
+        board = board.addToPlayerContainer(player_2, King(player_1))
+        board = board.addToPlayerContainer(player_2, King(player_1))
+
+        board.getContainer() should be((
+          ListBuffer(Lancer(player_1), Lancer(player_1), King(player_1), King(player_1)),
+          ListBuffer(Lancer(player_2), Lancer(player_2), King(player_2), King(player_2))
+        ))
+
+        board.getFromPlayerContainer(player_1) {
+          _.isInstanceOf[Lancer]
+        } match {
+          case Some((newBoard, piece)) =>
+            board = newBoard
+            wantedPiece_0 = piece
+          case None =>
+        }
+
+        board.getFromPlayerContainer(player_2) {
+          _.isInstanceOf[King]
+        } match {
+          case Some((newBoard, piece)) =>
+            board = newBoard
+            wantedPiece_1 = piece
+          case None =>
+        }
+
+        board.getContainer() should be((
+          ListBuffer(Lancer(player_1), King(player_1), King(player_1)),
+          ListBuffer(Lancer(player_2), Lancer(player_2), King(player_2))
+        ))
+
+        wantedPiece_0 shouldBe a[Lancer]
+        wantedPiece_1 shouldBe a[King]
       }
     }
   }

@@ -146,8 +146,8 @@ class ControllerSpec extends WordSpec with Matchers {
     "called boardToString" should {
       "create an String of the filled Board with captured" in {
         controller.createNewBoard()
-        controller.movePiece((2, 6), (2, 5))
-        controller.movePiece((1, 7), (6, 2))
+        controller.movePiece((2, 6), (2, 5)) should be(true)
+        controller.movePiece((1, 7), (6, 2)) should be(true)
         controller.boardToString() should be(
           "Captured Player 1: \n" +
             "   0    1    2    3    4    5    6    7    8 \n \n" +
@@ -179,9 +179,9 @@ class ControllerSpec extends WordSpec with Matchers {
     "called boardToString" should {
       "create an String of the filled Board with captured both" in {
         controller.createNewBoard()
-        controller.movePiece((2, 6), (2, 5))
-        controller.movePiece((1, 7), (6, 2))
-        controller.movePiece((7, 1), (6, 2))
+        controller.movePiece((2, 6), (2, 5)) should be(true)
+        controller.movePiece((1, 7), (6, 2)) should be(true)
+        controller.movePiece((7, 1), (6, 2)) should be(true)
         controller.boardToString() should be(
           "Captured Player 1: B    \n" +
             "   0    1    2    3    4    5    6    7    8 \n \n" +
@@ -206,6 +206,102 @@ class ControllerSpec extends WordSpec with Matchers {
             "------------------------------------------------\n" +
             "Captured Player 2: P    \n"
         )
+      }
+    }
+  }
+  "Controller" when {
+    "called movePiece" should {
+      "return false, if the destination is invalide" in {
+        controller.createNewBoard()
+        controller.movePiece((1, 7), (0, 0)) should be(false)
+        controller.movePiece((1, 7), (0, 1)) should be(false)
+        controller.movePiece((1, 7), (0, 2)) should be(false)
+        controller.movePiece((1, 7), (0, 3)) should be(false)
+        controller.movePiece((1, 7), (0, 4)) should be(false)
+        controller.movePiece((1, 7), (0, 5)) should be(false)
+        controller.movePiece((1, 7), (0, 6)) should be(false)
+        controller.movePiece((1, 7), (0, 7)) should be(false)
+        controller.movePiece((1, 7), (0, 8)) should be(false)
+
+        controller.movePiece((1, 7), (1, 0)) should be(false)
+        controller.movePiece((1, 7), (1, 1)) should be(false)
+        controller.movePiece((1, 7), (1, 2)) should be(false)
+        controller.movePiece((1, 7), (1, 3)) should be(false)
+        controller.movePiece((1, 7), (1, 4)) should be(false)
+        controller.movePiece((1, 7), (1, 5)) should be(false)
+        controller.movePiece((1, 7), (1, 6)) should be(false)
+        controller.movePiece((1, 7), (1, 7)) should be(false)
+        controller.movePiece((1, 7), (1, 8)) should be(false)
+
+        controller.movePiece((1, 7), (2, 0)) should be(false)
+        controller.movePiece((1, 7), (2, 1)) should be(false)
+        controller.movePiece((1, 7), (2, 2)) should be(false)
+        controller.movePiece((1, 7), (2, 3)) should be(false)
+        controller.movePiece((1, 7), (2, 4)) should be(false)
+        controller.movePiece((1, 7), (2, 5)) should be(false)
+        controller.movePiece((1, 7), (2, 6)) should be(false)
+        controller.movePiece((1, 7), (2, 7)) should be(false)
+        controller.movePiece((1, 7), (2, 8)) should be(false)
+
+        controller.movePiece((1, 7), (3, 0)) should be(false)
+        controller.movePiece((1, 7), (3, 1)) should be(false)
+        controller.movePiece((1, 7), (3, 2)) should be(false)
+        controller.movePiece((1, 7), (3, 3)) should be(false)
+        controller.movePiece((1, 7), (3, 4)) should be(false)
+        controller.movePiece((1, 7), (3, 5)) should be(false)
+        controller.movePiece((1, 7), (3, 6)) should be(false)
+        controller.movePiece((1, 7), (3, 7)) should be(false)
+        controller.movePiece((1, 7), (3, 8)) should be(false)
+
+        controller.movePiece((1, 7), (4, 0)) should be(false)
+        controller.movePiece((1, 7), (4, 1)) should be(false)
+        controller.movePiece((1, 7), (4, 2)) should be(false)
+        controller.movePiece((1, 7), (4, 3)) should be(false)
+        controller.movePiece((1, 7), (4, 4)) should be(false)
+        controller.movePiece((1, 7), (4, 5)) should be(false)
+        controller.movePiece((1, 7), (4, 6)) should be(false)
+        controller.movePiece((1, 7), (4, 7)) should be(false)
+        controller.movePiece((1, 7), (4, 8)) should be(false)
+
+        controller.movePiece((1, 7), (5, 0)) should be(false)
+        controller.movePiece((1, 7), (5, 1)) should be(false)
+        controller.movePiece((1, 7), (5, 2)) should be(false)
+        controller.movePiece((1, 7), (5, 3)) should be(false)
+        controller.movePiece((1, 7), (5, 4)) should be(false)
+        controller.movePiece((1, 7), (5, 5)) should be(false)
+        controller.movePiece((1, 7), (5, 6)) should be(false)
+        controller.movePiece((1, 7), (5, 7)) should be(false)
+        controller.movePiece((1, 7), (5, 8)) should be(false)
+
+        controller.movePiece((1, 7), (6, 0)) should be(false)
+        controller.movePiece((1, 7), (6, 1)) should be(false)
+        controller.movePiece((1, 7), (6, 2)) should be(false)
+        controller.movePiece((1, 7), (6, 3)) should be(false)
+        controller.movePiece((1, 7), (6, 4)) should be(false)
+        controller.movePiece((1, 7), (6, 5)) should be(false)
+        controller.movePiece((1, 7), (6, 6)) should be(false)
+        controller.movePiece((1, 7), (6, 7)) should be(false)
+        controller.movePiece((1, 7), (6, 8)) should be(false)
+
+        controller.movePiece((1, 7), (7, 0)) should be(false)
+        controller.movePiece((1, 7), (7, 1)) should be(false)
+        controller.movePiece((1, 7), (7, 2)) should be(false)
+        controller.movePiece((1, 7), (7, 3)) should be(false)
+        controller.movePiece((1, 7), (7, 4)) should be(false)
+        controller.movePiece((1, 7), (7, 5)) should be(false)
+        controller.movePiece((1, 7), (7, 6)) should be(false)
+        controller.movePiece((1, 7), (7, 7)) should be(false)
+        controller.movePiece((1, 7), (7, 8)) should be(false)
+
+        controller.movePiece((1, 7), (8, 0)) should be(false)
+        controller.movePiece((1, 7), (8, 1)) should be(false)
+        controller.movePiece((1, 7), (8, 2)) should be(false)
+        controller.movePiece((1, 7), (8, 3)) should be(false)
+        controller.movePiece((1, 7), (8, 4)) should be(false)
+        controller.movePiece((1, 7), (8, 5)) should be(false)
+        controller.movePiece((1, 7), (8, 6)) should be(false)
+        controller.movePiece((1, 7), (8, 7)) should be(false)
+        controller.movePiece((1, 7), (8, 8)) should be(false)
       }
     }
   }

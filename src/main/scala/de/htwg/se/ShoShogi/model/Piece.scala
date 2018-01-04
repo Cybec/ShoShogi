@@ -1,7 +1,5 @@
 package de.htwg.se.ShoShogi.model
 
-import scala.collection.mutable.ListBuffer
-
 abstract class Piece(name: String, val player: Player) {
 
   def promotePiece: Option[Piece]
@@ -10,9 +8,9 @@ abstract class Piece(name: String, val player: Player) {
 
   override def toString: String
 
-  def getMoveSet(pos: (Int, Int), board: Board[Piece]): List[(Int, Int)]
+  def getMoveSet(pos: (Int, Int), board: Board): List[(Int, Int)]
 
-  def rekMoveSet(board: Board[Piece], newPos: (Int, Int), rek: Int, value: (Int, Int)): List[(Int, Int)] = {
+  def rekMoveSet(board: Board, newPos: (Int, Int), rek: Int, value: (Int, Int)): List[(Int, Int)] = {
     var l = List[(Int, Int)]()
 
     if (rek != 0) {
@@ -27,6 +25,8 @@ abstract class Piece(name: String, val player: Player) {
       List[(Int, Int)]()
     }
   }
+
+  def cloneToNewPlayer(player: Player): Piece
 }
 
 //region King
@@ -49,7 +49,7 @@ case class King(override val player: Player)
   /*Author:   Mert, Nick
   * Role:     Gibt die moeglichen Bewegungsfelder zurueck
   * Return:   List[(Int, Int)] mit den Koordinaten */
-  def getMoveSet(pos: (Int, Int), board: Board[Piece]): List[(Int, Int)] = {
+  def getMoveSet(pos: (Int, Int), board: Board): List[(Int, Int)] = {
     //    Jede Richtung ein Feld
     rekMoveSet(board, (pos._1 - 1, pos._2 - 1), 1, (-1, -1)) ::: //Hinten Links
       rekMoveSet(board, (pos._1 - 1, pos._2), 1, (-1, 0)) ::: //Links
@@ -61,6 +61,8 @@ case class King(override val player: Player)
       rekMoveSet(board, (pos._1 + 1, pos._2 + 1), 1, (1, 1)) //Vorne Rechts
 
   }
+
+  override def cloneToNewPlayer(player: Player): King = King(player)
 }
 
 //endregion
@@ -85,7 +87,7 @@ case class GoldenGeneral(override val player: Player)
   /*Author:   Mert, Nick
   * Role:     Gibt die moeglichen Bewegungsfelder zurueck
   * Return:   List[(Int, Int)] mit den Koordinaten */
-  def getMoveSet(pos: (Int, Int), board: Board[Piece]): List[(Int, Int)] = {
+  def getMoveSet(pos: (Int, Int), board: Board): List[(Int, Int)] = {
     //    Jede Richtung ein Feld
     if (this.player.first) {
       rekMoveSet(board, (pos._1 - 1, pos._2), 1, (-1, 0)) :::
@@ -104,6 +106,8 @@ case class GoldenGeneral(override val player: Player)
         rekMoveSet(board, (pos._1, pos._2 + 1), 1, (0, 1))
     }
   }
+
+  override def cloneToNewPlayer(player: Player): GoldenGeneral = GoldenGeneral(player)
 }
 
 //endregion
@@ -128,7 +132,7 @@ case class SilverGeneral(override val player: Player)
   /*Author:   Mert, Nick
   * Role:     Gibt die moeglichen Bewegungsfelder zurueck
   * Return:   List[(Int, Int)] mit den Koordinaten */
-  def getMoveSet(pos: (Int, Int), board: Board[Piece]): List[(Int, Int)] = {
+  def getMoveSet(pos: (Int, Int), board: Board): List[(Int, Int)] = {
     if (this.player.first) {
       rekMoveSet(board, (pos._1 - 1, pos._2 + 1), 1, (-1, 1)) ::: //Vorne Links
         rekMoveSet(board, (pos._1 - 1, pos._2 - 1), 1, (-1, -1)) ::: //Hinten Links
@@ -143,6 +147,8 @@ case class SilverGeneral(override val player: Player)
         rekMoveSet(board, (pos._1, pos._2 - 1), 1, (0, 1)) //Vorne
     }
   }
+
+  override def cloneToNewPlayer(player: Player): SilverGeneral = SilverGeneral(player)
 }
 
 case class PromotedSilver(override val player: Player)
@@ -155,7 +161,7 @@ case class PromotedSilver(override val player: Player)
 
   override def toString: String = "PS"
 
-  def getMoveSet(pos: (Int, Int), board: Board[Piece]): List[(Int, Int)] = {
+  def getMoveSet(pos: (Int, Int), board: Board): List[(Int, Int)] = {
     //    Jede Richtung ein Feld
     if (this.player.first) {
       rekMoveSet(board, (pos._1 - 1, pos._2), 1, (-1, 0)) :::
@@ -174,6 +180,8 @@ case class PromotedSilver(override val player: Player)
         rekMoveSet(board, (pos._1, pos._2 + 1), 1, (0, 1))
     }
   }
+
+  override def cloneToNewPlayer(player: Player): SilverGeneral = SilverGeneral(player)
 }
 
 //endregion
@@ -199,7 +207,7 @@ case class Knight(override val player: Player)
   /*Author:   Mert, Nick
   * Role:     Gibt die moeglichen Bewegungsfelder zurueck
   * Return:   List[(Int, Int)] mit den Koordinaten */
-  def getMoveSet(pos: (Int, Int), board: Board[Piece]): List[(Int, Int)] = {
+  def getMoveSet(pos: (Int, Int), board: Board): List[(Int, Int)] = {
     rekMoveSet(board, (pos._1 - 1, pos._2 + 2), 1, (-1, 2)) :::
       rekMoveSet(board, (pos._1 + 1, pos._2 + 2), 1, (1, 2)) :::
       rekMoveSet(board, (pos._1 + 2, pos._2 + 1), 1, (2, 1)) :::
@@ -210,6 +218,8 @@ case class Knight(override val player: Player)
       rekMoveSet(board, (pos._1 - 2, pos._2 - 1), 1, (-2, -1))
 
   }
+
+  override def cloneToNewPlayer(player: Player): Knight = Knight(player)
 }
 
 case class PromotedKnight(override val player: Player)
@@ -222,7 +232,7 @@ case class PromotedKnight(override val player: Player)
 
   override def toString: String = "PK"
 
-  def getMoveSet(pos: (Int, Int), board: Board[Piece]): List[(Int, Int)] = {
+  def getMoveSet(pos: (Int, Int), board: Board): List[(Int, Int)] = {
     if (this.player.first) {
       rekMoveSet(board, (pos._1 - 1, pos._2), 1, (-1, 0)) :::
         rekMoveSet(board, (pos._1 - 1, pos._2 + 1), 1, (-1, 1)) :::
@@ -240,6 +250,8 @@ case class PromotedKnight(override val player: Player)
         rekMoveSet(board, (pos._1, pos._2 + 1), 1, (0, 1))
     }
   }
+
+  override def cloneToNewPlayer(player: Player): Knight = Knight(player)
 }
 
 //endregion
@@ -264,13 +276,15 @@ case class Lancer(override val player: Player)
   /*Author:   Mert, Nick
   * Role:     Gibt die moeglichen Bewegungsfelder zurueck
   * Return:   List[(Int, Int)] mit den Koordinaten */
-  def getMoveSet(pos: (Int, Int), board: Board[Piece]): List[(Int, Int)] = {
+  def getMoveSet(pos: (Int, Int), board: Board): List[(Int, Int)] = {
     if (this.player.first) {
       rekMoveSet(board, (pos._1, pos._2 + 1), board.size, (0, 1))
     } else {
       rekMoveSet(board, (pos._1, pos._2 - 1), board.size, (0, -1))
     }
   }
+
+  override def cloneToNewPlayer(player: Player): Lancer = Lancer(player)
 }
 
 case class PromotedLancer(override val player: Player)
@@ -283,7 +297,7 @@ case class PromotedLancer(override val player: Player)
 
   override def toString: String = "PL"
 
-  def getMoveSet(pos: (Int, Int), board: Board[Piece]): List[(Int, Int)] = {
+  def getMoveSet(pos: (Int, Int), board: Board): List[(Int, Int)] = {
     if (this.player.first) {
       rekMoveSet(board, (pos._1 - 1, pos._2), 1, (-1, 0)) :::
         rekMoveSet(board, (pos._1 - 1, pos._2 + 1), 1, (-1, 1)) :::
@@ -301,6 +315,8 @@ case class PromotedLancer(override val player: Player)
         rekMoveSet(board, (pos._1, pos._2 + 1), 1, (0, 1))
     }
   }
+
+  override def cloneToNewPlayer(player: Player): Lancer = Lancer(player)
 }
 
 //endregion
@@ -325,12 +341,14 @@ case class Bishop(override val player: Player)
   /*Author:   Mert, Nick
   * Role:     Gibt die moeglichen Bewegungsfelder zurueck
   * Return:   List[(Int, Int)] mit den Koordinaten */
-  def getMoveSet(pos: (Int, Int), board: Board[Piece]): List[(Int, Int)] = {
+  def getMoveSet(pos: (Int, Int), board: Board): List[(Int, Int)] = {
     rekMoveSet(board, (pos._1 - 1, pos._2 - 1), board.size, (-1, -1)) :::
       rekMoveSet(board, (pos._1 - 1, pos._2 + 1), board.size, (-1, 1)) :::
       rekMoveSet(board, (pos._1 + 1, pos._2 + 1), board.size, (1, 1)) :::
       rekMoveSet(board, (pos._1 + 1, pos._2 - 1), board.size, (1, -1))
   }
+
+  override def cloneToNewPlayer(player: Player): Bishop = Bishop(player)
 }
 
 case class PromotedBishop(override val player: Player)
@@ -343,7 +361,7 @@ case class PromotedBishop(override val player: Player)
 
   override def toString: String = "PB"
 
-  def getMoveSet(pos: (Int, Int), board: Board[Piece]): List[(Int, Int)] = {
+  def getMoveSet(pos: (Int, Int), board: Board): List[(Int, Int)] = {
     rekMoveSet(board, (pos._1 - 1, pos._2 - 1), board.size, (-1, -1)) :::
       rekMoveSet(board, (pos._1 - 1, pos._2 + 1), board.size, (-1, 1)) :::
       rekMoveSet(board, (pos._1 + 1, pos._2 + 1), board.size, (1, 1)) :::
@@ -353,6 +371,8 @@ case class PromotedBishop(override val player: Player)
       rekMoveSet(board, (pos._1, pos._2 - 1), 1, (0, -1)) :::
       rekMoveSet(board, (pos._1 - 1, pos._2), 1, (-1, 0))
   }
+
+  override def cloneToNewPlayer(player: Player): Bishop = Bishop(player)
 }
 
 //endregion
@@ -377,12 +397,14 @@ case class Rook(override val player: Player)
   /*Author:   Mert, Nick
   * Role:     Gibt die moeglichen Bewegungsfelder zurueck
   * Return:   List[(Int, Int)] mit den Koordinaten */
-  def getMoveSet(pos: (Int, Int), board: Board[Piece]): List[(Int, Int)] = {
+  def getMoveSet(pos: (Int, Int), board: Board): List[(Int, Int)] = {
     rekMoveSet(board, (pos._1, pos._2 + 1), board.size, (0, 1)) :::
       rekMoveSet(board, (pos._1 + 1, pos._2), board.size, (1, 0)) :::
       rekMoveSet(board, (pos._1, pos._2 - 1), board.size, (0, -1)) :::
       rekMoveSet(board, (pos._1 - 1, pos._2), board.size, (-1, 0))
   }
+
+  override def cloneToNewPlayer(player: Player): Rook = Rook(player)
 }
 
 case class PromotedRook(override val player: Player)
@@ -395,7 +417,7 @@ case class PromotedRook(override val player: Player)
 
   override def toString: String = "PR"
 
-  def getMoveSet(pos: (Int, Int), board: Board[Piece]): List[(Int, Int)] = {
+  def getMoveSet(pos: (Int, Int), board: Board): List[(Int, Int)] = {
     rekMoveSet(board, (pos._1, pos._2 + 1), board.size, (0, 1)) :::
       rekMoveSet(board, (pos._1 + 1, pos._2), board.size, (1, 0)) :::
       rekMoveSet(board, (pos._1, pos._2 - 1), board.size, (0, -1)) :::
@@ -405,6 +427,8 @@ case class PromotedRook(override val player: Player)
       rekMoveSet(board, (pos._1 + 1, pos._2 + 1), 1, (1, 1)) :::
       rekMoveSet(board, (pos._1 + 1, pos._2 - 1), 1, (1, -1))
   }
+
+  override def cloneToNewPlayer(player: Player): Rook = Rook(player)
 }
 
 //endregion
@@ -429,13 +453,15 @@ case class Pawn(override val player: Player)
   /*Author:   Mert, Nick
   * Role:     Gibt die moeglichen Bewegungsfelder zurueck
   * Return:   List[(Int, Int)] mit den Koordinaten */
-  def getMoveSet(pos: (Int, Int), board: Board[Piece]): List[(Int, Int)] = {
+  def getMoveSet(pos: (Int, Int), board: Board): List[(Int, Int)] = {
     if (this.player.first) {
       rekMoveSet(board, (pos._1, pos._2 + 1), 1, (0, 1))
     } else {
       rekMoveSet(board, (pos._1, pos._2 - 1), 1, (0, -1))
     }
   }
+
+  override def cloneToNewPlayer(player: Player): Pawn = Pawn(player)
 }
 
 case class PromotedPawn(override val player: Player)
@@ -448,7 +474,7 @@ case class PromotedPawn(override val player: Player)
 
   override def toString: String = "PP"
 
-  def getMoveSet(pos: (Int, Int), board: Board[Piece]): List[(Int, Int)] = {
+  def getMoveSet(pos: (Int, Int), board: Board): List[(Int, Int)] = {
     if (this.player.first) {
       rekMoveSet(board, (pos._1 - 1, pos._2), 1, (-1, 0)) :::
         rekMoveSet(board, (pos._1 - 1, pos._2 + 1), 1, (-1, 1)) :::
@@ -466,6 +492,8 @@ case class PromotedPawn(override val player: Player)
         rekMoveSet(board, (pos._1, pos._2 + 1), 1, (0, 1))
     }
   }
+
+  override def cloneToNewPlayer(player: Player): Pawn = Pawn(player)
 }
 
 //endregion
@@ -487,9 +515,11 @@ case class EmptyPiece()
   /*Author:   Mert, Nick
   * Role:     Gibt die moeglichen Bewegungsfelder zurueck
   * Return:   List[(Int, Int)] mit den Koordinaten */
-  def getMoveSet(pos: (Int, Int), board: Board[Piece]): List[(Int, Int)] = {
+  def getMoveSet(pos: (Int, Int), board: Board): List[(Int, Int)] = {
     List()
   }
+
+  override def cloneToNewPlayer(player: Player): EmptyPiece = EmptyPiece()
 }
 
 //endregion

@@ -11,7 +11,7 @@ class PieceSpec extends WordSpec with Matchers {
   val boardSize = 9
   val player_1 = new Player("Player 1", true)
   val player_2 = new Player("Player 2", false)
-  var board = new Board[Piece](boardSize, new EmptyPiece)
+  var board = new Board(boardSize, new EmptyPiece)
 
   //Steine fuer Spieler 1
   board = board.replaceCell(0, 0, Lancer(player_1))
@@ -454,6 +454,85 @@ class PieceSpec extends WordSpec with Matchers {
       }
       "have a List of Moves (3, 0)" in {
         piece.getMoveSet((3, 0), board) should be(List[(Int, Int)]())
+      }
+    }
+  }
+
+  "A Piece" when {
+    "called cloneToNewPlayer" should {
+      "clone King(player_1) to King(player_2)" in {
+        val p: Piece = King(player_1).cloneToNewPlayer(player_2)
+        p shouldBe a[King]
+        p.player should be(player_2)
+      }
+      "clone GoldenGeneral(player_1) to GoldenGeneral(player_2)" in {
+        val p: Piece = GoldenGeneral(player_1).cloneToNewPlayer(player_2)
+        p shouldBe a[GoldenGeneral]
+        p.player should be(player_2)
+      }
+      "clone SilverGeneral(player_1) to SilverGeneral(player_2)" in {
+        val p: Piece = SilverGeneral(player_1).cloneToNewPlayer(player_2)
+        p shouldBe a[SilverGeneral]
+        p.player should be(player_2)
+      }
+      "clone PromotedSilver(player_1) to SilverGeneral(player_2)" in {
+        val p: Piece = PromotedSilver(player_1).cloneToNewPlayer(player_2)
+        p shouldBe a[SilverGeneral]
+        p.player should be(player_2)
+      }
+      "clone Knight(player_1) to Knight(player_2)" in {
+        val p: Piece = Knight(player_1).cloneToNewPlayer(player_2)
+        p shouldBe a[Knight]
+        p.player should be(player_2)
+      }
+      "clone PromotedKnight(player_1) to Knight(player_2)" in {
+        val p: Piece = PromotedKnight(player_1).cloneToNewPlayer(player_2)
+        p shouldBe a[Knight]
+        p.player should be(player_2)
+      }
+      "clone Lancer(player_1) to Lancer(player_2)" in {
+        val p: Piece = Lancer(player_1).cloneToNewPlayer(player_2)
+        p shouldBe a[Lancer]
+        p.player should be(player_2)
+      }
+      "clone PromotedLancer(player_1) to Lancer(player_2)" in {
+        val p: Piece = PromotedLancer(player_1).cloneToNewPlayer(player_2)
+        p shouldBe a[Lancer]
+        p.player should be(player_2)
+      }
+      "clone Bishop(player_1) to Bishop(player_2)" in {
+        val p: Piece = Bishop(player_1).cloneToNewPlayer(player_2)
+        p shouldBe a[Bishop]
+        p.player should be(player_2)
+      }
+      "clone PromotedBishop(player_1) to Bishop(player_2)" in {
+        val p: Piece = PromotedBishop(player_1).cloneToNewPlayer(player_2)
+        p shouldBe a[Bishop]
+        p.player should be(player_2)
+      }
+      "clone Rook(player_1) to Rook(player_2)" in {
+        val p: Piece = Rook(player_1).cloneToNewPlayer(player_2)
+        p shouldBe a[Rook]
+        p.player should be(player_2)
+      }
+      "clone PromotedRook(player_1) to Rook(player_2)" in {
+        val p: Piece = PromotedRook(player_1).cloneToNewPlayer(player_2)
+        p shouldBe a[Rook]
+        p.player should be(player_2)
+      }
+      "clone Pawn(player_1) to Pawn(player_2)" in {
+        val p: Piece = Pawn(player_1).cloneToNewPlayer(player_2)
+        p shouldBe a[Pawn]
+        p.player should be(player_2)
+      }
+      "clone PromotedPawn(player_1) to Pawn(player_2)" in {
+        val p: Piece = PromotedPawn(player_1).cloneToNewPlayer(player_2)
+        p shouldBe a[Pawn]
+        p.player should be(player_2)
+      }
+      "clone EmptyPiece(player_1) to EmptyPiece(player_2)" in {
+        val p: Piece = EmptyPiece().cloneToNewPlayer(player_2)
+        p shouldBe a[EmptyPiece]
       }
     }
   }
