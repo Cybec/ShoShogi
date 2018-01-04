@@ -5,6 +5,92 @@ import de.htwg.se.ShoShogi.util.Observer
 
 class Tui(controller: Controller) extends Observer {
   controller.add(this)
+
+  case class Event(command: String, input: Array[String])
+
+  //Chain of Responsibility Pattern
+  //Base handler class
+  abstract class Handler {
+    val successor: Option[Handler]
+
+    def handleEvent(event: Event): Unit
+  }
+
+  class Quit(val successor: Option[Handler]) extends Handler {
+    override def handleEvent(event: Event): Unit = {
+      event match {
+        case e if e.command == "q" => printString("Quit")
+        case e => {
+          successor match {
+            case Some(h: Handler) => h.handleEvent(e)
+            case None => printString("Could not find command.")
+          }
+        }
+      }
+    }
+  }
+
+  class New(val successor: Option[Handler]) extends Handler {
+    override def handleEvent(event: Event): Unit = {
+      event match {
+        case e if e.command == "n" =>
+          controller.createNewBoard()
+          menuMap = menuMapInGame
+        case e => {
+          successor match {
+            case Some(h: Handler) => h.handleEvent(e)
+            case None => printString("Could not find command.")
+          }
+        }
+      }
+    }
+  }
+
+  class MovePiece(val successor: Option[Handler]) extends Handler {
+    override def handleEvent(event: Event): Unit = {
+      event match {
+        //TODO: ReadLine gewollte Lösung?
+        case e if e.command == "mv" =>
+          parseArguments(e.input) match {
+            case Some(value) =>
+              if (controller.promotable((value(0)._1, value(0)._2), (value(1)._1, value(1)._2))) {
+                printString("Do you want to promote your piece?\nYes: y\nNo: n")
+                var input = scala.io.StdIn.readLine()
+                if (input == "y") {
+                  controller.promotePiece(value(0)._1, value(0)._2)
+                }
+              }
+              controller.movePiece((value(0)._1, value(0)._2), (value(1)._1, value(1)._2))
+            case _ => printString("Could not read input: ".concat(e.input.mkString(" ")))
+          }
+        case e => {
+          successor match {
+            case Some(h: Handler) => h.handleEvent(e)
+            case None => printString("Could not find command.")
+          }
+        }
+      }
+    }
+  }
+
+  class PossibleMoves(val successor: Option[Handler]) extends Handler {
+    override def handleEvent(event: Event): Unit = {
+      event match {
+        case e if e.command == "pmv" =>
+          parseArguments(e.input) match {
+            case Some(value) => printPossibleMoves(controller.possibleMoves(value(0)._1, value(0)._2))
+            case _ => printString("Could not read input: ".concat(e.input.mkString(" ")))
+          }
+        case e => {
+          successor match {
+            case Some(h: Handler) => h.handleEvent(e)
+            case None => printString("Could not find command.")
+          }
+        }
+      }
+    }
+  }
+
   val yAxis = Map(
     'a' -> 0,
     'b' -> 1,
@@ -16,6 +102,7 @@ class Tui(controller: Controller) extends Observer {
     'h' -> 7,
     'i' -> 8
   )
+
   val menuMapStart = Map(
     "q" -> "quit",
     "n" -> "new"
@@ -34,29 +121,56 @@ class Tui(controller: Controller) extends Observer {
     }
     printString("Input was: " + input)
     val inputArray = input.split("\\ ", -1)
+    val possibleMoves = new PossibleMoves(None)
+    val movePiece = new MovePiece(Some(possibleMoves))
+    val newGame = new New(Some(movePiece))
+    val quit = new Quit(Some(newGame))
 
-    inputArray(0) match {
-      case "q" =>
-      case "n" => {
-        controller.createNewBoard()
-        menuMap = menuMapInGame
-      }
-      case "mv" =>
-      case "pmv" =>
-        parseArguments(inputArray) match {
-          case Some(value) => printPossibleMoves(controller.possibleMoves(value._1, value._2))
-          case _ => printString("Could not read input: ".concat(input))
-        }
-      case default => printString("\"" + default + "\" is not a valid input!\n")
-    }
+    val e = Event(inputArray(0), inputArray)
+
+    quit.handleEvent(e)
+
+    //inputArray(0) match {
+
+    //case "q" =>
+    //case "q" =>
+    //case "n" => {
+    //  controller.createNewBoard()
+    //  menuMap = menuMapInGame
+    //}
+    //case "mv" =>
+
+    //  parseArguments(inputArray) match {
+    //    case Some(value) => controller.movePiece((value(0)._1, value(0)._2), (value(1)._1, value(1)._2))
+    //    case _ => printString("Could not read input: ".concat(input))
+    //  }
+    //case "pmv" =>
+    //  parseArguments(inputArray) match {
+    //    case Some(value) => printPossibleMoves(controller.possibleMoves(value(0)._1, value(0)._2))
+    //    case _ => printString("Could not read input: ".concat(input))
+    //  }
+    //case default => printString("\"" + default + "\" is not a valid input!\n")
+    //}
   }
 
-  def parseArguments(inputArray: Array[String]): Option[(Int, Int)] = {
-    val position = inputArray.mkString(" ").replace("pmv", "").trim.toList
+  def parseArguments(inputArray: Array[String]): Option[Vector[(Int, Int)]] = {
+    val position = inputArray.mkString("").replace("pmv", "").replace("mv", "").trim.toList
     if (position.length == 2) {
       try {
         if ("1234567890".contains(position(0))) {
-          Some(position(0).toInt - '0', yAxis.getOrElse(position(1), -1))
+          Some(Vector[(Int, Int)]((position(0).toInt - '0', yAxis.getOrElse(position(1), -1))))
+        } else {
+          None
+        }
+      }
+    } else if (position.length == 4) {
+      try {
+        if ("1234567890".contains(position(0)) && "1234567890".contains(position(2))) {
+          var tempVec = Vector.empty[(Int, Int)]
+          tempVec = tempVec :+ (position(0).toInt - '0', yAxis.getOrElse(position(1), -1))
+          tempVec = tempVec :+ (position(2).toInt - '0', yAxis.getOrElse(position(3), -1))
+
+          Some(tempVec)
         } else {
           None
         }
@@ -69,7 +183,8 @@ class Tui(controller: Controller) extends Observer {
   def printPossibleMoves(moveList: List[(Int, Int)]): Unit = {
     val moveListString = new StringBuilder
     moveListString.append("Possible moves: ")
-    for ((k, v) <- moveList) moveListString.append("(").append(k).append(", ").append(v).append(")").append("   ")
+    for ((k, v) <- moveList) moveListString.append("(").append(k).append(", ")
+      .append(yAxis.find(_._2 == v).getOrElse((' ', -1))._1).append(")").append("   ")
     moveListString.append("\n")
     printString(moveListString.toString())
   }

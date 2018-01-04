@@ -29,6 +29,20 @@ class TuiSpec extends WordSpec with Matchers {
       "give back \"pmv     ca  \"" in {
         tui.parseArguments(Array("pmv", " ", " ", " ", " ", " ca", " ", " ")) should be(None)
       }
+      "give back \"mv      0g     0f  \"" in {
+        tui.parseArguments(Array("mv", "0g", "0f")) should be(Some(Vector((0, 6), (0, 5))))
+      }
+    }
+    //TODO: Unit testing?
+    "printPossibleMoves called" should {
+      "print \"Possible moves: (0,g)\"" in {
+        tui.printPossibleMoves(List((0, 6))) should be()
+      }
+    }
+    "printInputMenu called" should {
+      "print a Menu" in {
+        tui.printInputMenu() should be()
+      }
     }
   }
 }
