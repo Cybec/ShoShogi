@@ -302,6 +302,7 @@ class ControllerSpec extends WordSpec with Matchers {
         controller.movePiece((1, 7), (8, 6)) should be(false)
         controller.movePiece((1, 7), (8, 7)) should be(false)
         controller.movePiece((1, 7), (8, 8)) should be(false)
+        controller.movePiece((1, 7), (8, -8)) should be(false)
       }
     }
   }
@@ -323,16 +324,19 @@ class ControllerSpec extends WordSpec with Matchers {
     }
     "called promotePiece" should {
       "return false if Piece of Player 1 has no Promotion" in {
-        controller.promotePiece((8, 5))
+        controller.promotePiece((8, 5)) should be(false)
       }
       "return false if Piece of Player 2 has no Promotion" in {
-        controller.promotePiece((0, 5))
+        controller.promotePiece((0, 5)) should be(false)
       }
       "return true if Piece of Player 1 has a Promotion" in {
-        controller.promotePiece((0, 6))
+        controller.promotePiece((0, 6)) should be(true)
       }
       "return true if Piece of Player 2 has a Promotion" in {
-        controller.promotePiece((0, 2))
+        controller.promotePiece((0, 2)) should be(true)
+      }
+      "return false because invalid cell" in {
+        controller.promotePiece((0, -5)) should be(false)
       }
     }
   }
