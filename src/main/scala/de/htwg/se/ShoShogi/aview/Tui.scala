@@ -126,31 +126,7 @@ class Tui(controller: Controller) extends Observer {
     val newGame = new New(Some(movePiece))
     val quit = new Quit(Some(newGame))
 
-    val e = Event(inputArray(0), inputArray)
-
-    quit.handleEvent(e)
-
-    //inputArray(0) match {
-
-    //case "q" =>
-    //case "q" =>
-    //case "n" => {
-    //  controller.createNewBoard()
-    //  menuMap = menuMapInGame
-    //}
-    //case "mv" =>
-
-    //  parseArguments(inputArray) match {
-    //    case Some(value) => controller.movePiece((value(0)._1, value(0)._2), (value(1)._1, value(1)._2))
-    //    case _ => printString("Could not read input: ".concat(input))
-    //  }
-    //case "pmv" =>
-    //  parseArguments(inputArray) match {
-    //    case Some(value) => printPossibleMoves(controller.possibleMoves(value(0)._1, value(0)._2))
-    //    case _ => printString("Could not read input: ".concat(input))
-    //  }
-    //case default => printString("\"" + default + "\" is not a valid input!\n")
-    //}
+    quit.handleEvent(Event(inputArray(0), inputArray))
   }
 
   def parseArguments(inputArray: Array[String]): Option[Vector[(Int, Int)]] = {
