@@ -76,7 +76,7 @@ case class Board(board: Vector[Vector[Piece]], containerPlayer_0: List[Piece], c
     var emptyCells = List[(Int, Int)]()
 
     if (column <= this.size && column >= 0) {
-      for (i <- range._1 until range._2) {
+      for (i <- range._1 to range._2) {
         this.cell(column, i) match {
           case Some(_: EmptyPiece) => emptyCells = emptyCells :+ (column, i)
           case Some(_) => {}

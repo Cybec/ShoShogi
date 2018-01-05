@@ -53,9 +53,10 @@ class Tui(controller: Controller) extends Observer {
         case e if e.command == "mv" =>
           parseArguments(e.input) match {
             case Some(value) =>
-              promoteQuery(value)
               if (!controller.movePiece((value(0)._1, value(0)._2), (value(1)._1, value(1)._2))) {
                 printString("You cant move this piece that way\n")
+              } else {
+                promoteQuery(value)
               }
             case _ => printString("Could not read input: ".concat(e.input.mkString(" ")))
           }
