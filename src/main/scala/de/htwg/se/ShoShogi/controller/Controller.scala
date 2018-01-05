@@ -112,11 +112,11 @@ class Controller(private var board: Board, val player_1: Player, val player_2: P
 
     if (piece == "P") {
       for (column: Int <- 0 until board.size) {
-        if (!board.getPiecesInColumn(column, state).filter(x => x.typeEquals("P")).isEmpty) {
-          if (!board.getPiecesInColumn(column, state).filter(x => x.typeEquals("P")).isEmpty) {
+        if (board.getPiecesInColumn(column, state).filter(x => x.typeEquals("P")).isEmpty) {
+          if (board.getPiecesInColumn(column, state).filter(x => x.typeEquals("K")).isEmpty) {
             possibleMoves = possibleMoves ::: board.getEmptyCellsInColumn(column, (0, 7))
           } else {
-            for (row <- 0 until board.size) {
+            for (row <- 0 to 7) {
               board.cell(column, row) match {
                 case Some(piece) => if (piece.isInstanceOf[EmptyPiece]) {
                   possibleMoves = possibleMoves :+ (column, row)
@@ -146,11 +146,11 @@ class Controller(private var board: Board, val player_1: Player, val player_2: P
 
     if (piece == "P") {
       for (column: Int <- 0 until board.size) {
-        if (!board.getPiecesInColumn(column, state).filter(x => x.typeEquals("P")).isEmpty) {
-          if (!board.getPiecesInColumn(column, state).filter(x => x.typeEquals("P")).isEmpty) {
+        if (board.getPiecesInColumn(column, state).filter(x => x.typeEquals("P")).isEmpty) {
+          if (board.getPiecesInColumn(column, state).filter(x => x.typeEquals("K")).isEmpty) {
             possibleMoves = possibleMoves ::: board.getEmptyCellsInColumn(column, (1, 8))
           } else {
-            for (row <- (board.size - 1) to 0) {
+            for (row <- (board.size - 1) to 1) {
               board.cell(column, row) match {
                 case Some(piece) => if (piece.isInstanceOf[EmptyPiece]) {
                   possibleMoves = possibleMoves :+ (column, row)

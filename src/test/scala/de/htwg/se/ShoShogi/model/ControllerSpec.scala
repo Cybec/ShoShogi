@@ -340,15 +340,13 @@ class ControllerSpec extends WordSpec with Matchers {
     "called possibleMovesConqueredPiece" should {
       "return a List of Moves a Conquered Pawn can make" in {
         controller.createNewBoard()
-        controller.movePiece((5, 0), (5, 1)) should be(true)
-        controller.movePiece((0, 6), (0, 5)) should be(true)
-        controller.movePiece((0, 2), (0, 3)) should be(true)
-        controller.movePiece((0, 5), (0, 4)) should be(true)
-        controller.movePiece((0, 3), (0, 4)) should be(true)
-        controller.movePiece((0, 8), (0, 4)) should be(true)
-        controller.possibleMovesConqueredPiece("P") should be(List[(Int, Int)]((0, 1), (0, 2), (0, 3), (0, 5), (0, 6), (0, 7), (0, 8)))
-        controller.movePiece((0, 0), (0, 4)) should be(true)
-        controller.possibleMovesConqueredPiece("P") should be(List[(Int, Int)]((0, 0), (0, 1), (0, 2), (0, 3), (0, 5), (0, 6), (0, 7), (0, 8)))
+        controller.movePiece((5, 0), (5, 1)) should be(true) // player_1
+        controller.movePiece((0, 6), (0, 5)) should be(true) // player_2
+        controller.movePiece((0, 2), (0, 3)) should be(true) // player_1
+        controller.movePiece((0, 5), (0, 4)) should be(true) // player_2
+        controller.movePiece((0, 3), (0, 4)) should be(true) // player_1
+        controller.movePiece((0, 8), (0, 4)) should be(true) // player_2
+        controller.possibleMovesConqueredPiece("P") should be(List[(Int, Int)]((0, 1), (0, 2), (0, 3), (0, 5), (0, 6), (0, 7))) // player_1
         controller.boardToString() should be(
           "Captured Player 1: P    \n" +
             "   0    1    2    3    4    5    6    7    8 \n \n" +
@@ -373,76 +371,14 @@ class ControllerSpec extends WordSpec with Matchers {
             "------------------------------------------------\n" +
             "Captured Player 2: P    \n"
         )
-      }
-    }
-  }
-  "Controller" when {
-    "called getPossibleMvConPlayer1" should {
-      "return a List of fields where a conquered piece in Player 1 container can be placed" in {
-        controller.createNewBoard()
-        controller.movePiece((5, 0), (5, 1)) should be(true)
-        controller.movePiece((0, 6), (0, 5)) should be(true)
-        controller.movePiece((0, 2), (0, 3)) should be(true)
-        controller.movePiece((0, 5), (0, 4)) should be(true)
-        controller.movePiece((0, 3), (0, 4)) should be(true)
-        controller.movePiece((0, 8), (0, 4)) should be(true)
-        controller.movePiece((3, 2), (3, 3)) should be(true)
-        controller.movePiece((3, 6), (3, 5)) should be(true)
-        controller.movePiece((3, 3), (3, 4)) should be(true)
-        controller.movePiece((3, 5), (3, 4)) should be(true)
 
-        controller.getPossibleMvConPlayer1("P") should be(List[(Int, Int)]((0, 1), (0, 2), (0, 3), (0, 5), (0, 6), (0, 7), (0, 8), (3, 1), (3, 2), (3, 3), (3, 5), (3, 6), (3, 7)))
-
+        controller.movePiece((0, 0), (0, 4)) should be(true) // player_1
+        controller.possibleMovesConqueredPiece("P") should be(List[(Int, Int)]((0, 1), (0, 2), (0, 3), (0, 5), (0, 6), (0, 7), (0, 8))) // player_2
         controller.boardToString() should be(
-          "Captured Player 1: P    \n" +
+          "Captured Player 1: P    L    \n" +
             "   0    1    2    3    4    5    6    7    8 \n \n" +
             "------------------------------------------------\n " +
-            "| L  | KN | SG | GG | K  |    | SG | KN | L  | \ta\n" +
-            "------------------------------------------------\n " +
-            "|    | R  |    |    |    | GG |    | B  |    | \tb\n" +
-            "------------------------------------------------\n " +
-            "|    | P  | P  | P  | P  | P  | P  | P  | P  | \tc\n" +
-            "------------------------------------------------\n " +
-            "|    |    |    |    |    |    |    |    |    | \td\n" +
-            "------------------------------------------------\n " +
-            "| L  |    |    |    |    |    |    |    |    | \te\n" +
-            "------------------------------------------------\n " +
-            "|    |    |    |    |    |    |    |    |    | \tf\n" +
-            "------------------------------------------------\n " +
-            "|    | P  | P  | P  | P  | P  | P  | P  | P  | \tg\n" +
-            "------------------------------------------------\n " +
-            "|    | B  |    |    |    |    |    | R  |    | \th\n" +
-            "------------------------------------------------\n " +
-            "|    | KN | SG | GG | K  | GG | SG | KN | L  | \ti\n" +
-            "------------------------------------------------\n" +
-            "Captured Player 2: P    \n"
-        )
-      }
-    }
-  }
-  "Controller" when {
-    "called getPossibleMvConPlayer2" should {
-      "return a List of fields where a conquered piece in Player 2 container can be placed" in {
-        controller.createNewBoard()
-        controller.movePiece((5, 0), (5, 1)) should be(true)
-        controller.movePiece((0, 6), (0, 5)) should be(true)
-        controller.movePiece((0, 2), (0, 3)) should be(true)
-        controller.movePiece((0, 5), (0, 4)) should be(true)
-        controller.movePiece((0, 3), (0, 4)) should be(true)
-        controller.movePiece((0, 8), (0, 4)) should be(true)
-        controller.movePiece((3, 2), (3, 3)) should be(true)
-        controller.movePiece((3, 6), (3, 5)) should be(true)
-        controller.movePiece((3, 3), (3, 4)) should be(true)
-        controller.movePiece((2, 6), (2, 5)) should be(true)
-        controller.movePiece((3, 4), (3, 5)) should be(true)
-
-        controller.getPossibleMvConPlayer2("P") should be(List[(Int, Int)]((0, 1), (0, 2), (0, 3), (0, 5), (0, 6), (0, 7), (0, 8), (3, 1), (3, 2), (3, 3), (3, 4), (3, 6), (3, 7)))
-
-        controller.boardToString() should be(
-          "Captured Player 1: P    \n" +
-            "   0    1    2    3    4    5    6    7    8 \n \n" +
-            "------------------------------------------------\n " +
-            "| L  | KN | SG | GG | K  |    | SG | KN | L  | \ta\n" +
+            "|    | KN | SG | GG | K  |    | SG | KN | L  | \ta\n" +
             "------------------------------------------------\n " +
             "|    | R  |    |    |    | GG |    | B  |    | \tb\n" +
             "------------------------------------------------\n " +
