@@ -280,39 +280,59 @@ class ControllerSpec extends WordSpec with Matchers {
     }
   }
   "Controller" when {
-    controller.createNewBoard()
     "called promotable" should {
+      controller.createNewBoard()
+
       "return false if Pawn of Player 1 is not in Promotionzone" in {
         controller.promotable(0, 5) should be(false)
       }
       "return false if Pawn of Player 2 is not in Promotionzone" in {
         controller.promotable(0, 3) should be(false)
       }
-      "return true if Pawn of Player 1 is in Promotionzone" in {
-        controller.promotable(0, 2) should be(true)
+      "return false if Pawn of Player 1 is in Promotionzone" in {
+        controller.promotable(0, 2) should be(false)
       }
-      "return true if Pawn of Player 2 is in Promotionzone" in {
-        controller.promotable(0, 6) should be(true)
+      "return false if Pawn of Player 2 is in Promotionzone" in {
+        controller.promotable(0, 6) should be(false)
       }
       "return false if no Piece was selected in the Algorithmen" in {
         controller.promotable(8, 4) should be(false)
       }
     }
     "called promotePiece" should {
+      controller.createNewBoard()
+
       "return false if Piece of Player 1 has no Promotion" in {
-        controller.promotePiece((8, 5)) should be(false)
+        controller.promotePiece(8, 5) should be(false)
       }
       "return false if Piece of Player 2 has no Promotion" in {
-        controller.promotePiece((0, 5)) should be(false)
+        controller.promotePiece(0, 5) should be(false)
       }
       "return true if Piece of Player 1 has a Promotion" in {
-        controller.promotePiece((0, 6)) should be(true)
+        controller.promotePiece(0, 6) should be(true)
       }
       "return true if Piece of Player 2 has a Promotion" in {
-        controller.promotePiece((0, 2)) should be(true)
+        controller.promotePiece(0, 2) should be(true)
       }
       "return false because invalid cell" in {
-        controller.promotePiece((0, -5)) should be(false)
+        controller.promotePiece(0, -5) should be(false)
+      }
+    }
+    "called promotePiece" should {
+      "return true if the Piece is located in the promotionzone" in {
+        controller.createNewBoard()
+
+        controller.movePiece((0, 2), (0, 3)) should be(true)
+        controller.movePiece((0, 6), (0, 5)) should be(true)
+        controller.movePiece((0, 3), (0, 4)) should be(true)
+        controller.movePiece((0, 5), (0, 4)) should be(true)
+        controller.movePiece((1, 2), (1, 3)) should be(true)
+        controller.movePiece((0, 4), (0, 3)) should be(true)
+        controller.movePiece((1, 3), (1, 4)) should be(true)
+        controller.movePiece((0, 3), (0, 2)) should be(true)
+
+        controller.promotable(0, 2) should be(true)
+        controller.promotePiece(0, 2) should be(true)
       }
     }
   }

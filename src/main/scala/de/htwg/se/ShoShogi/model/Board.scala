@@ -56,14 +56,16 @@ case class Board(board: Vector[Vector[Piece]], containerPlayer_0: List[Piece], c
   def replaceCell(col: Int, row: Int, cell: Piece): Board =
     copy(board.updated(col, board(col).updated(row, cell)), containerPlayer_0, containerPlayer_1)
 
-  def getPiecesInColumn(column: Int): List[Piece] = {
+  def getPiecesInColumn(column: Int, stateTurn: Boolean): List[Piece] = {
     var pieces = List[Piece]()
 
     if (column <= this.size && column >= 0) {
       for (i <- 0 until this.size) {
         this.cell(column, i) match {
           case Some(_: EmptyPiece) => {}
-          case Some(piece) => pieces = pieces :+ piece
+          case Some(piece) => if (stateTurn == piece.player.first) {
+            pieces = pieces :+ piece
+          }
           case None => {}
         }
       }

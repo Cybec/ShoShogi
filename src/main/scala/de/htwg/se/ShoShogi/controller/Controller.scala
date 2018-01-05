@@ -94,6 +94,7 @@ class Controller(private var board: Board, val player_1: Player, val player_2: P
     }
   }
 
+  //TODO: Sonderfall direkt schachmatt beim einsetzten
   def possibleMovesConqueredPiece(piece: String): List[(Int, Int)] = {
     var possibleMoves = List[(Int, Int)]()
 
@@ -111,8 +112,8 @@ class Controller(private var board: Board, val player_1: Player, val player_2: P
 
     if (piece == "P") {
       for (column: Int <- 0 until board.size) {
-        if (!board.getPiecesInColumn(column).contains(Pawn)) {
-          if (!board.getPiecesInColumn(column).contains(King)) {
+        if (!board.getPiecesInColumn(column, state).filter(x => x.typeEquals("P")).isEmpty) {
+          if (!board.getPiecesInColumn(column, state).filter(x => x.typeEquals("P")).isEmpty) {
             possibleMoves = possibleMoves ::: board.getEmptyCellsInColumn(column, (0, 7))
           } else {
             for (row <- 0 until board.size) {
@@ -145,8 +146,8 @@ class Controller(private var board: Board, val player_1: Player, val player_2: P
 
     if (piece == "P") {
       for (column: Int <- 0 until board.size) {
-        if (!board.getPiecesInColumn(column).contains(Pawn)) {
-          if (!board.getPiecesInColumn(column).contains(King)) {
+        if (!board.getPiecesInColumn(column, state).filter(x => x.typeEquals("P")).isEmpty) {
+          if (!board.getPiecesInColumn(column, state).filter(x => x.typeEquals("P")).isEmpty) {
             possibleMoves = possibleMoves ::: board.getEmptyCellsInColumn(column, (1, 8))
           } else {
             for (row <- (board.size - 1) to 0) {
@@ -208,15 +209,15 @@ class Controller(private var board: Board, val player_1: Player, val player_2: P
     }
   }
 
-  def promotable(dest: (Int, Int)): Boolean = {
-    val piece = board.cell(dest._1, dest._2).getOrElse(return false)
-    piece.hasPromotion && ((piece.player == player_1 && dest._2 > 5) || (piece.player == player_2 && dest._2 < 3))
+  def promotable(position: (Int, Int)): Boolean = {
+    val piece = board.cell(position._1, position._2).getOrElse(return false)
+    piece.hasPromotion && ((piece.player == player_1 && position._2 > 5) || (piece.player == player_2 && position._2 < 3))
   }
 
-  def promotePiece(currentPos: (Int, Int)): Boolean = {
-    var piece = board.cell(currentPos._1, currentPos._2).getOrElse(return false)
+  def promotePiece(piecePosition: (Int, Int)): Boolean = {
+    var piece = board.cell(piecePosition._1, piecePosition._2).getOrElse(return false)
     piece = piece.promotePiece.getOrElse(return false)
-    board = board.replaceCell(currentPos._1, currentPos._2, piece)
+    board = board.replaceCell(piecePosition._1, piecePosition._2, piece)
     notifyObservers
     true
   }
