@@ -184,4 +184,31 @@ class BoardSpec extends WordSpec with Matchers {
       }
     }
   }
+  "Board" when {
+    var board = new Board(9, new EmptyPiece)
+    val player_1 = Player("Nick", true)
+    val player_2 = Player("Mert", false)
+    val pawn = Pawn(player_1)
+    val lancer = Lancer(player_1)
+    board = board.replaceCell(0, 4, pawn)
+    board = board.replaceCell(0, 7, lancer)
+    "checked if Piece is in Column" should {
+      "have Piece Pawn and Lancer" in {
+        board.getPiecesInColumn(0, true) should be(List[Piece](pawn, lancer))
+        board.getPiecesInColumn(3, true) should be(List[Piece]())
+      }
+      "give nothing" in {
+        board.getPiecesInColumn(10, true) should be(List[(Int, Int)]())
+      }
+    }
+    "checked which fields in a column are empty" should {
+      "be (0, 0), (0, 1), (0, 2), (0, 3), (0, 5), (0, 6), (0, 8) " in {
+        board.getEmptyCellsInColumn(0, (0, 8)) should be(List[(Int, Int)]((0, 0), (0, 1), (0, 2), (0, 3), (0, 5), (0, 6), (0, 8)))
+      }
+      "have () when the column is not in the board" in {
+        board.getEmptyCellsInColumn(10, (-4, -8)) should be(List[(Int, Int)]())
+        board.getEmptyCellsInColumn(0, (0, 10)) should be(List[(Int, Int)]((0, 0), (0, 1), (0, 2), (0, 3), (0, 5), (0, 6), (0, 8)))
+      }
+    }
+  }
 }

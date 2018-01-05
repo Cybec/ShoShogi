@@ -33,6 +33,14 @@ class TuiSpec extends WordSpec with Matchers {
         tui.parseArguments(Array("mv", "0g", "0f")) should be(Some(Vector((0, 6), (0, 5))))
       }
     }
+    "parseArgumentsFromConquered called" should {
+      "give back \"mvcp    P    0d\"" in {
+        tui.parseArgumentsFromConquered(Array("mvcp", "P", "0d")) should be(Some("P", (0, 3)))
+      }
+      "give back \"None\"" in {
+        tui.parseArgumentsFromConquered(Array("mvcp", "990", "0d")) should be(None)
+      }
+    }
     //TODO: Unit testing?
     "printPossibleMoves called" should {
       "print \"Possible moves: (0,g)\"" in {
