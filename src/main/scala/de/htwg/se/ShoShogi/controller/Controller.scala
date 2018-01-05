@@ -113,7 +113,7 @@ class Controller(private var board: Board, val player_1: Player, val player_2: P
       for (column: Int <- 0 until board.size) {
         if (!board.getPiecesInColumn(column).contains(Pawn)) {
           if (!board.getPiecesInColumn(column).contains(King)) {
-            possibleMoves = possibleMoves ::: board.getEmptyCellsInColumn(column, (0, 8))
+            possibleMoves = possibleMoves ::: board.getEmptyCellsInColumn(column, (0, 7))
           } else {
             for (row <- 0 until board.size) {
               board.cell(column, row) match {
@@ -130,11 +130,11 @@ class Controller(private var board: Board, val player_1: Player, val player_2: P
       }
     } else if (piece == "KN" || piece == "L") {
       for (x <- 0 until board.size) {
-        possibleMoves = possibleMoves ::: board.getEmptyCellsInColumn(x, (0, 8))
+        possibleMoves = possibleMoves ::: board.getEmptyCellsInColumn(x, (0, 7))
       }
     } else {
       for (x <- 0 until board.size) {
-        possibleMoves = possibleMoves ::: board.getEmptyCellsInColumn(x, (0, 9))
+        possibleMoves = possibleMoves ::: board.getEmptyCellsInColumn(x, (0, 8))
       }
     }
     possibleMoves
@@ -147,7 +147,7 @@ class Controller(private var board: Board, val player_1: Player, val player_2: P
       for (column: Int <- 0 until board.size) {
         if (!board.getPiecesInColumn(column).contains(Pawn)) {
           if (!board.getPiecesInColumn(column).contains(King)) {
-            possibleMoves = possibleMoves ::: board.getEmptyCellsInColumn(column, (1, 9))
+            possibleMoves = possibleMoves ::: board.getEmptyCellsInColumn(column, (1, 8))
           } else {
             for (row <- (board.size - 1) to 0) {
               board.cell(column, row) match {
@@ -165,11 +165,11 @@ class Controller(private var board: Board, val player_1: Player, val player_2: P
 
     } else if (piece == "KN" || piece == "L") {
       for (x: Int <- 0 until board.size) {
-        possibleMoves = possibleMoves ::: board.getEmptyCellsInColumn(x, (1, 9))
+        possibleMoves = possibleMoves ::: board.getEmptyCellsInColumn(x, (1, 8))
       }
     } else {
       for (x: Int <- 0 until board.size) {
-        possibleMoves = possibleMoves ::: board.getEmptyCellsInColumn(x, (0, 9))
+        possibleMoves = possibleMoves ::: board.getEmptyCellsInColumn(x, (0, 8))
       }
     }
     possibleMoves
