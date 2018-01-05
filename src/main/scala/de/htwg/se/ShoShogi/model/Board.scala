@@ -1,7 +1,5 @@
 package de.htwg.se.ShoShogi.model
 
-import de.htwg.se.ShoShogi.model.Piece
-
 case class Board(board: Vector[Vector[Piece]], containerPlayer_0: List[Piece], containerPlayer_1: List[Piece]) {
   def this(size: Int, filling: Piece) = this(Vector.tabulate(size, size) { (row, col) => filling }, List.empty[Piece], List.empty[Piece])
 
@@ -57,6 +55,38 @@ case class Board(board: Vector[Vector[Piece]], containerPlayer_0: List[Piece], c
 
   def replaceCell(col: Int, row: Int, cell: Piece): Board =
     copy(board.updated(col, board(col).updated(row, cell)), containerPlayer_0, containerPlayer_1)
+
+  def getPiecesInColumn(column: Int): List[Piece] = {
+    var pieces = List[Piece]()
+
+    if (column <= this.size && column >= 0) {
+      for (i <- 0 until this.size) {
+        this.cell(column, i) match {
+          case Some(_: EmptyPiece) => {}
+          case Some(piece) => pieces = pieces :+ piece
+          case None => {}
+        }
+      }
+    }
+
+    pieces
+  }
+
+  def getEmptyCellsInColumn(column: Int, range: (Int, Int)): List[(Int, Int)] = {
+    var emptyCells = List[(Int, Int)]()
+
+    if (column <= this.size && column >= 0) {
+      for (i <- range._1 until range._2) {
+        this.cell(column, i) match {
+          case Some(_: EmptyPiece) => emptyCells = emptyCells :+ (column, i)
+          case Some(_) => {}
+          case None => {}
+        }
+      }
+    }
+
+    emptyCells
+  }
 
   override def toString: String = {
     var index: Int = 0

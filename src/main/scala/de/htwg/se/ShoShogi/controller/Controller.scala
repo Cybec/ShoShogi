@@ -9,6 +9,7 @@ import scala.collection.mutable.ListBuffer
 class Controller(private var board: Board, player_1: Player, player_2: Player) extends Observable {
   val boardSize = 9
   var container = board.getContainer()
+  var state = true
 
   def createEmptyBoard(): Unit = {
     board = new Board(boardSize, new EmptyPiece)
@@ -77,6 +78,91 @@ class Controller(private var board: Board, player_1: Player, player_2: Player) e
     } else {
       false
     }
+  }
+
+  def possibleMovesConqueredPiece(piece: String): List[(Int, Int)] = {
+    var possibleMoves = List[(Int, Int)]()
+
+    if (state) {
+      possibleMoves = getPossibleMvConPlayer1(piece)
+    } else {
+      possibleMoves = getPossibleMvConPlayer2(piece)
+    }
+
+    possibleMoves
+  }
+
+  def getPossibleMvConPlayer1(piece: String): List[(Int, Int)] = {
+    var possibleMoves = List[(Int, Int)]()
+
+    if (piece == Pawn.toString().trim) {
+      for (column: Int <- 0 until board.size) {
+        if (!board.getPiecesInColumn(column).contains(Pawn)) {
+          if (!board.getPiecesInColumn(column).contains(King)) {
+            possibleMoves = possibleMoves ::: board.getEmptyCellsInColumn(column, (0, 8))
+          } else {
+            for (row <- 0 until board.size) {
+              board.cell(column, row) match {
+                case Some(piece) => if (piece.isInstanceOf[EmptyPiece]) {
+                  possibleMoves = possibleMoves :+ (column, row)
+                } else if (piece.isInstanceOf[King] && piece.player.first) {
+                  possibleMoves = possibleMoves.filter(_ != (column, row - 1))
+                }
+                case None => {}
+              }
+            }
+          }
+        }
+      }
+    } else if (piece == Knight.toString().trim || piece == Lancer.toString().trim) {
+      for (x <- 0 until board.size) {
+        possibleMoves = possibleMoves ::: board.getEmptyCellsInColumn(x, (0, 8))
+      }
+    } else {
+      for (x <- 0 until board.size) {
+        possibleMoves = possibleMoves ::: board.getEmptyCellsInColumn(x, (0, 9))
+      }
+    }
+    possibleMoves
+  }
+
+  def getPossibleMvConPlayer2(piece: String): List[(Int, Int)] = {
+    var possibleMoves = List[(Int, Int)]()
+
+    if (piece == Pawn.toString().trim) {
+      for (column: Int <- 0 until board.size) {
+        if (!board.getPiecesInColumn(column).contains(Pawn)) {
+          if (!board.getPiecesInColumn(column).contains(King)) {
+            possibleMoves = possibleMoves ::: board.getEmptyCellsInColumn(column, (1, 9))
+          } else {
+            for (row <- (board.size - 1) to 0) {
+              board.cell(column, row) match {
+                case Some(piece) => if (piece.isInstanceOf[EmptyPiece]) {
+                  possibleMoves = possibleMoves :+ (column, row)
+                } else if (piece.isInstanceOf[King] && piece.player.first) {
+                  possibleMoves = possibleMoves.filter(_ != (column, row + 1))
+                }
+                case None => {}
+              }
+            }
+          }
+        }
+      }
+
+    } else if (piece == Knight.toString().trim || piece == Lancer.toString().trim) {
+      for (x: Int <- 0 until board.size) {
+        possibleMoves = possibleMoves ::: board.getEmptyCellsInColumn(x, (1, 9))
+      }
+    } else {
+      for (x: Int <- 0 until board.size) {
+        possibleMoves = possibleMoves ::: board.getEmptyCellsInColumn(x, (0, 9))
+      }
+    }
+    possibleMoves
+  }
+
+  def moveConqueredPiece(pieceAbbreviation: String, destination: (Int, Int)): Boolean = {
+    false
   }
 
   def promotable(currentPos: (Int, Int), dest: (Int, Int)): Boolean = {
