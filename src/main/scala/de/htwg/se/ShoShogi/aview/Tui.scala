@@ -56,7 +56,8 @@ class Tui(controller: Controller) extends Observer {
               promoteQuery(value)
               if (!controller.movePiece((value(0)._1, value(0)._2), (value(1)._1, value(1)._2))) {
                 printString("You cant move this piece that way\n")
-              }            case _ => printString("Could not read input: ".concat(e.input.mkString(" ")))
+              }
+            case _ => printString("Could not read input: ".concat(e.input.mkString(" ")))
           }
         case e => {
           successor match {
@@ -104,6 +105,24 @@ class Tui(controller: Controller) extends Observer {
     }
   }
 
+  class PossibleMovesConqueredPiece(val successor: Option[Handler]) extends Handler {
+    override def handleEvent(event: Event): Unit = {
+      event match {
+        case e if e.command == "pmvcp" =>
+          parseArgumentsFromConquered(e.input) match {
+            case Some((pieceAbbreviation, _)) => printPossibleMoves(controller.possibleMovesConqueredPiece(pieceAbbreviation))
+            case _ => printString("Could not read input: ".concat(e.input.mkString(" ")))
+          }
+        case e => {
+          successor match {
+            case Some(h: Handler) => h.handleEvent(e)
+            case None => printString("Could not find command.")
+          }
+        }
+      }
+    }
+  }
+
   val yAxis = Map(
     'a' -> 0,
     'b' -> 1,
@@ -125,7 +144,8 @@ class Tui(controller: Controller) extends Observer {
     "n" -> "new",
     "mv [0-9][a-i] [0-9][a-i]" -> "move [0-9][a-i] to [0-9][a-i]",
     "pmv [0-9][a-i]" -> "possible moves of [0-9][a-i]",
-    "mvcp [piece abbreviation] [0-9][a-i]" -> "move [piece abbreviation] to [0-9][a-i]"
+    "mvcp [piece abbreviation] [0-9][a-i]" -> "move [piece abbreviation] to [0-9][a-i]",
+    "pmvcp [piece abbreviation]" -> "possible moves of [piece abbreviation]"
   )
   var menuMap = menuMapStart
 
@@ -134,7 +154,8 @@ class Tui(controller: Controller) extends Observer {
       printString("Input was: " + input)
       val inputArray = input.split("\\ ", -1)
 
-      val moveConqueredPiece = new MoveConqueredPiece(None)
+      val possibleMovesConqueredPiece = new PossibleMovesConqueredPiece(None)
+      val moveConqueredPiece = new MoveConqueredPiece(Some(possibleMovesConqueredPiece))
       val possibleMoves = new PossibleMoves(Some(moveConqueredPiece))
       val movePiece = new MovePiece(Some(possibleMoves))
       val newGame = new New(Some(movePiece))
@@ -145,7 +166,7 @@ class Tui(controller: Controller) extends Observer {
   }
 
   def parseArguments(inputArray: Array[String]): Option[Vector[(Int, Int)]] = {
-    val position = inputArray.mkString("").replace("pmv", "").replace("mv", "").replace("mvcp", "").trim.toList
+    val position = inputArray.mkString("").replace("pmv", "").replace("mvcp", "").replace("mv", "").trim.toList
     try {
       if (position.length == 2 && "1234567890".contains(position(0))) {
         Some(Vector[(Int, Int)]((position(0).toInt - '0', yAxis.getOrElse(position(1), -1))))
@@ -165,21 +186,32 @@ class Tui(controller: Controller) extends Observer {
   }
 
   def parseArgumentsFromConquered(inputArray: Array[String]): Option[(String, (Int, Int))] = {
-    val position = inputArray.mkString("").replace("mvcp", "").trim.toList
+    val input = inputArray.mkString("").replace("pmvcp", "").replace("mvcp", "").trim.toList
     try {
-      if (position.length > 2 && (('a' to 'z') ++ ('A' to 'Z')).contains(position(0))) {
+      if (input.length > 2 && ('A' to 'Z').contains(input(0))) {
         var pieceAbbreviation: String = ""
         var pieceDestination: (Int, Int) = (-1, -1)
 
-        if ((('a' to 'z') ++ ('A' to 'Z')).contains(position(1))) {
-          pieceAbbreviation = position.slice(0, 1).mkString("")
-          pieceDestination = (position(2).toInt - '0', yAxis.getOrElse(position(3), -1))
+        if (('A' to 'Z').contains(input(1))) {
+          pieceAbbreviation = input.slice(0, 1).mkString("")
+          pieceDestination = (input(2).toInt - '0', yAxis.getOrElse(input(3), -1))
         } else {
-          pieceAbbreviation = position(0).toString()
-          pieceDestination = (position(1).toInt - '0', yAxis.getOrElse(position(2), -1))
+          pieceAbbreviation = input(0).toString()
+          pieceDestination = (input(1).toInt - '0', yAxis.getOrElse(input(2), -1))
         }
 
         Some(pieceAbbreviation, pieceDestination)
+
+      } else if (input.length >= 1 && ('A' to 'Z').contains(input(0))) {
+        var pieceAbbreviation: String = ""
+
+        if (input.length == 2) {
+          pieceAbbreviation = input.slice(0, 1).mkString("")
+        } else {
+          pieceAbbreviation = input(0).toString()
+        }
+
+        Some(pieceAbbreviation, (-1, -1))
 
       } else {
         None

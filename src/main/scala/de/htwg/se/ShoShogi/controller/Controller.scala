@@ -17,6 +17,8 @@ class Controller(private var board: Board, val player_1: Player, val player_2: P
   var container = board.getContainer()
   var state = true
 
+  def getPieceAbbreviationList: List[String] = Pieces.getPiecesAbbreviation
+
   def createEmptyBoard(): Unit = {
     board = new Board(boardSize, new EmptyPiece)
     notifyObservers
@@ -107,7 +109,7 @@ class Controller(private var board: Board, val player_1: Player, val player_2: P
   def getPossibleMvConPlayer1(piece: String): List[(Int, Int)] = {
     var possibleMoves = List[(Int, Int)]()
 
-    if (piece == Pawn.toString().trim) {
+    if (piece == "P") {
       for (column: Int <- 0 until board.size) {
         if (!board.getPiecesInColumn(column).contains(Pawn)) {
           if (!board.getPiecesInColumn(column).contains(King)) {
@@ -126,7 +128,7 @@ class Controller(private var board: Board, val player_1: Player, val player_2: P
           }
         }
       }
-    } else if (piece == Knight.toString().trim || piece == Lancer.toString().trim) {
+    } else if (piece == "KN" || piece == "L") {
       for (x <- 0 until board.size) {
         possibleMoves = possibleMoves ::: board.getEmptyCellsInColumn(x, (0, 8))
       }
@@ -141,7 +143,7 @@ class Controller(private var board: Board, val player_1: Player, val player_2: P
   def getPossibleMvConPlayer2(piece: String): List[(Int, Int)] = {
     var possibleMoves = List[(Int, Int)]()
 
-    if (piece == Pawn.toString().trim) {
+    if (piece == "P") {
       for (column: Int <- 0 until board.size) {
         if (!board.getPiecesInColumn(column).contains(Pawn)) {
           if (!board.getPiecesInColumn(column).contains(King)) {
@@ -161,7 +163,7 @@ class Controller(private var board: Board, val player_1: Player, val player_2: P
         }
       }
 
-    } else if (piece == Knight.toString().trim || piece == Lancer.toString().trim) {
+    } else if (piece == "KN" || piece == "L") {
       for (x: Int <- 0 until board.size) {
         possibleMoves = possibleMoves ::: board.getEmptyCellsInColumn(x, (1, 9))
       }
@@ -174,7 +176,36 @@ class Controller(private var board: Board, val player_1: Player, val player_2: P
   }
 
   def moveConqueredPiece(pieceAbbreviation: String, destination: (Int, Int)): Boolean = {
-    false
+    if (possibleMovesConqueredPiece(pieceAbbreviation).contains(destination)) {
+
+      val currentPlayer = if (state) {
+        player_1
+      } else {
+        player_2
+      }
+      var tempPiece: Piece = new EmptyPiece
+
+      val success = board.getFromPlayerContainer(currentPlayer) {
+        _.typeEquals(pieceAbbreviation)
+      } match {
+        case Some((newBoard, piece)) =>
+          board = newBoard
+          tempPiece = piece
+          true
+        case None => false
+      }
+      if (success) {
+        board = board.replaceCell(destination._1, destination._2, tempPiece)
+
+        state = changePlayer(state)
+        notifyObservers
+        true
+      } else {
+        false
+      }
+    } else {
+      false
+    }
   }
 
   def promotable(currentPos: (Int, Int), dest: (Int, Int)): Boolean = {

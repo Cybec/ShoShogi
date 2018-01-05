@@ -1,5 +1,24 @@
 package de.htwg.se.ShoShogi.model
 
+object Pieces {
+  def getPiecesAbbreviation: List[String] = List[String](
+    "K",
+    "GG",
+    "SG",
+    "PS",
+    "KN",
+    "PK",
+    "L",
+    "PL",
+    "B",
+    "PB",
+    "R",
+    "PR",
+    "P",
+    "PP"
+  )
+}
+
 abstract class Piece(name: String, val player: Player) {
 
   def promotePiece: Option[Piece]
@@ -27,6 +46,8 @@ abstract class Piece(name: String, val player: Player) {
   }
 
   def cloneToNewPlayer(player: Player): Piece
+
+  def typeEquals(piecesAbbreviation: String): Boolean = this.toString().trim == piecesAbbreviation.trim
 }
 
 //region King
