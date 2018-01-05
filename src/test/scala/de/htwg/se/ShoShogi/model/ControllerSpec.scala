@@ -283,19 +283,19 @@ class ControllerSpec extends WordSpec with Matchers {
     controller.createNewBoard()
     "called promotable" should {
       "return false if Pawn of Player 1 is not in Promotionzone" in {
-        controller.promotable((0, 6), (0, 5)) should be(false)
+        controller.promotable(0, 5) should be(false)
       }
       "return false if Pawn of Player 2 is not in Promotionzone" in {
-        controller.promotable((0, 2), (0, 3)) should be(false)
+        controller.promotable(0, 3) should be(false)
       }
       "return true if Pawn of Player 1 is in Promotionzone" in {
-        controller.promotable((0, 6), (0, 2)) should be(true)
+        controller.promotable(0, 2) should be(true)
       }
       "return true if Pawn of Player 2 is in Promotionzone" in {
-        controller.promotable((0, 2), (0, 6)) should be(true)
+        controller.promotable(0, 6) should be(true)
       }
       "return false if no Piece was selected in the Algorithmen" in {
-        controller.promotable((8, 5), (8, 4)) should be(false)
+        controller.promotable(8, 4) should be(false)
       }
     }
     "called promotePiece" should {

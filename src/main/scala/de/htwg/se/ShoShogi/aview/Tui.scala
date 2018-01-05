@@ -222,12 +222,12 @@ class Tui(controller: Controller) extends Observer {
     }
   }
 
-  private def promoteQuery(value: Vector[(Int, Int)]) = {
-    if (controller.promotable((value(0)._1, value(0)._2), (value(1)._1, value(1)._2))) {
+  private def promoteQuery(value: Vector[(Int, Int)]): Unit = {
+    if (controller.promotable(value(1)._1, value(1)._2)) {
       printString("Do you want to promote your piece? (y/n)")
       val input = scala.io.StdIn.readLine()
       if (input == "y") {
-        controller.promotePiece(value(0)._1, value(0)._2)
+        controller.promotePiece(value(1)._1, value(1)._2)
       }
     }
   }

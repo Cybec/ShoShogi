@@ -208,8 +208,8 @@ class Controller(private var board: Board, val player_1: Player, val player_2: P
     }
   }
 
-  def promotable(currentPos: (Int, Int), dest: (Int, Int)): Boolean = {
-    val piece = board.cell(currentPos._1, currentPos._2).getOrElse(return false)
+  def promotable(dest: (Int, Int)): Boolean = {
+    val piece = board.cell(dest._1, dest._2).getOrElse(return false)
     piece.hasPromotion && ((piece.player == player_1 && dest._2 > 5) || (piece.player == player_2 && dest._2 < 3))
   }
 
@@ -217,6 +217,7 @@ class Controller(private var board: Board, val player_1: Player, val player_2: P
     var piece = board.cell(currentPos._1, currentPos._2).getOrElse(return false)
     piece = piece.promotePiece.getOrElse(return false)
     board = board.replaceCell(currentPos._1, currentPos._2, piece)
+    notifyObservers
     true
   }
 }
