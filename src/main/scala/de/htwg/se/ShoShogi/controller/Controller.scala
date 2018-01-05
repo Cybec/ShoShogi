@@ -7,10 +7,15 @@ import scala.collection.mutable.ListBuffer
 
 // TODO 1: schauen ob vals und vars aus dem classenparameter entfernt werden köennen
 
+trait State {
+  def changePlayer(bool: Boolean): Boolean = !bool
+}
+
 //noinspection ScalaStyle
-class Controller(var board: Board, val player_1: Player, val player_2: Player) extends Observable {
+class Controller(var board: Board, val player_1: Player, val player_2: Player) extends Observable with State {
   val boardSize = 9
   var container = board.getContainer()
+  var state = true
 
   def createEmptyBoard(): Unit = {
     board = new Board(boardSize, new EmptyPiece)
@@ -70,12 +75,18 @@ class Controller(var board: Board, val player_1: Player, val player_2: Player) e
       val tempPieceDestination = board.cell(destination._1, destination._2).getOrElse(return false)
       val tempPieceCurrent = board.cell(currentPos._1, currentPos._2).getOrElse(return false)
 
-      board = board.replaceCell(destination._1, destination._2, tempPieceCurrent)
-      board = board.replaceCell(currentPos._1, currentPos._2, new EmptyPiece)
+      if (state == tempPieceCurrent.player.first) {
 
-      board = board.addToPlayerContainer(tempPieceCurrent.player, tempPieceDestination)
-      notifyObservers
-      true
+        board = board.replaceCell(destination._1, destination._2, tempPieceCurrent)
+        board = board.replaceCell(currentPos._1, currentPos._2, new EmptyPiece)
+
+        board = board.addToPlayerContainer(tempPieceCurrent.player, tempPieceDestination)
+        state = changePlayer(state)
+        notifyObservers
+        true
+      } else {
+        false
+      }
     } else {
       false
     }
