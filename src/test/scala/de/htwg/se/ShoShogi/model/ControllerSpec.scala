@@ -13,7 +13,7 @@ import org.scalatest.junit.JUnitRunner
 @RunWith(classOf[JUnitRunner])
 class ControllerSpec extends WordSpec with Matchers {
   val controller = new Controller(new Board(boardSize, new EmptyPiece), Player("Player1", true), Player("Player2", false))
-
+  //TODO: Testing for false in movePiece
   "Controller" when {
     "called printPossibleMoves" should {
       "print for \"pmv 0a\"" in {
@@ -146,31 +146,32 @@ class ControllerSpec extends WordSpec with Matchers {
     "called boardToString" should {
       "create an String of the filled Board with captured" in {
         controller.createNewBoard()
-        controller.movePiece((2, 6), (2, 5)) should be(true)
-        controller.movePiece((1, 7), (6, 2)) should be(true)
+        controller.movePiece((6, 2), (6, 3)) should be(true)
+        controller.movePiece((8, 6), (8, 5)) should be(true)
+        controller.movePiece((7, 1), (2, 6)) should be(true)
         controller.boardToString() should be(
-          "Captured Player 1: \n" +
+          "Captured Player 1: P    \n" +
             "   0    1    2    3    4    5    6    7    8 \n \n" +
             "------------------------------------------------\n " +
             "| L  | KN | SG | GG | K  | GG | SG | KN | L  | \ta\n" +
             "------------------------------------------------\n " +
-            "|    | R  |    |    |    |    |    | B  |    | \tb\n" +
+            "|    | R  |    |    |    |    |    |    |    | \tb\n" +
             "------------------------------------------------\n " +
-            "| P  | P  | P  | P  | P  | P  | B  | P  | P  | \tc\n" +
+            "| P  | P  | P  | P  | P  | P  |    | P  | P  | \tc\n" +
             "------------------------------------------------\n " +
-            "|    |    |    |    |    |    |    |    |    | \td\n" +
+            "|    |    |    |    |    |    | P  |    |    | \td\n" +
             "------------------------------------------------\n " +
             "|    |    |    |    |    |    |    |    |    | \te\n" +
             "------------------------------------------------\n " +
-            "|    |    | P  |    |    |    |    |    |    | \tf\n" +
+            "|    |    |    |    |    |    |    |    | P  | \tf\n" +
             "------------------------------------------------\n " +
-            "| P  | P  |    | P  | P  | P  | P  | P  | P  | \tg\n" +
+            "| P  | P  | B  | P  | P  | P  | P  | P  |    | \tg\n" +
             "------------------------------------------------\n " +
-            "|    |    |    |    |    |    |    | R  |    | \th\n" +
+            "|    | B  |    |    |    |    |    | R  |    | \th\n" +
             "------------------------------------------------\n " +
             "| L  | KN | SG | GG | K  | GG | SG | KN | L  | \ti\n" +
             "------------------------------------------------\n" +
-            "Captured Player 2: P    \n"
+            "Captured Player 2: \n"
         )
       }
     }
@@ -179,33 +180,51 @@ class ControllerSpec extends WordSpec with Matchers {
     "called boardToString" should {
       "create an String of the filled Board with captured both" in {
         controller.createNewBoard()
-        controller.movePiece((2, 6), (2, 5)) should be(true)
-        controller.movePiece((1, 7), (6, 2)) should be(true)
-        controller.movePiece((7, 1), (6, 2)) should be(true)
+        controller.movePiece((8, 6), (8, 5)) should be(true)
+        controller.movePiece((6, 2), (6, 3)) should be(true)
+        controller.movePiece((8, 5), (8, 4)) should be(true)
+        controller.movePiece((7, 1), (2, 6)) should be(true)
+        controller.movePiece((1, 7), (2, 6)) should be(true)
         controller.boardToString() should be(
-          "Captured Player 1: B    \n" +
+          "Captured Player 1: P    \n" +
             "   0    1    2    3    4    5    6    7    8 \n \n" +
             "------------------------------------------------\n " +
             "| L  | KN | SG | GG | K  | GG | SG | KN | L  | \ta\n" +
             "------------------------------------------------\n " +
             "|    | R  |    |    |    |    |    |    |    | \tb\n" +
             "------------------------------------------------\n " +
-            "| P  | P  | P  | P  | P  | P  | B  | P  | P  | \tc\n" +
+            "| P  | P  | P  | P  | P  | P  |    | P  | P  | \tc\n" +
             "------------------------------------------------\n " +
-            "|    |    |    |    |    |    |    |    |    | \td\n" +
+            "|    |    |    |    |    |    | P  |    |    | \td\n" +
             "------------------------------------------------\n " +
-            "|    |    |    |    |    |    |    |    |    | \te\n" +
+            "|    |    |    |    |    |    |    |    | P  | \te\n" +
             "------------------------------------------------\n " +
-            "|    |    | P  |    |    |    |    |    |    | \tf\n" +
+            "|    |    |    |    |    |    |    |    |    | \tf\n" +
             "------------------------------------------------\n " +
-            "| P  | P  |    | P  | P  | P  | P  | P  | P  | \tg\n" +
+            "| P  | P  | B  | P  | P  | P  | P  | P  |    | \tg\n" +
             "------------------------------------------------\n " +
             "|    |    |    |    |    |    |    | R  |    | \th\n" +
             "------------------------------------------------\n " +
             "| L  | KN | SG | GG | K  | GG | SG | KN | L  | \ti\n" +
             "------------------------------------------------\n" +
-            "Captured Player 2: P    \n"
+            "Captured Player 2: B    \n"
         )
+      }
+    }
+  }
+  "Controller" when {
+    "called movePiece" should {
+      "return false if the Player tries to move enemy piece" in {
+        controller.movePiece((0, 8), (0, 7)) should be(false)
+        controller.movePiece((1, 8), (1, 7)) should be(false)
+        controller.movePiece((2, 8), (2, 7)) should be(false)
+        controller.movePiece((3, 8), (3, 7)) should be(false)
+        controller.movePiece((4, 8), (4, 7)) should be(false)
+        controller.movePiece((5, 8), (5, 7)) should be(false)
+        controller.movePiece((6, 8), (6, 7)) should be(false)
+        controller.movePiece((7, 8), (7, 7)) should be(false)
+        controller.movePiece((8, 8), (8, 7)) should be(false)
+        controller.movePiece((0, 6), (0, 5)) should be(false)
       }
     }
   }

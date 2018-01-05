@@ -55,12 +55,14 @@ class Tui(controller: Controller) extends Observer {
             case Some(value) =>
               if (controller.promotable((value(0)._1, value(0)._2), (value(1)._1, value(1)._2))) {
                 printString("Do you want to promote your piece? (y/n)")
-                var input = scala.io.StdIn.readLine()
+                val input = scala.io.StdIn.readLine()
                 if (input == "y") {
                   controller.promotePiece(value(0)._1, value(0)._2)
                 }
               }
-              controller.movePiece((value(0)._1, value(0)._2), (value(1)._1, value(1)._2))
+              if (!controller.movePiece((value(0)._1, value(0)._2), (value(1)._1, value(1)._2))) {
+                printString("You cant move this piece that way\n")
+              }
             case _ => printString("Could not read input: ".concat(e.input.mkString(" ")))
           }
         case e => {
@@ -119,7 +121,7 @@ class Tui(controller: Controller) extends Observer {
     if (input.length < 1) {
       return
     }
-    printString("Input was: " + input)
+    printString("Input was: " + input + "\n")
     val inputArray = input.split("\\ ", -1)
     val possibleMoves = new PossibleMoves(None)
     val movePiece = new MovePiece(Some(possibleMoves))
