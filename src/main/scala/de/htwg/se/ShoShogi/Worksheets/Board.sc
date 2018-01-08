@@ -40,7 +40,7 @@ case class King(player: Player)
 }
 
 case class EmptyPiece()
-  extends Piece("King", new Player("", false)) {
+  extends Piece("King",  Player("", false)) {
   var hasPromotion: Boolean = false
 
   /*Author:   Mert, Nick
@@ -77,7 +77,7 @@ case class Board[T](rows: Vector[Vector[T]]) {
 
 
 
-val board1 = new Board[Piece](2, King(new Player("Hans", true)))
+val board1 = new Board[Piece](2, King( Player("Hans", true)))
 var board2 = new Board[Piece](3, new EmptyPiece)
 
-board2 = board2.replaceCell(2,2, King(new Player("HansPeter", true)))
+board2 = board2.replaceCell(2,2, King( Player("HansPeter", true)))

@@ -521,7 +521,7 @@ case class PromotedPawn(override val player: Player)
 
 //region EmptyPiece
 case class EmptyPiece()
-    extends Piece("", new Player("", false)) {
+    extends Piece("", Player("", false)) {
   val hasPromotion: Boolean = false
 
   /*Author:   Mert, Nick

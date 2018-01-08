@@ -5,7 +5,7 @@ import de.htwg.se.ShoShogi.util.Observable
 
 import scala.collection.mutable.ListBuffer
 
-// TODO 1: schauen ob vals und vars aus dem classenparameter entfernt werden köennen
+// TODO 1: schauen ob vals und vars aus dem Klassen parameter entfernt werden koennen
 
 trait State {
   def changePlayer(bool: Boolean): Boolean = !bool
@@ -112,8 +112,8 @@ class Controller(private var board: Board, val player_1: Player, val player_2: P
 
     if (piece == "P") {
       for (column: Int <- 0 until board.size) {
-        if (board.getPiecesInColumn(column, state).filter(x => x.typeEquals("P")).isEmpty) {
-          if (board.getPiecesInColumn(column, state).filter(x => x.typeEquals("K")).isEmpty) {
+        if (!board.getPiecesInColumn(column, state).exists(x => x.typeEquals("P"))) {
+          if (!board.getPiecesInColumn(column, state).exists(x => x.typeEquals("K"))) {
             possibleMoves = possibleMoves ::: board.getEmptyCellsInColumn(column, (0, 7))
           } else {
             for (row <- 0 to 7) {
@@ -146,8 +146,8 @@ class Controller(private var board: Board, val player_1: Player, val player_2: P
 
     if (piece == "P") {
       for (column: Int <- 0 until board.size) {
-        if (board.getPiecesInColumn(column, state).filter(x => x.typeEquals("P")).isEmpty) {
-          if (board.getPiecesInColumn(column, state).filter(x => x.typeEquals("K")).isEmpty) {
+        if (!board.getPiecesInColumn(column, state).exists(x => x.typeEquals("P"))) {
+          if (!board.getPiecesInColumn(column, state).exists(x => x.typeEquals("K"))) {
             possibleMoves = possibleMoves ::: board.getEmptyCellsInColumn(column, (1, 8))
           } else {
             for (row <- (board.size - 1) to 1) {

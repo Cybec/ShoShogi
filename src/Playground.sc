@@ -41,7 +41,7 @@ for (i <- 0 to 8) {
 
 println(board)
 
-board.getPiecesInColumn(0, false).filter(x => x.typeEquals("P")).isEmpty
+!board.getPiecesInColumn(0, false).exists(x => x.typeEquals("P"))
 
 
 

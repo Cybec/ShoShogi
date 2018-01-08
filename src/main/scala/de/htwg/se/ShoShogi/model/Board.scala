@@ -26,8 +26,8 @@ case class Board(board: Vector[Vector[Piece]], containerPlayer_0: List[Piece], c
   def getFromPlayerContainer(player: Player)(pred: (Piece) => Boolean): Option[(Board, Piece)] = {
     if (player.first) {
       val (before, atAndAfter) = containerPlayer_0 span (x => !pred(x))
-      if (atAndAfter.size > 0) {
-        val getPiece: Piece = atAndAfter(0)
+      if (atAndAfter.nonEmpty) {
+        val getPiece: Piece = atAndAfter.head
         val newCon: List[Piece] = before ::: atAndAfter.drop(1)
         Some((copy(board, newCon, containerPlayer_1), getPiece.cloneToNewPlayer(player)))
       } else {
@@ -35,8 +35,8 @@ case class Board(board: Vector[Vector[Piece]], containerPlayer_0: List[Piece], c
       }
     } else {
       val (before, atAndAfter) = containerPlayer_1 span (x => !pred(x))
-      if (atAndAfter.size > 0) {
-        val getPiece: Piece = atAndAfter(0)
+      if (atAndAfter.nonEmpty) {
+        val getPiece: Piece = atAndAfter.head
         val newCon: List[Piece] = before ::: atAndAfter.drop(1)
         Some((copy(board, containerPlayer_0, newCon), getPiece.cloneToNewPlayer(player)))
       } else {

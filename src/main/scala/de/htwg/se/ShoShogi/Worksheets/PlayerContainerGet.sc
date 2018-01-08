@@ -59,8 +59,8 @@ getFromPlayerContainer(containerPlayer_0, player_0) {
 
 def getFromPlayerContainer(list: List[Piece], player: Player)(pred: (Piece) => Boolean): Option[(List[Piece], Piece)] = {
   def buildNewList(before: List[Piece], atAndAfter: List[Piece]): Option[(List[Piece], Piece)] ={
-    if (atAndAfter.size > 0) {
-      val getPiece = atAndAfter(0)
+    if (atAndAfter.nonEmpty) {
+      val getPiece = atAndAfter.head
       val newCon = before ::: atAndAfter.drop(1)
       Some((newCon, getPiece))
     } else {

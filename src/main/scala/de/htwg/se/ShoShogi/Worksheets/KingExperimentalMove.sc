@@ -44,8 +44,8 @@ import de.htwg.se.ShoShogi.model._
 
 import scala.collection.mutable.ListBuffer
 
-val player_1: Player = new Player("Player1", true)
-val player_2: Player = new Player("Player2", false)
+val player_1: Player =  Player("Player1", true)
+val player_2: Player =  Player("Player2", false)
 
 var board = new Board[Piece](9, new EmptyPiece)
 

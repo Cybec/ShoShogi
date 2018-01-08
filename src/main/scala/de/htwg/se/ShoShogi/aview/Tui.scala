@@ -53,10 +53,10 @@ class Tui(controller: Controller) extends Observer {
         case e if e.command == "mv" =>
           parseArguments(e.input) match {
             case Some(value) =>
-              if (!controller.movePiece((value(0)._1, value(0)._2), (value(1)._1, value(1)._2))) {
-                printString("You cant move this piece that way\n")
-              } else {
+              if (controller.movePiece((value(0)._1, value(0)._2), (value(1)._1, value(1)._2))) {
                 promoteQuery(value)
+              } else {
+                printString("You cant move this piece that way\n")
               }
             case _ => printString("Could not read input: ".concat(e.input.mkString(" ")))
           }
@@ -136,6 +136,9 @@ class Tui(controller: Controller) extends Observer {
     'i' -> 8
   )
 
+
+  //TODO: menu als state
+  
   val menuMapStart = Map(
     "q" -> "quit",
     "n" -> "new"
@@ -169,12 +172,12 @@ class Tui(controller: Controller) extends Observer {
   def parseArguments(inputArray: Array[String]): Option[Vector[(Int, Int)]] = {
     val position = inputArray.mkString("").replace("pmv", "").replace("mvcp", "").replace("mv", "").trim.toList
     try {
-      if (position.length == 2 && "1234567890".contains(position(0))) {
-        Some(Vector[(Int, Int)]((position(0).toInt - '0', yAxis.getOrElse(position(1), -1))))
+      if (position.length == 2 && "1234567890".contains(position.head)) {
+        Some(Vector[(Int, Int)]((position.head.toInt - '0', yAxis.getOrElse(position(1), -1))))
 
-      } else if (position.length == 4 && "1234567890".contains(position(0)) && "1234567890".contains(position(2))) {
+      } else if (position.length == 4 && "1234567890".contains(position.head) && "1234567890".contains(position(2))) {
         var tempVec = Vector.empty[(Int, Int)]
-        tempVec = tempVec :+ (position(0).toInt - '0', yAxis.getOrElse(position(1), -1))
+        tempVec = tempVec :+ (position.head.toInt - '0', yAxis.getOrElse(position(1), -1))
         tempVec = tempVec :+ (position(2).toInt - '0', yAxis.getOrElse(position(3), -1))
 
         Some(tempVec)
@@ -189,7 +192,7 @@ class Tui(controller: Controller) extends Observer {
   def parseArgumentsFromConquered(inputArray: Array[String]): Option[(String, (Int, Int))] = {
     val input = inputArray.mkString("").replace("pmvcp", "").replace("mvcp", "").trim.toList
     try {
-      if (input.length > 2 && ('A' to 'Z').contains(input(0))) {
+      if (input.length > 2 && ('A' to 'Z').contains(input.head)) {
         var pieceAbbreviation: String = ""
         var pieceDestination: (Int, Int) = (-1, -1)
 
@@ -197,19 +200,19 @@ class Tui(controller: Controller) extends Observer {
           pieceAbbreviation = input.slice(0, 1).mkString("")
           pieceDestination = (input(2).toInt - '0', yAxis.getOrElse(input(3), -1))
         } else {
-          pieceAbbreviation = input(0).toString()
+          pieceAbbreviation = input.head.toString
           pieceDestination = (input(1).toInt - '0', yAxis.getOrElse(input(2), -1))
         }
 
         Some(pieceAbbreviation, pieceDestination)
 
-      } else if (input.length >= 1 && ('A' to 'Z').contains(input(0))) {
+      } else if (input.nonEmpty && ('A' to 'Z').contains(input.head)) {
         var pieceAbbreviation: String = ""
 
         if (input.length == 2) {
           pieceAbbreviation = input.slice(0, 1).mkString("")
         } else {
-          pieceAbbreviation = input(0).toString()
+          pieceAbbreviation = input.head.toString
         }
 
         Some(pieceAbbreviation, (-1, -1))
@@ -252,5 +255,5 @@ class Tui(controller: Controller) extends Observer {
     true
   }
 
-  override def update: Unit = printString(controller.boardToString)
+  override def update: Unit = printString(controller.boardToString())
 }

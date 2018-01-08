@@ -1,16 +1,15 @@
 package de.htwg.se.ShoShogi.model
 
-import de.htwg.se.ShoShogi.aview.Tui
-import de.htwg.se.ShoShogi.controller.Controller
 import org.scalatest._
 import org.junit.runner.RunWith
 import org.scalatest.junit.JUnitRunner
 
+//noinspection ScalaStyle
 @RunWith(classOf[JUnitRunner])
 class PieceSpec extends WordSpec with Matchers {
   val boardSize = 9
-  val player_1 = new Player("Player 1", true)
-  val player_2 = new Player("Player 2", false)
+  val player_1 = Player("Player 1", true)
+  val player_2 = Player("Player 2", false)
   var board = new Board(boardSize, new EmptyPiece)
 
   //Steine fuer Spieler 1
@@ -441,7 +440,7 @@ class PieceSpec extends WordSpec with Matchers {
     "new" should {
       val piece = EmptyPiece()
       "have a Player" in {
-        piece.player should be(new Player("", false))
+        piece.player should be(Player("", false))
       }
       "should not have a promotion" in {
         piece.hasPromotion should be(false)
