@@ -3,10 +3,41 @@ package de.htwg.se.ShoShogi.aview
 import de.htwg.se.ShoShogi.controller.Controller
 import de.htwg.se.ShoShogi.util.Observer
 
-class Tui(controller: Controller) extends Observer {
+trait State {
+  var state = true
+  val newGame = false
+  val mainMenu = true
+
+  def setGameState(value: Boolean): Unit = {
+    state = value
+  }
+
+  def getMenu: Map[String, String] = if (state) {
+    menuMapStart
+  } else {
+    menuMapInGame
+  }
+
+  private val menuMapStart = Map(
+    "q" -> "quit",
+    "n" -> "new"
+  )
+  private val menuMapInGame = Map(
+    "q" -> "quit",
+    "n" -> "new",
+    "mv [0-9][a-i] [0-9][a-i]" -> "move [0-9][a-i] to [0-9][a-i]",
+    "pmv [0-9][a-i]" -> "possible moves of [0-9][a-i]",
+    "mvcp [piece abbreviation] [0-9][a-i]" -> "move [piece abbreviation] to [0-9][a-i]",
+    "pmvcp [piece abbreviation]" -> "possible moves of [piece abbreviation]"
+  )
+}
+
+class Tui(controller: Controller) extends Observer with State {
   controller.add(this)
 
   case class Event(command: String, input: Array[String])
+
+  //TODO: Chain of Responsibility Pattern in eine andere Datei?
 
   //Chain of Responsibility Pattern
   //Base handler class
@@ -35,10 +66,14 @@ class Tui(controller: Controller) extends Observer {
       event match {
         case e if e.command == "n" =>
           controller.createNewBoard()
-          menuMap = menuMapInGame
+          setGameState(newGame)
         case e => {
           successor match {
-            case Some(h: Handler) => h.handleEvent(e)
+            case Some(h: Handler) => {
+              if (!state) {
+                h.handleEvent(e)
+              }
+            }
             case None => printString("Could not find command.")
           }
         }
@@ -52,12 +87,7 @@ class Tui(controller: Controller) extends Observer {
         //TODO: ReadLine gewollte Lösung?
         case e if e.command == "mv" =>
           parseArguments(e.input) match {
-            case Some(value) =>
-              if (controller.movePiece((value(0)._1, value(0)._2), (value(1)._1, value(1)._2))) {
-                promoteQuery(value)
-              } else {
-                printString("You cant move this piece that way\n")
-              }
+            case Some(value) => move(e, value)
             case _ => printString("Could not read input: ".concat(e.input.mkString(" ")))
           }
         case e => {
@@ -65,6 +95,18 @@ class Tui(controller: Controller) extends Observer {
             case Some(h: Handler) => h.handleEvent(e)
             case None => printString("Could not find command.")
           }
+        }
+      }
+    }
+
+    private def move(e: Event, value: Vector[(Int, Int)]) = {
+      controller.movePiece((value(0)._1, value(0)._2), (value(1)._1, value(1)._2)) match {
+        case controller.MoveResult.invalidMove => printString("You cant move this piece that way\n")
+        case controller.MoveResult.validMove => promoteQuery(value)
+        case controller.MoveResult.kingSlain => {
+          setGameState(mainMenu)
+          printString("You won!")
+          update
         }
       }
     }
@@ -135,23 +177,6 @@ class Tui(controller: Controller) extends Observer {
     'h' -> 7,
     'i' -> 8
   )
-
-
-  //TODO: menu als state
-  
-  val menuMapStart = Map(
-    "q" -> "quit",
-    "n" -> "new"
-  )
-  val menuMapInGame = Map(
-    "q" -> "quit",
-    "n" -> "new",
-    "mv [0-9][a-i] [0-9][a-i]" -> "move [0-9][a-i] to [0-9][a-i]",
-    "pmv [0-9][a-i]" -> "possible moves of [0-9][a-i]",
-    "mvcp [piece abbreviation] [0-9][a-i]" -> "move [piece abbreviation] to [0-9][a-i]",
-    "pmvcp [piece abbreviation]" -> "possible moves of [piece abbreviation]"
-  )
-  var menuMap = menuMapStart
 
   def processInputLine(input: String): Unit = {
     if (input.length > 0) {
@@ -246,7 +271,7 @@ class Tui(controller: Controller) extends Observer {
 
   def printInputMenu(): Unit = {
     val menuString = new StringBuilder
-    for ((k, v) <- menuMap) menuString.append(k).append(": ").append(v).append("\n").append("------\n")
+    for ((k, v) <- getMenu) menuString.append(k).append(": ").append(v).append("\n").append("------\n")
     printString(menuString.toString())
   }
 

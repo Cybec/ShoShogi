@@ -23,6 +23,8 @@ abstract class Piece(name: String, val player: Player) {
 
   def promotePiece: Option[Piece]
 
+  def isFirstOwner: Boolean = player.first
+
   val hasPromotion: Boolean
 
   override def toString: String

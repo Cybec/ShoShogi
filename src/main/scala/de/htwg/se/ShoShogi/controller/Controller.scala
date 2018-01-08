@@ -14,8 +14,13 @@ trait State {
 //noinspection ScalaStyle
 class Controller(private var board: Board, val player_1: Player, val player_2: Player) extends Observable with State {
   val boardSize = 9
-  var container = board.getContainer()
+  var container: (List[Piece], List[Piece]) = board.getContainer()
   var state = true
+
+  object MoveResult extends Enumeration {
+    type EnumType = Value
+    val invalidMove, validMove, kingSlain = Value
+  }
 
   def getPieceAbbreviationList: List[String] = Pieces.getPiecesAbbreviation
 
@@ -71,11 +76,11 @@ class Controller(private var board: Board, val player_1: Player, val player_2: P
     }
   }
 
-  def movePiece(currentPos: (Int, Int), destination: (Int, Int)): Boolean = {
+  def movePiece(currentPos: (Int, Int), destination: (Int, Int)): MoveResult.Value = {
     if (possibleMoves(currentPos).contains(destination)) {
 
-      val tempPieceDestination = board.cell(destination._1, destination._2).getOrElse(return false)
-      val tempPieceCurrent = board.cell(currentPos._1, currentPos._2).getOrElse(return false)
+      val tempPieceDestination = board.cell(destination._1, destination._2).getOrElse(return MoveResult.invalidMove)
+      val tempPieceCurrent = board.cell(currentPos._1, currentPos._2).getOrElse(return MoveResult.invalidMove)
 
       if (state == tempPieceCurrent.player.first) {
 
@@ -85,12 +90,17 @@ class Controller(private var board: Board, val player_1: Player, val player_2: P
         board = board.addToPlayerContainer(tempPieceCurrent.player, tempPieceDestination)
         state = changePlayer(state)
         notifyObservers
-        true
+
+        if (tempPieceDestination.isInstanceOf[King]) {
+          MoveResult.kingSlain
+        } else {
+          MoveResult.validMove
+        }
       } else {
-        false
+        MoveResult.invalidMove
       }
     } else {
-      false
+      MoveResult.invalidMove
     }
   }
 
