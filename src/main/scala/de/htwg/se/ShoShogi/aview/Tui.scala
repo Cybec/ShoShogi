@@ -1,7 +1,9 @@
 package de.htwg.se.ShoShogi.aview
 
-import de.htwg.se.ShoShogi.controller.Controller
+import de.htwg.se.ShoShogi.controller.{ UpdateAll, Controller }
 import de.htwg.se.ShoShogi.util.Observer
+
+import scala.swing.Reactor
 
 trait State {
   var state = true
@@ -32,8 +34,8 @@ trait State {
   )
 }
 
-class Tui(controller: Controller) extends Observer with State {
-  controller.add(this)
+class Tui(controller: Controller) extends Reactor with State {
+  listenTo(controller)
 
   case class Event(command: String, input: Array[String])
 
@@ -106,7 +108,6 @@ class Tui(controller: Controller) extends Observer with State {
         case controller.MoveResult.kingSlain => {
           setGameState(mainMenu)
           printString("You won!")
-          update
         }
       }
     }
@@ -280,5 +281,7 @@ class Tui(controller: Controller) extends Observer with State {
     true
   }
 
-  override def update: Unit = printString(controller.boardToString())
+  reactions += {
+    case event: UpdateAll => printString(controller.boardToString())
+  }
 }

@@ -1,6 +1,7 @@
 package de.htwg.se.ShoShogi.model
 
 case class Board(board: Vector[Vector[Piece]], containerPlayer_0: List[Piece], containerPlayer_1: List[Piece]) {
+
   def this(size: Int, filling: Piece) = this(Vector.tabulate(size, size) { (row, col) => filling }, List.empty[Piece], List.empty[Piece])
 
   val size: Int = board.size
@@ -121,6 +122,22 @@ case class Board(board: Vector[Vector[Piece]], containerPlayer_0: List[Piece], c
     returnValue.append("\n")
 
     returnValue.toString()
+  }
+
+  def toList: List[Piece] = {
+    var returnList: List[Piece] = List[Piece]()
+
+    for {
+      x <- 0 until size
+      y <- 0 until size
+    } {
+      cell(y, x) match {
+        case Some(piece) => returnList = returnList :+ piece
+        case None => returnList = returnList :+ new EmptyPiece
+      }
+    }
+
+    returnList
   }
 }
 
