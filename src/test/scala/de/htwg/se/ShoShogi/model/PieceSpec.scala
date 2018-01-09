@@ -58,7 +58,7 @@ class PieceSpec extends WordSpec with Matchers {
         piece.promotePiece should be(None)
       }
       "have a nice String representation" in {
-        piece.toString should be("K ")
+        piece.toString should be("K° ")
       }
       "have a List of Moves (4, 0)" in {
         piece.getMoveSet((4, 0), board) should be(List[(Int, Int)]((3, 1), (4, 1), (5, 1)))
@@ -86,7 +86,7 @@ class PieceSpec extends WordSpec with Matchers {
         piece.promotePiece should be(None)
       }
       "have a nice String representation" in {
-        piece.toString should be("GG")
+        piece.toString should be("GG°")
       }
       "have a List of Moves (3, 0)" in {
         piece.getMoveSet((3, 0), board) should be(List[(Int, Int)]((2, 1), (3, 1), (4, 1)))
@@ -114,7 +114,7 @@ class PieceSpec extends WordSpec with Matchers {
         piece.promotePiece should be(Some(PromotedSilver(piece.player)))
       }
       "have a nice String representation" in {
-        piece.toString should be("SG")
+        piece.toString should be("SG°")
       }
       "have a List of Moves (2, 0)" in {
         piece.getMoveSet((2, 0), board) should be(List[(Int, Int)]((3, 1), (2, 1)))
@@ -142,7 +142,7 @@ class PieceSpec extends WordSpec with Matchers {
         piece.promotePiece should be(None)
       }
       "have a nice String representation" in {
-        piece.toString should be("PS")
+        piece.toString should be("PS°")
       }
       "have a List of Moves (3, 0)" in {
         piece.getMoveSet((3, 0), board) should be(List[(Int, Int)]((2, 1), (3, 1), (4, 1)))
@@ -170,7 +170,7 @@ class PieceSpec extends WordSpec with Matchers {
         piece.promotePiece should be(Some(PromotedKnight(piece.player)))
       }
       "have a nice String representation" in {
-        piece.toString should be("KN")
+        piece.toString should be("KN°")
       }
       "have a List of Moves (1, 0)" in {
         piece.getMoveSet((1, 0), board) should be(List[(Int, Int)]((3, 1)))
@@ -198,7 +198,7 @@ class PieceSpec extends WordSpec with Matchers {
         piece.promotePiece should be(None)
       }
       "have a nice String representation" in {
-        piece.toString should be("PK")
+        piece.toString should be("PK°")
       }
       "have a List of Moves (3, 0)" in {
         piece.getMoveSet((3, 0), board) should be(List[(Int, Int)]((2, 1), (3, 1), (4, 1)))
@@ -226,7 +226,7 @@ class PieceSpec extends WordSpec with Matchers {
         piece.promotePiece should be(Some(PromotedLancer(piece.player)))
       }
       "have a nice String representation" in {
-        piece.toString should be("L ")
+        piece.toString should be("L° ")
       }
       "have a List of Moves (0, 0)" in {
         piece.getMoveSet((0, 0), board) should be(List[(Int, Int)]((0, 1)))
@@ -254,7 +254,7 @@ class PieceSpec extends WordSpec with Matchers {
         piece.promotePiece should be(None)
       }
       "have a nice String representation" in {
-        piece.toString should be("PL")
+        piece.toString should be("PL°")
       }
       "have a List of Moves (3, 0)" in {
         piece.getMoveSet((3, 0), board) should be(List[(Int, Int)]((2, 1), (3, 1), (4, 1)))
@@ -282,7 +282,7 @@ class PieceSpec extends WordSpec with Matchers {
         piece.promotePiece should be(Some(PromotedBishop(piece.player)))
       }
       "have a nice String representation" in {
-        piece.toString should be("B ")
+        piece.toString should be("B° ")
       }
       "have a List of Moves (7, 0)" in {
         piece.getMoveSet((7, 1), board) should be(List[(Int, Int)]())
@@ -310,7 +310,7 @@ class PieceSpec extends WordSpec with Matchers {
         piece.promotePiece should be(None)
       }
       "have a nice String representation" in {
-        piece.toString should be("PB")
+        piece.toString should be("PB°")
       }
       "have a List of Moves (7, 0)" in {
         piece.getMoveSet((7, 1), board) should be(List[(Int, Int)]((8, 1), (6, 1)))
@@ -338,7 +338,7 @@ class PieceSpec extends WordSpec with Matchers {
         piece.promotePiece should be(Some(PromotedRook(piece.player)))
       }
       "have a nice String representation" in {
-        piece.toString should be("R ")
+        piece.toString should be("R° ")
       }
       "have a List of Moves (1, 1)" in {
         piece.getMoveSet((1, 1), board) should be(List[(Int, Int)]((2, 1), (3, 1), (4, 1), (5, 1), (6, 1), (0, 1)))
@@ -366,7 +366,7 @@ class PieceSpec extends WordSpec with Matchers {
         piece.promotePiece should be(None)
       }
       "have a nice String representation" in {
-        piece.toString should be("PR")
+        piece.toString should be("PR°")
       }
       "have a List of Moves (1, 1)" in {
         piece.getMoveSet((1, 1), board) should be(List[(Int, Int)]((2, 1), (3, 1), (4, 1), (5, 1), (6, 1), (0, 1)))
@@ -394,7 +394,7 @@ class PieceSpec extends WordSpec with Matchers {
         piece.promotePiece should be(Some(PromotedPawn(piece.player)))
       }
       "have a nice String representation" in {
-        piece.toString should be("P ")
+        piece.toString should be("P° ")
       }
       "have a List of Moves (1, 1)" in {
         piece.getMoveSet((1, 2), board) should be(List[(Int, Int)]((1, 3)))
@@ -422,7 +422,7 @@ class PieceSpec extends WordSpec with Matchers {
         piece.promotePiece should be(None)
       }
       "have a nice String representation" in {
-        piece.toString should be("PP")
+        piece.toString should be("PP°")
       }
       "have a List of Moves (3, 0)" in {
         piece.getMoveSet((3, 0), board) should be(List[(Int, Int)]((2, 1), (3, 1), (4, 1)))
@@ -449,7 +449,7 @@ class PieceSpec extends WordSpec with Matchers {
         piece.promotePiece should be(None)
       }
       "have a nice String representation" in {
-        piece.toString should be("  ")
+        piece.toString should be("   ")
       }
       "have a List of Moves (3, 0)" in {
         piece.getMoveSet((3, 0), board) should be(List[(Int, Int)]())

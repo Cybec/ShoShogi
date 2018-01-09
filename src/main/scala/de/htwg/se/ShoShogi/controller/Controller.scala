@@ -120,10 +120,10 @@ class Controller(private var board: Board, val player_1: Player, val player_2: P
   def getPossibleMvConPlayer1(piece: String): List[(Int, Int)] = {
     var possibleMoves = List[(Int, Int)]()
 
-    if (piece == "P") {
+    if (piece == "P" || piece == "P°") {
       for (column: Int <- 0 until board.size) {
-        if (!board.getPiecesInColumn(column, state).exists(x => x.typeEquals("P"))) {
-          if (!board.getPiecesInColumn(column, state).exists(x => x.typeEquals("K"))) {
+        if (!board.getPiecesInColumn(column, state).exists(x => x.typeEquals("P") || x.typeEquals("P°"))) {
+          if (!board.getPiecesInColumn(column, state).exists(x => x.typeEquals("K") || x.typeEquals("K°"))) {
             possibleMoves = possibleMoves ::: board.getEmptyCellsInColumn(column, (0, 7))
           } else {
             for (row <- 0 to 7) {
@@ -139,7 +139,7 @@ class Controller(private var board: Board, val player_1: Player, val player_2: P
           }
         }
       }
-    } else if (piece == "KN" || piece == "L") {
+    } else if (piece == "KN" || piece == "L" || piece == "KN°" || piece == "L°") {
       for (x <- 0 until board.size) {
         possibleMoves = possibleMoves ::: board.getEmptyCellsInColumn(x, (0, 7))
       }
@@ -154,10 +154,10 @@ class Controller(private var board: Board, val player_1: Player, val player_2: P
   def getPossibleMvConPlayer2(piece: String): List[(Int, Int)] = {
     var possibleMoves = List[(Int, Int)]()
 
-    if (piece == "P") {
+    if (piece == "P" || piece == "P°") {
       for (column: Int <- 0 until board.size) {
-        if (!board.getPiecesInColumn(column, state).exists(x => x.typeEquals("P"))) {
-          if (!board.getPiecesInColumn(column, state).exists(x => x.typeEquals("K"))) {
+        if (!board.getPiecesInColumn(column, state).exists(x => x.typeEquals("P") || x.typeEquals("P°"))) {
+          if (!board.getPiecesInColumn(column, state).exists(x => x.typeEquals("K") || x.typeEquals("K°"))) {
             possibleMoves = possibleMoves ::: board.getEmptyCellsInColumn(column, (1, 8))
           } else {
             for (row <- (board.size - 1) to 1) {
@@ -174,7 +174,7 @@ class Controller(private var board: Board, val player_1: Player, val player_2: P
         }
       }
 
-    } else if (piece == "KN" || piece == "L") {
+    } else if (piece == "KN" || piece == "L" || piece == "KN°" || piece == "L°") {
       for (x: Int <- 0 until board.size) {
         possibleMoves = possibleMoves ::: board.getEmptyCellsInColumn(x, (1, 8))
       }
