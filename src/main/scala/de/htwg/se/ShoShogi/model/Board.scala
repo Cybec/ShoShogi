@@ -98,11 +98,11 @@ case class Board(board: Vector[Vector[Piece]], containerPlayer_0: List[Piece], c
     returnValue.append("Captured Player 1: ")
     containerPlayer_0.foreach(x => returnValue.append(x).append("   "))
 
-    returnValue.append("\n   0    1    2    3    4    5    6    7    8 \n \n")
+    returnValue.append("\n    0     1     2     3     4     5     6     7     8 \n \n")
 
     for (a <- 1 to 19) {
       if (a % 2 == 1) {
-        for (b <- 1 to 48) returnValue.append("-")
+        for (b <- 1 to 57) returnValue.append("-")
       } else {
         for (c <- 0 to 8) {
           cell(c, index) match {

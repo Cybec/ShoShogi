@@ -67,7 +67,13 @@ case class King(override val player: Player)
     None
   }
 
-  override def toString: String = "K "
+  override def toString: String = {
+    "K" + (if (this.player.first) {
+      "° "
+    } else {
+      "  "
+    })
+  }
 
   /*Author:   Mert, Nick
   * Role:     Gibt die moeglichen Bewegungsfelder zurueck
@@ -105,7 +111,13 @@ case class GoldenGeneral(override val player: Player)
     None
   }
 
-  override def toString: String = "GG"
+  override def toString: String = {
+    "GG" + (if (this.player.first) {
+      "°"
+    } else {
+      " "
+    })
+  }
 
   /*Author:   Mert, Nick
   * Role:     Gibt die moeglichen Bewegungsfelder zurueck
@@ -150,7 +162,13 @@ case class SilverGeneral(override val player: Player)
     Some(PromotedSilver(player))
   }
 
-  override def toString: String = "SG"
+  override def toString: String = {
+    "SG" + (if (this.player.first) {
+      "°"
+    } else {
+      " "
+    })
+  }
 
   /*Author:   Mert, Nick
   * Role:     Gibt die moeglichen Bewegungsfelder zurueck
@@ -182,7 +200,13 @@ case class PromotedSilver(override val player: Player)
     None
   }
 
-  override def toString: String = "PS"
+  override def toString: String = {
+    "PS" + (if (this.player.first) {
+      "°"
+    } else {
+      " "
+    })
+  }
 
   def getMoveSet(pos: (Int, Int), board: Board): List[(Int, Int)] = {
     //    Jede Richtung ein Feld
@@ -225,7 +249,13 @@ case class Knight(override val player: Player)
     Some(PromotedKnight(player))
   }
 
-  override def toString: String = "KN"
+  override def toString: String = {
+    "KN" + (if (this.player.first) {
+      "°"
+    } else {
+      " "
+    })
+  }
 
   /*Author:   Mert, Nick
   * Role:     Gibt die moeglichen Bewegungsfelder zurueck
@@ -253,7 +283,13 @@ case class PromotedKnight(override val player: Player)
     None
   }
 
-  override def toString: String = "PK"
+  override def toString: String = {
+    "PK" + (if (this.player.first) {
+      "°"
+    } else {
+      " "
+    })
+  }
 
   def getMoveSet(pos: (Int, Int), board: Board): List[(Int, Int)] = {
     if (this.player.first) {
@@ -294,7 +330,13 @@ case class Lancer(override val player: Player)
     Some(PromotedLancer(player))
   }
 
-  override def toString: String = "L "
+  override def toString: String = {
+    "L" + (if (this.player.first) {
+      "° "
+    } else {
+      "  "
+    })
+  }
 
   /*Author:   Mert, Nick
   * Role:     Gibt die moeglichen Bewegungsfelder zurueck
@@ -318,7 +360,13 @@ case class PromotedLancer(override val player: Player)
     None
   }
 
-  override def toString: String = "PL"
+  override def toString: String = {
+    "PL" + (if (this.player.first) {
+      "°"
+    } else {
+      " "
+    })
+  }
 
   def getMoveSet(pos: (Int, Int), board: Board): List[(Int, Int)] = {
     if (this.player.first) {
@@ -359,7 +407,13 @@ case class Bishop(override val player: Player)
     Some(PromotedBishop(player))
   }
 
-  override def toString: String = "B "
+  override def toString: String = {
+    "B" + (if (this.player.first) {
+      "° "
+    } else {
+      "  "
+    })
+  }
 
   /*Author:   Mert, Nick
   * Role:     Gibt die moeglichen Bewegungsfelder zurueck
@@ -382,7 +436,13 @@ case class PromotedBishop(override val player: Player)
     None
   }
 
-  override def toString: String = "PB"
+  override def toString: String = {
+    "PB" + (if (this.player.first) {
+      "°"
+    } else {
+      " "
+    })
+  }
 
   def getMoveSet(pos: (Int, Int), board: Board): List[(Int, Int)] = {
     rekMoveSet(board, (pos._1 - 1, pos._2 - 1), board.size, (-1, -1)) :::
@@ -415,7 +475,13 @@ case class Rook(override val player: Player)
     Some(PromotedRook(player))
   }
 
-  override def toString: String = "R "
+  override def toString: String = {
+    "R" + (if (this.player.first) {
+      "° "
+    } else {
+      "  "
+    })
+  }
 
   /*Author:   Mert, Nick
   * Role:     Gibt die moeglichen Bewegungsfelder zurueck
@@ -438,7 +504,13 @@ case class PromotedRook(override val player: Player)
     None
   }
 
-  override def toString: String = "PR"
+  override def toString: String = {
+    "PR" + (if (this.player.first) {
+      "°"
+    } else {
+      " "
+    })
+  }
 
   def getMoveSet(pos: (Int, Int), board: Board): List[(Int, Int)] = {
     rekMoveSet(board, (pos._1, pos._2 + 1), board.size, (0, 1)) :::
@@ -471,7 +543,13 @@ case class Pawn(override val player: Player)
     Some(PromotedPawn(player))
   }
 
-  override def toString: String = "P "
+  override def toString: String = {
+    "P" + (if (this.player.first) {
+      "° "
+    } else {
+      "  "
+    })
+  }
 
   /*Author:   Mert, Nick
   * Role:     Gibt die moeglichen Bewegungsfelder zurueck
@@ -495,7 +573,13 @@ case class PromotedPawn(override val player: Player)
     None
   }
 
-  override def toString: String = "PP"
+  override def toString: String = {
+    "PP" + (if (this.player.first) {
+      "°"
+    } else {
+      " "
+    })
+  }
 
   def getMoveSet(pos: (Int, Int), board: Board): List[(Int, Int)] = {
     if (this.player.first) {
@@ -533,7 +617,7 @@ case class EmptyPiece()
     None
   }
 
-  override def toString: String = "  "
+  override def toString: String = "   "
 
   /*Author:   Mert, Nick
   * Role:     Gibt die moeglichen Bewegungsfelder zurueck
