@@ -1,24 +1,5 @@
 package de.htwg.se.ShoShogi.model
 
-object Pieces {
-  def getPiecesAbbreviation: List[String] = List[String](
-    "K",
-    "GG",
-    "SG",
-    "PS",
-    "KN",
-    "PK",
-    "L",
-    "PL",
-    "B",
-    "PB",
-    "R",
-    "PR",
-    "P",
-    "PP"
-  )
-}
-
 abstract class Piece(name: String, val player: Player) {
 
   def promotePiece: Option[Piece]

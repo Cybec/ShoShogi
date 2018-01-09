@@ -420,26 +420,4 @@ class ControllerSpec extends WordSpec with Matchers {
       }
     }
   }
-  "A Controller" when {
-    "called getPieceAbbreviationList" should {
-      "give back a String for all Pieces" in {
-        controller.getPieceAbbreviationList should be(List[String](
-          "K",
-          "GG",
-          "SG",
-          "PS",
-          "KN",
-          "PK",
-          "L",
-          "PL",
-          "B",
-          "PB",
-          "R",
-          "PR",
-          "P",
-          "PP"
-        ))
-      }
-    }
-  }
 }

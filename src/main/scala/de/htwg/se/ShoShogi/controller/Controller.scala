@@ -22,8 +22,6 @@ class Controller(private var board: Board, val player_1: Player, val player_2: P
     val invalidMove, validMove, kingSlain = Value
   }
 
-  def getPieceAbbreviationList: List[String] = Pieces.getPiecesAbbreviation
-
   def createEmptyBoard(): Unit = {
     board = new Board(boardSize, new EmptyPiece)
     notifyObservers
