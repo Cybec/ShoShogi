@@ -168,7 +168,7 @@ class ControllerSpec extends WordSpec with Matchers {
   }
   "Controller" when {
     "called movePiece" should {
-      "return false if the Player tries to move enemy piece" in {
+      "return invalidMove if the Player tries to move enemy piece" in {
         controller.movePiece((0, 8), (0, 7)) should be(controller.MoveResult.invalidMove)
         controller.movePiece((1, 8), (1, 7)) should be(controller.MoveResult.invalidMove)
         controller.movePiece((2, 8), (2, 7)) should be(controller.MoveResult.invalidMove)
@@ -184,7 +184,7 @@ class ControllerSpec extends WordSpec with Matchers {
   }
   "Controller" when {
     "called movePiece" should {
-      "return false, if the destination is invalide" in {
+      "return invalidMove, if the destination is invalide" in {
         controller.createNewBoard()
         controller.movePiece((1, 7), (0, 0)) should be(controller.MoveResult.invalidMove)
         controller.movePiece((1, 7), (0, 1)) should be(controller.MoveResult.invalidMove)
@@ -276,6 +276,25 @@ class ControllerSpec extends WordSpec with Matchers {
         controller.movePiece((1, 7), (8, 7)) should be(controller.MoveResult.invalidMove)
         controller.movePiece((1, 7), (8, 8)) should be(controller.MoveResult.invalidMove)
         controller.movePiece((1, 7), (8, -8)) should be(controller.MoveResult.invalidMove)
+      }
+    }
+  }
+  "Controller" when {
+    "called movePiece" should {
+      controller.createNewBoard()
+      "return kingSlain, if the destination is the enemy King Piece" in {
+        controller.movePiece((4, 2), (4, 3)) should be(controller.MoveResult.validMove)
+        controller.movePiece((4, 6), (4, 5)) should be(controller.MoveResult.validMove)
+        controller.movePiece((4, 3), (4, 4)) should be(controller.MoveResult.validMove)
+        controller.movePiece((4, 5), (4, 4)) should be(controller.MoveResult.validMove)
+        controller.movePiece((1, 2), (1, 3)) should be(controller.MoveResult.validMove)
+        controller.movePiece((4, 4), (4, 3)) should be(controller.MoveResult.validMove)
+        controller.movePiece((1, 3), (1, 4)) should be(controller.MoveResult.validMove)
+        controller.movePiece((4, 3), (4, 2)) should be(controller.MoveResult.validMove)
+        controller.movePiece((1, 4), (1, 5)) should be(controller.MoveResult.validMove)
+        controller.movePiece((4, 2), (4, 1)) should be(controller.MoveResult.validMove)
+        controller.movePiece((1, 5), (1, 6)) should be(controller.MoveResult.validMove)
+        controller.movePiece((4, 1), (4, 0)) should be(controller.MoveResult.kingSlain)
       }
     }
   }
@@ -398,6 +417,28 @@ class ControllerSpec extends WordSpec with Matchers {
             "------------------------------------------------\n" +
             "Captured Player 2: P    \n"
         )
+      }
+    }
+  }
+  "A Controller" when {
+    "called getPieceAbbreviationList" should {
+      "give back a String for all Pieces" in {
+        controller.getPieceAbbreviationList should be(List[String](
+          "K",
+          "GG",
+          "SG",
+          "PS",
+          "KN",
+          "PK",
+          "L",
+          "PL",
+          "B",
+          "PB",
+          "R",
+          "PR",
+          "P",
+          "PP"
+        ))
       }
     }
   }

@@ -535,4 +535,82 @@ class PieceSpec extends WordSpec with Matchers {
       }
     }
   }
+
+  "A Piece" when {
+    "called isForstOwner" should {
+      "be true when Piece belongs to first player" in {
+        val piecePlayer1: Piece = King(player_1)
+        piecePlayer1.isFirstOwner should be(true)
+      }
+      "be false when Piece belongs to second player" in {
+        val piecePlayer2: Piece = King(player_2)
+        piecePlayer2.isFirstOwner should be(false)
+      }
+    }
+  }
+
+  "Pieces" when {
+    "called getPiecesAbbreviation" should {
+      "include Piece King" in {
+        val p: Piece = King(player_1)
+        Pieces.getPiecesAbbreviation.contains(p.toString.trim) should be(true)
+      }
+      "include Piece GoldenGeneral" in {
+        val p: Piece = GoldenGeneral(player_1)
+        Pieces.getPiecesAbbreviation.contains(p.toString.trim) should be(true)
+      }
+      "include Piece SilverGeneral" in {
+        val p: Piece = SilverGeneral(player_1)
+        Pieces.getPiecesAbbreviation.contains(p.toString.trim) should be(true)
+      }
+      "include Piece PromotedSilver" in {
+        val p: Piece = PromotedSilver(player_1)
+        Pieces.getPiecesAbbreviation.contains(p.toString.trim) should be(true)
+      }
+      "include Piece Knight" in {
+        val p: Piece = Knight(player_1)
+        Pieces.getPiecesAbbreviation.contains(p.toString.trim) should be(true)
+      }
+      "include Piece PromotedKnight" in {
+        val p: Piece = PromotedKnight(player_1)
+        Pieces.getPiecesAbbreviation.contains(p.toString.trim) should be(true)
+      }
+      "include Piece Lance" in {
+        val p: Piece = Lancer(player_1)
+        Pieces.getPiecesAbbreviation.contains(p.toString.trim) should be(true)
+      }
+      "include Piece PromotedLancer" in {
+        val p: Piece = PromotedLancer(player_1)
+        Pieces.getPiecesAbbreviation.contains(p.toString.trim) should be(true)
+      }
+      "include Piece Bishop" in {
+        val p: Piece = Bishop(player_1)
+        Pieces.getPiecesAbbreviation.contains(p.toString.trim) should be(true)
+      }
+      "include Piece PromotedBishop" in {
+        val p: Piece = PromotedBishop(player_1)
+        Pieces.getPiecesAbbreviation.contains(p.toString.trim) should be(true)
+      }
+      "include Piece Rook" in {
+        val p: Piece = Rook(player_1)
+        Pieces.getPiecesAbbreviation.contains(p.toString.trim) should be(true)
+      }
+      "include Piece PromotedRook" in {
+        val p: Piece = PromotedRook(player_1)
+        Pieces.getPiecesAbbreviation.contains(p.toString.trim) should be(true)
+      }
+      "include Piece Pawn" in {
+        val p: Piece = Pawn(player_1)
+        Pieces.getPiecesAbbreviation.contains(p.toString.trim) should be(true)
+      }
+      "include Piece PromotedPawn" in {
+        val p: Piece = PromotedPawn(player_1)
+        Pieces.getPiecesAbbreviation.contains(p.toString.trim) should be(true)
+      }
+      "not include Random String" in {
+        Pieces.getPiecesAbbreviation.contains("Hallo") should be(false)
+      }
+    }
+  }
+
 }
