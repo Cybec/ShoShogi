@@ -361,60 +361,41 @@ class ControllerSpec extends WordSpec with Matchers {
       "return a List of Moves a Conquered Pawn of each player can make" in {
         controller.createNewBoard()
         controller.movePiece((5, 0), (5, 1)) should be(controller.MoveResult.validMove) // player_1
-        controller.movePiece((0, 6), (0, 5)) should be(controller.MoveResult.validMove) // player_2
-        controller.movePiece((0, 2), (0, 3)) should be(controller.MoveResult.validMove) // player_1
-        controller.movePiece((0, 5), (0, 4)) should be(controller.MoveResult.validMove) // player_2
-        controller.movePiece((0, 3), (0, 4)) should be(controller.MoveResult.validMove) // player_1
-        controller.movePiece((0, 8), (0, 4)) should be(controller.MoveResult.validMove) // player_2
-        controller.possibleMovesConqueredPiece("P°") should be(List[(Int, Int)]((0, 1), (0, 2), (0, 3), (0, 5), (0, 6), (0, 7))) // player_1
+        controller.movePiece((4, 6), (4, 5)) should be(controller.MoveResult.validMove) // player_2
+        controller.movePiece((4, 2), (4, 3)) should be(controller.MoveResult.validMove) // player_1
+        controller.movePiece((4, 5), (4, 4)) should be(controller.MoveResult.validMove) // player_2
+        controller.movePiece((6, 0), (6, 1)) should be(controller.MoveResult.validMove) // player_1
+        controller.movePiece((4, 4), (4, 3)) should be(controller.MoveResult.validMove) // player_2
+        controller.movePiece((8, 2), (8, 3)) should be(controller.MoveResult.validMove) // player_1
+        controller.movePiece((4, 3), (4, 2)) should be(controller.MoveResult.validMove) // player_2
+        controller.movePiece((5, 1), (4, 2)) should be(controller.MoveResult.validMove) // player_1
+
+        controller.possibleMovesConqueredPiece("P") should be(List[(Int, Int)]((4, 7), (4, 6), (4, 5), (4, 4), (4, 3))) // player_2
+        controller.movePiece((8, 6), (8, 5)) should be(controller.MoveResult.validMove) // player_2
+
+        controller.possibleMovesConqueredPiece("P°") should be(List[(Int, Int)]((4, 1), (4, 3), (4, 4), (4, 5), (4, 6))) // player_1
+
         controller.boardToString() should be(
           "Captured Player 1: P°    \n" +
             "    0     1     2     3     4     5     6     7     8 \n \n" +
             "---------------------------------------------------------\n " +
-            "| L°  | KN° | SG° | GG° | K°  |     | SG° | KN° | L°  | \ta\n" +
+            "| L°  | KN° | SG° | GG° | K°  |     |     | KN° | L°  | \ta\n" +
             "---------------------------------------------------------\n " +
-            "|     | R°  |     |     |     | GG° |     | B°  |     | \tb\n" +
+            "|     | R°  |     |     |     |     | SG° | B°  |     | \tb\n" +
             "---------------------------------------------------------\n " +
-            "|     | P°  | P°  | P°  | P°  | P°  | P°  | P°  | P°  | \tc\n" +
+            "| P°  | P°  | P°  | P°  | GG° | P°  | P°  | P°  |     | \tc\n" +
             "---------------------------------------------------------\n " +
-            "|     |     |     |     |     |     |     |     |     | \td\n" +
+            "|     |     |     |     |     |     |     |     | P°  | \td\n" +
             "---------------------------------------------------------\n " +
-            "| L   |     |     |     |     |     |     |     |     | \te\n" +
+            "|     |     |     |     |     |     |     |     |     | \te\n" +
             "---------------------------------------------------------\n " +
-            "|     |     |     |     |     |     |     |     |     | \tf\n" +
+            "|     |     |     |     |     |     |     |     | P   | \tf\n" +
             "---------------------------------------------------------\n " +
-            "|     | P   | P   | P   | P   | P   | P   | P   | P   | \tg\n" +
-            "---------------------------------------------------------\n " +
-            "|     | B   |     |     |     |     |     | R   |     | \th\n" +
-            "---------------------------------------------------------\n " +
-            "|     | KN  | SG  | GG  | K   | GG  | SG  | KN  | L   | \ti\n" +
-            "---------------------------------------------------------\n" +
-            "Captured Player 2: P     \n"
-        )
-
-        controller.movePiece((0, 0), (0, 4)) should be(controller.MoveResult.validMove) // player_1
-        controller.possibleMovesConqueredPiece("P") should be(List[(Int, Int)]((0, 1), (0, 2), (0, 3), (0, 5), (0, 6), (0, 7), (0, 8))) // player_2
-        controller.boardToString() should be(
-          "Captured Player 1: P°    L°    \n" +
-            "    0     1     2     3     4     5     6     7     8 \n \n" +
-            "---------------------------------------------------------\n " +
-            "|     | KN° | SG° | GG° | K°  |     | SG° | KN° | L°  | \ta\n" +
-            "---------------------------------------------------------\n " +
-            "|     | R°  |     |     |     | GG° |     | B°  |     | \tb\n" +
-            "---------------------------------------------------------\n " +
-            "|     | P°  | P°  | P°  | P°  | P°  | P°  | P°  | P°  | \tc\n" +
-            "---------------------------------------------------------\n " +
-            "|     |     |     |     |     |     |     |     |     | \td\n" +
-            "---------------------------------------------------------\n " +
-            "| L°  |     |     |     |     |     |     |     |     | \te\n" +
-            "---------------------------------------------------------\n " +
-            "|     |     |     |     |     |     |     |     |     | \tf\n" +
-            "---------------------------------------------------------\n " +
-            "|     | P   | P   | P   | P   | P   | P   | P   | P   | \tg\n" +
+            "| P   | P   | P   | P   |     | P   | P   | P   |     | \tg\n" +
             "---------------------------------------------------------\n " +
             "|     | B   |     |     |     |     |     | R   |     | \th\n" +
             "---------------------------------------------------------\n " +
-            "|     | KN  | SG  | GG  | K   | GG  | SG  | KN  | L   | \ti\n" +
+            "| L   | KN  | SG  | GG  | K   | GG  | SG  | KN  | L   | \ti\n" +
             "---------------------------------------------------------\n" +
             "Captured Player 2: P     \n"
         )
@@ -585,42 +566,50 @@ class ControllerSpec extends WordSpec with Matchers {
 
   "Controller" when {
     "called moveConqueredPiece" should {
-      "should be true when conquered pawn was set on column with no other row of the same player" in {
+      "be true when conquered pawn was set on column with no other row of the same player" in {
         controller.createNewBoard()
-        controller.movePiece((0, 2), (0, 3)) should be(controller.MoveResult.validMove) // player_1
-        controller.movePiece((0, 6), (0, 5)) should be(controller.MoveResult.validMove) // player_2
-        controller.movePiece((0, 3), (0, 4)) should be(controller.MoveResult.validMove) // player_1
-        controller.movePiece((1, 6), (1, 5)) should be(controller.MoveResult.validMove) // player_2
-        controller.movePiece((0, 4), (0, 5)) should be(controller.MoveResult.validMove) // player_1
-        controller.movePiece((0, 8), (0, 5)) should be(controller.MoveResult.validMove) // player_2
-        controller.moveConqueredPiece("P°", (0, 6)) should be(true) // player_1
-        controller.moveConqueredPiece("P", (0, 2)) should be(true) // player_2
+        controller.movePiece((5, 0), (5, 1)) should be(controller.MoveResult.validMove) // player_1
+        controller.movePiece((4, 6), (4, 5)) should be(controller.MoveResult.validMove) // player_2
+        controller.movePiece((4, 2), (4, 3)) should be(controller.MoveResult.validMove) // player_1
+        controller.movePiece((4, 5), (4, 4)) should be(controller.MoveResult.validMove) // player_2
+        controller.movePiece((6, 0), (6, 1)) should be(controller.MoveResult.validMove) // player_1
+        controller.movePiece((4, 4), (4, 3)) should be(controller.MoveResult.validMove) // player_2
+        controller.movePiece((8, 2), (8, 3)) should be(controller.MoveResult.validMove) // player_1
+        controller.movePiece((4, 3), (4, 2)) should be(controller.MoveResult.validMove) // player_2
+        controller.movePiece((5, 1), (4, 2)) should be(controller.MoveResult.validMove) // player_1
+
+        controller.moveConqueredPiece("P", (0, 2)) should be(false) // player_2
+        controller.moveConqueredPiece("P", (4, 1)) should be(false) // player_2
+        controller.moveConqueredPiece("P", (4, 3)) should be(true) // player_2
+        controller.moveConqueredPiece("P°", (4, 7)) should be(false) // player_1
+        controller.moveConqueredPiece("P°", (4, 4)) should be(true) // player_1
+
         controller.boardToString() should be(
           "Captured Player 1: \n" +
             "    0     1     2     3     4     5     6     7     8 \n \n" +
             "---------------------------------------------------------\n " +
-            "| L°  | KN° | SG° | GG° | K°  |     | SG° | KN° | L°  | \ta\n" +
+            "| L°  | KN° | SG° | GG° | K°  |     |     | KN° | L°  | \ta\n" +
             "---------------------------------------------------------\n " +
-            "|     | R°  |     |     |     | GG° |     | B°  |     | \tb\n" +
+            "|     | R°  |     |     |     |     | SG° | B°  |     | \tb\n" +
             "---------------------------------------------------------\n " +
-            "| P   | P°  | P°  | P°  | P°  | P°  | P°  | P°  | P°  | \tc\n" +
+            "| P°  | P°  | P°  | P°  | GG° | P°  | P°  | P°  |     | \tc\n" +
             "---------------------------------------------------------\n " +
-            "|     |     |     |     |     |     |     |     |     | \td\n" +
+            "|     |     |     |     | P   |     |     |     | P°  | \td\n" +
             "---------------------------------------------------------\n " +
-            "| L   |     |     |     |     |     |     |     |     | \te\n" +
+            "|     |     |     |     | P°  |     |     |     |     | \te\n" +
             "---------------------------------------------------------\n " +
-            "|     | P   |     |     |     |     |     |     |     | \tf\n" +
+            "|     |     |     |     |     |     |     |     |     | \tf\n" +
             "---------------------------------------------------------\n " +
-            "| P°  |     | P   | P   | P   | P   | P   | P   | P   | \tg\n" +
+            "| P   | P   | P   | P   |     | P   | P   | P   | P   | \tg\n" +
             "---------------------------------------------------------\n " +
             "|     | B   |     |     |     |     |     | R   |     | \th\n" +
             "---------------------------------------------------------\n " +
-            "|     | KN  | SG  | GG  | K   | GG  | SG  | KN  | L   | \ti\n" +
+            "| L   | KN  | SG  | GG  | K   | GG  | SG  | KN  | L   | \ti\n" +
             "---------------------------------------------------------\n" +
-            "Captured Player 2: L°    \n"
+            "Captured Player 2: \n"
         )
       }
-      "should be false when a non existing piece wants to be moved" in {
+      "be false when a non existing piece wants to be moved" in {
         controller.createNewBoard()
         controller.movePiece((0, 2), (0, 3)) should be(controller.MoveResult.validMove) // player_1
         controller.movePiece((0, 6), (0, 5)) should be(controller.MoveResult.validMove) // player_2
@@ -630,7 +619,7 @@ class ControllerSpec extends WordSpec with Matchers {
         controller.movePiece((1, 5), (1, 4)) should be(controller.MoveResult.validMove) // player_2
         controller.moveConqueredPiece("Z", (0, 2)) should be(false)
       }
-      "should be false when conquered piece wants to be moved on a field its not allowed to be moved" in {
+      "be false when conquered piece wants to be moved on a field its not allowed to be moved" in {
         controller.createNewBoard()
         controller.movePiece((0, 2), (0, 3)) should be(controller.MoveResult.validMove) // player_1
         controller.movePiece((0, 6), (0, 5)) should be(controller.MoveResult.validMove) // player_2
