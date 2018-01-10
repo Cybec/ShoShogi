@@ -595,6 +595,30 @@ class ControllerSpec extends WordSpec with Matchers {
         controller.movePiece((0, 8), (0, 5)) should be(controller.MoveResult.validMove) // player_2
         controller.moveConqueredPiece("P°", (0, 6)) should be(true) // player_1
         controller.moveConqueredPiece("P", (0, 2)) should be(true) // player_2
+        controller.boardToString() should be(
+          "Captured Player 1: \n" +
+            "    0     1     2     3     4     5     6     7     8 \n \n" +
+            "---------------------------------------------------------\n " +
+            "| L°  | KN° | SG° | GG° | K°  |     | SG° | KN° | L°  | \ta\n" +
+            "---------------------------------------------------------\n " +
+            "|     | R°  |     |     |     | GG° |     | B°  |     | \tb\n" +
+            "---------------------------------------------------------\n " +
+            "| P   | P°  | P°  | P°  | P°  | P°  | P°  | P°  | P°  | \tc\n" +
+            "---------------------------------------------------------\n " +
+            "|     |     |     |     |     |     |     |     |     | \td\n" +
+            "---------------------------------------------------------\n " +
+            "| L   |     |     |     |     |     |     |     |     | \te\n" +
+            "---------------------------------------------------------\n " +
+            "|     | P   |     |     |     |     |     |     |     | \tf\n" +
+            "---------------------------------------------------------\n " +
+            "| P°  |     | P   | P   | P   | P   | P   | P   | P   | \tg\n" +
+            "---------------------------------------------------------\n " +
+            "|     | B   |     |     |     |     |     | R   |     | \th\n" +
+            "---------------------------------------------------------\n " +
+            "|     | KN  | SG  | GG  | K   | GG  | SG  | KN  | L   | \ti\n" +
+            "---------------------------------------------------------\n" +
+            "Captured Player 2: L°    \n"
+        )
       }
       "should be false when a non existing piece wants to be moved" in {
         controller.createNewBoard()

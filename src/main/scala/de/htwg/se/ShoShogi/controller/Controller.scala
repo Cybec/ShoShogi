@@ -125,19 +125,18 @@ class Controller(private var board: Board, val player_1: Player, val player_2: P
         if (!board.getPiecesInColumn(column, state).exists(x => x.typeEquals("P") || x.typeEquals("P°"))) {
           if (!board.getPiecesInColumn(column, state).exists(x => x.typeEquals("K") || x.typeEquals("K°"))) {
             possibleMoves = possibleMoves ::: board.getEmptyCellsInColumn(column, (0, 7))
+          } else {
+            for (row <- 0 to 7) {
+              board.cell(column, row) match {
+                case Some(piece) => if (piece.isInstanceOf[EmptyPiece]) {
+                  possibleMoves = possibleMoves :+ (column, row)
+                } else if (piece.isInstanceOf[King] && piece.player.first) {
+                  possibleMoves = possibleMoves.filter(_ != (column, row - 1))
+                }
+                case None => {}
+              }
+            }
           }
-          //else {
-          //  for (row <- 0 to 7) {
-          //    board.cell(column, row) match {
-          //      case Some(piece) => if (piece.isInstanceOf[EmptyPiece]) {
-          //        possibleMoves = possibleMoves :+ (column, row)
-          //      } else if (piece.isInstanceOf[King] && piece.player.first) {
-          //        possibleMoves = possibleMoves.filter(_ != (column, row - 1))
-          //      }
-          //      case None => {}
-          //    }
-          //  }
-          //}
         }
       }
     } else if (piece == "KN" || piece == "L" || piece == "KN°" || piece == "L°") {
@@ -160,19 +159,18 @@ class Controller(private var board: Board, val player_1: Player, val player_2: P
         if (!board.getPiecesInColumn(column, state).exists(x => x.typeEquals("P") || x.typeEquals("P°"))) {
           if (!board.getPiecesInColumn(column, state).exists(x => x.typeEquals("K") || x.typeEquals("K°"))) {
             possibleMoves = possibleMoves ::: board.getEmptyCellsInColumn(column, (1, 8))
+          } else {
+            for (row <- (board.size - 1) to 1) {
+              board.cell(column, row) match {
+                case Some(piece) => if (piece.isInstanceOf[EmptyPiece]) {
+                  possibleMoves = possibleMoves :+ (column, row)
+                } else if (piece.isInstanceOf[King] && piece.player.first) {
+                  possibleMoves = possibleMoves.filter(_ != (column, row + 1))
+                }
+                case None => {}
+              }
+            }
           }
-          //else {
-          //  for (row <- (board.size - 1) to 1) {
-          //    board.cell(column, row) match {
-          //      case Some(piece) => if (piece.isInstanceOf[EmptyPiece]) {
-          //        possibleMoves = possibleMoves :+ (column, row)
-          //      } else if (piece.isInstanceOf[King] && piece.player.first) {
-          //        possibleMoves = possibleMoves.filter(_ != (column, row + 1))
-          //      }
-          //      case None => {}
-          //    }
-          //  }
-          //}
         }
       }
 
