@@ -143,6 +143,7 @@ class PieceSpec extends WordSpec with Matchers {
       }
       "have a nice String representation" in {
         piece.toString should be("PS°")
+        piece2.toString should be("PS ")
       }
       "have a List of Moves (3, 0)" in {
         piece.getMoveSet((3, 0), board) should be(List[(Int, Int)]((2, 1), (3, 1), (4, 1)))
@@ -199,6 +200,7 @@ class PieceSpec extends WordSpec with Matchers {
       }
       "have a nice String representation" in {
         piece.toString should be("PK°")
+        piece2.toString should be("PK ")
       }
       "have a List of Moves (3, 0)" in {
         piece.getMoveSet((3, 0), board) should be(List[(Int, Int)]((2, 1), (3, 1), (4, 1)))
@@ -255,6 +257,7 @@ class PieceSpec extends WordSpec with Matchers {
       }
       "have a nice String representation" in {
         piece.toString should be("PL°")
+        piece2.toString should be("PL ")
       }
       "have a List of Moves (3, 0)" in {
         piece.getMoveSet((3, 0), board) should be(List[(Int, Int)]((2, 1), (3, 1), (4, 1)))
@@ -311,6 +314,7 @@ class PieceSpec extends WordSpec with Matchers {
       }
       "have a nice String representation" in {
         piece.toString should be("PB°")
+        piece2.toString should be("PB ")
       }
       "have a List of Moves (7, 0)" in {
         piece.getMoveSet((7, 1), board) should be(List[(Int, Int)]((8, 1), (6, 1)))
@@ -367,6 +371,7 @@ class PieceSpec extends WordSpec with Matchers {
       }
       "have a nice String representation" in {
         piece.toString should be("PR°")
+        piece2.toString should be("PR ")
       }
       "have a List of Moves (1, 1)" in {
         piece.getMoveSet((1, 1), board) should be(List[(Int, Int)]((2, 1), (3, 1), (4, 1), (5, 1), (6, 1), (0, 1)))
@@ -423,6 +428,7 @@ class PieceSpec extends WordSpec with Matchers {
       }
       "have a nice String representation" in {
         piece.toString should be("PP°")
+        piece2.toString should be("PP ")
       }
       "have a List of Moves (3, 0)" in {
         piece.getMoveSet((3, 0), board) should be(List[(Int, Int)]((2, 1), (3, 1), (4, 1)))

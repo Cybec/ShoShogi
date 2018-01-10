@@ -66,7 +66,6 @@ case class Board(board: Vector[Vector[Piece]], containerPlayer_0: List[Piece], c
           case Some(piece) => if (stateTurn == piece.player.first) {
             pieces = pieces :+ piece
           }
-          case None => {}
         }
       }
     }
