@@ -62,6 +62,8 @@ class Controller(private var board: Board, val player_1: Player, val player_2: P
       board = board.replaceCell(i, 6, Pawn(player_2))
     }
 
+    state = true
+
     notifyObservers
   }
 
@@ -124,11 +126,11 @@ class Controller(private var board: Board, val player_1: Player, val player_2: P
           if (!board.getPiecesInColumn(column, state).exists(x => x.typeEquals("K") || x.typeEquals("K°"))) {
             possibleMoves = possibleMoves ::: board.getEmptyCellsInColumn(column, (0, 7))
           } else {
-            for (row <- 0 to 7) {
+            for (row <- 0 to 8) {
               board.cell(column, row) match {
                 case Some(piece) => if (piece.isInstanceOf[EmptyPiece]) {
                   possibleMoves = possibleMoves :+ (column, row)
-                } else if (piece.isInstanceOf[King] && piece.player.first) {
+                } else if (piece.isInstanceOf[King] && !piece.player.first) {
                   possibleMoves = possibleMoves.filter(_ != (column, row - 1))
                 }
                 case None => {}
@@ -151,22 +153,23 @@ class Controller(private var board: Board, val player_1: Player, val player_2: P
 
   def getPossibleMvConPlayer2(piece: String): List[(Int, Int)] = {
     var possibleMoves = List[(Int, Int)]()
-
+    var count = 0
     if (piece == "P" || piece == "P°") {
       for (column: Int <- 0 until board.size) {
         if (!board.getPiecesInColumn(column, state).exists(x => x.typeEquals("P") || x.typeEquals("P°"))) {
           if (!board.getPiecesInColumn(column, state).exists(x => x.typeEquals("K") || x.typeEquals("K°"))) {
             possibleMoves = possibleMoves ::: board.getEmptyCellsInColumn(column, (1, 8))
           } else {
-            for (row <- (board.size - 1) to 1) {
-              board.cell(column, row) match {
+            for (row <- 0 to 8) {
+              board.cell(column, row + board.size - 1 - count) match {
                 case Some(piece) => if (piece.isInstanceOf[EmptyPiece]) {
-                  possibleMoves = possibleMoves :+ (column, row)
+                  possibleMoves = possibleMoves :+ (column, row + board.size - 1 - count)
                 } else if (piece.isInstanceOf[King] && piece.player.first) {
-                  possibleMoves = possibleMoves.filter(_ != (column, row + 1))
+                  possibleMoves = possibleMoves.filter(_ != (column, row + board.size - count))
                 }
                 case None => {}
               }
+              count = count + 2
             }
           }
         }
