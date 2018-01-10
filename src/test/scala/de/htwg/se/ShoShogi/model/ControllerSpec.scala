@@ -134,6 +134,7 @@ class ControllerSpec extends WordSpec with Matchers {
     "called boardToString" should {
       "create an String of the filled Board with captured both" in {
         controller.createNewBoard()
+        controller.movePiece((0, 2), (0, 3)) should be(controller.MoveResult.validMove)
         controller.movePiece((8, 6), (8, 5)) should be(controller.MoveResult.validMove)
         controller.movePiece((6, 2), (6, 3)) should be(controller.MoveResult.validMove)
         controller.movePiece((8, 5), (8, 4)) should be(controller.MoveResult.validMove)
@@ -147,9 +148,9 @@ class ControllerSpec extends WordSpec with Matchers {
             "---------------------------------------------------------\n " +
             "|     | R°  |     |     |     |     |     |     |     | \tb\n" +
             "---------------------------------------------------------\n " +
-            "| P°  | P°  | P°  | P°  | P°  | P°  |     | P°  | P°  | \tc\n" +
+            "|     | P°  | P°  | P°  | P°  | P°  |     | P°  | P°  | \tc\n" +
             "---------------------------------------------------------\n " +
-            "|     |     |     |     |     |     | P°  |     |     | \td\n" +
+            "| P°  |     |     |     |     |     | P°  |     |     | \td\n" +
             "---------------------------------------------------------\n " +
             "|     |     |     |     |     |     |     |     | P   | \te\n" +
             "---------------------------------------------------------\n " +
@@ -425,6 +426,7 @@ class ControllerSpec extends WordSpec with Matchers {
     "called possibleMovesConqueredPiece" should {
       "return a List of moves a conquered Lancer of each player can make" in {
         controller.createNewBoard()
+        controller.movePiece((8, 2), (8, 3)) should be(controller.MoveResult.validMove) // player_1
         controller.movePiece((0, 6), (0, 5)) should be(controller.MoveResult.validMove) // player_2
         controller.movePiece((0, 2), (0, 3)) should be(controller.MoveResult.validMove) // player_1
         controller.movePiece((0, 5), (0, 4)) should be(controller.MoveResult.validMove) // player_2
@@ -435,7 +437,7 @@ class ControllerSpec extends WordSpec with Matchers {
 
         controller.possibleMovesConqueredPiece("L°") should be(List[(Int, Int)]((0, 0), (0, 1), (0, 2), (0, 3), (0, 5), (0, 6), (0, 7),
           (1, 3), (1, 4), (1, 6), (2, 1), (2, 3), (2, 4), (2, 5), (2, 7), (3, 1), (3, 3), (3, 4), (3, 5), (3, 7), (4, 1), (4, 3), (4, 4), (4, 5), (4, 7),
-          (5, 1), (5, 3), (5, 4), (5, 5), (5, 7), (6, 1), (6, 3), (6, 4), (6, 5), (6, 7), (7, 3), (7, 4), (7, 5), (8, 1), (8, 3), (8, 4), (8, 5), (8, 7))) // player_1
+          (5, 1), (5, 3), (5, 4), (5, 5), (5, 7), (6, 1), (6, 3), (6, 4), (6, 5), (6, 7), (7, 3), (7, 4), (7, 5), (8, 1), (8, 2), (8, 4), (8, 5), (8, 7))) // player_1
         controller.boardToString() should be(
           "Captured Player 1: P°    L°    \n" +
             "    0     1     2     3     4     5     6     7     8 \n \n" +
@@ -444,9 +446,9 @@ class ControllerSpec extends WordSpec with Matchers {
             "---------------------------------------------------------\n " +
             "|     | R°  |     |     |     |     |     | B°  |     | \tb\n" +
             "---------------------------------------------------------\n " +
-            "|     | P°  | P°  | P°  | P°  | P°  | P°  | P°  | P°  | \tc\n" +
+            "|     | P°  | P°  | P°  | P°  | P°  | P°  | P°  |     | \tc\n" +
             "---------------------------------------------------------\n " +
-            "|     |     |     |     |     |     |     |     |     | \td\n" +
+            "|     |     |     |     |     |     |     |     | P°  | \td\n" +
             "---------------------------------------------------------\n " +
             "| L°  |     |     |     |     |     |     |     |     | \te\n" +
             "---------------------------------------------------------\n " +
@@ -463,12 +465,12 @@ class ControllerSpec extends WordSpec with Matchers {
 
         controller.movePiece((0, 4), (0, 6)) should be(controller.MoveResult.validMove) // player_1
         controller.movePiece((1, 7), (0, 6)) should be(controller.MoveResult.validMove) // player_2
-        controller.movePiece((8, 2), (8, 3)) should be(controller.MoveResult.validMove) // player_1
+        controller.movePiece((8, 3), (8, 4)) should be(controller.MoveResult.validMove) // player_1
 
         controller.possibleMovesConqueredPiece("L") should be(List[(Int, Int)]((0, 1), (0, 2), (0, 3), (0, 4), (0, 5), (0, 7), (0, 8),
           (1, 3), (1, 4), (1, 6), (1, 7), (2, 1), (2, 3), (2, 4), (2, 5), (2, 7), (3, 1), (3, 3), (3, 4), (3, 5), (3, 7), (4, 1), (4, 3), (4, 4),
           (4, 5), (4, 7), (5, 1), (5, 3), (5, 4), (5, 5), (5, 7), (6, 1), (6, 3), (6, 4), (6, 5), (6, 7), (7, 3), (7, 4), (7, 5), (8, 1), (8, 2),
-          (8, 4), (8, 5), (8, 7))) // player_2
+          (8, 3), (8, 5), (8, 7))) // player_2
         controller.boardToString() should be(
           "Captured Player 1: P°    L°    \n" +
             "    0     1     2     3     4     5     6     7     8 \n \n" +
@@ -479,9 +481,9 @@ class ControllerSpec extends WordSpec with Matchers {
             "---------------------------------------------------------\n " +
             "|     | P°  | P°  | P°  | P°  | P°  | P°  | P°  |     | \tc\n" +
             "---------------------------------------------------------\n " +
-            "|     |     |     |     |     |     |     |     | P°  | \td\n" +
+            "|     |     |     |     |     |     |     |     |     | \td\n" +
             "---------------------------------------------------------\n " +
-            "|     |     |     |     |     |     |     |     |     | \te\n" +
+            "|     |     |     |     |     |     |     |     | P°  | \te\n" +
             "---------------------------------------------------------\n " +
             "|     | P   |     |     |     |     |     |     |     | \tf\n" +
             "---------------------------------------------------------\n " +
@@ -501,6 +503,7 @@ class ControllerSpec extends WordSpec with Matchers {
     "called possibleMovesConqueredPiece" should {
       "return a List of moves a conquered normal piece of each player can make" in {
         controller.createNewBoard()
+        controller.movePiece((8, 2), (8, 3)) should be(controller.MoveResult.validMove)
         controller.movePiece((7, 6), (7, 5)) should be(controller.MoveResult.validMove) // player_2
         controller.movePiece((7, 2), (7, 3)) should be(controller.MoveResult.validMove) // player_1
         controller.movePiece((7, 5), (7, 4)) should be(controller.MoveResult.validMove) // player_2
@@ -514,7 +517,7 @@ class ControllerSpec extends WordSpec with Matchers {
         controller.possibleMovesConqueredPiece("B") should be(List[(Int, Int)]((0, 1), (0, 3), (0, 4), (0, 5), (0, 7),
           (1, 2), (1, 3), (1, 5), (2, 1), (2, 3), (2, 4), (2, 5), (2, 7), (3, 1), (3, 3), (3, 4), (3, 5), (3, 7), (4, 1), (4, 3),
           (4, 4), (4, 5), (4, 7), (5, 1), (5, 3), (5, 4), (5, 5), (5, 7), (6, 1), (6, 3), (6, 4), (6, 5), (6, 7), (7, 2), (7, 3),
-          (7, 4), (7, 5), (7, 6), (7, 7), (8, 1), (8, 3), (8, 4), (8, 5), (8, 7))) // player_2
+          (7, 4), (7, 5), (7, 6), (7, 7), (8, 1), (8, 2), (8, 4), (8, 5), (8, 7))) // player_2
         controller.boardToString() should be(
           "Captured Player 1: P°    \n" +
             "    0     1     2     3     4     5     6     7     8 \n \n" +
@@ -523,9 +526,9 @@ class ControllerSpec extends WordSpec with Matchers {
             "---------------------------------------------------------\n " +
             "|     | R°  |     |     |     |     |     | R   |     | \tb\n" +
             "---------------------------------------------------------\n " +
-            "| P°  |     | P°  | P°  | P°  | P°  | P°  |     | P°  | \tc\n" +
+            "| P°  |     | P°  | P°  | P°  | P°  | P°  |     |     | \tc\n" +
             "---------------------------------------------------------\n " +
-            "|     |     |     |     |     |     |     |     |     | \td\n" +
+            "|     |     |     |     |     |     |     |     | P°  | \td\n" +
             "---------------------------------------------------------\n " +
             "|     | P°  |     |     |     |     |     |     |     | \te\n" +
             "---------------------------------------------------------\n " +
@@ -551,7 +554,7 @@ class ControllerSpec extends WordSpec with Matchers {
         controller.possibleMovesConqueredPiece("B°") should be(List[(Int, Int)]((0, 1), (0, 3), (0, 4), (0, 5), (0, 7),
           (1, 1), (1, 2), (1, 3), (1, 4), (1, 5), (1, 6), (2, 1), (2, 2), (2, 5), (2, 6), (2, 7), (3, 1), (3, 3), (3, 4), (3, 5),
           (3, 7), (4, 1), (4, 3), (4, 4), (4, 5), (4, 7), (5, 1), (5, 3), (5, 4), (5, 5), (5, 7), (6, 1), (6, 3), (6, 4), (6, 5),
-          (6, 7), (7, 2), (7, 3), (7, 4), (7, 5), (7, 6), (7, 7), (8, 1), (8, 3), (8, 4), (8, 5), (8, 7))) // player_1
+          (6, 7), (7, 2), (7, 3), (7, 4), (7, 5), (7, 6), (7, 7), (8, 1), (8, 2), (8, 4), (8, 5), (8, 7))) // player_1
         controller.boardToString() should be(
           "Captured Player 1: P°    P°    B°    \n" +
             "    0     1     2     3     4     5     6     7     8 \n \n" +
@@ -560,9 +563,9 @@ class ControllerSpec extends WordSpec with Matchers {
             "---------------------------------------------------------\n " +
             "|     |     |     |     |     |     |     | R   |     | \tb\n" +
             "---------------------------------------------------------\n " +
-            "| P°  |     |     | P°  | P°  | P°  | P°  |     | P°  | \tc\n" +
+            "| P°  |     |     | P°  | P°  | P°  | P°  |     |     | \tc\n" +
             "---------------------------------------------------------\n " +
-            "|     |     | P°  |     |     |     |     |     |     | \td\n" +
+            "|     |     | P°  |     |     |     |     |     | P°  | \td\n" +
             "---------------------------------------------------------\n " +
             "|     |     | P   |     |     |     |     |     |     | \te\n" +
             "---------------------------------------------------------\n " +
@@ -591,16 +594,16 @@ class ControllerSpec extends WordSpec with Matchers {
         controller.movePiece((0, 4), (0, 5)) should be(controller.MoveResult.validMove) // player_1
         controller.movePiece((0, 8), (0, 5)) should be(controller.MoveResult.validMove) // player_2
         controller.moveConqueredPiece("P°", (0, 6)) should be(true) // player_1
+        controller.moveConqueredPiece("P", (0, 2)) should be(true) // player_2
       }
       "should be false when a non existing piece wants to be moved" in {
         controller.createNewBoard()
-        controller.movePiece((0, 6), (0, 5)) should be(controller.MoveResult.validMove) // player_2
         controller.movePiece((0, 2), (0, 3)) should be(controller.MoveResult.validMove) // player_1
-        controller.movePiece((0, 5), (0, 4)) should be(controller.MoveResult.validMove) // player_2
+        controller.movePiece((0, 6), (0, 5)) should be(controller.MoveResult.validMove) // player_2
         controller.movePiece((0, 3), (0, 4)) should be(controller.MoveResult.validMove) // player_1
         controller.movePiece((1, 6), (1, 5)) should be(controller.MoveResult.validMove) // player_2
-        controller.movePiece((1, 2), (1, 3)) should be(controller.MoveResult.validMove) // player_1
-        controller.movePiece((0, 8), (0, 4)) should be(controller.MoveResult.validMove) // player_2
+        controller.movePiece((0, 4), (0, 5)) should be(controller.MoveResult.validMove) // player_1
+        controller.movePiece((1, 5), (1, 4)) should be(controller.MoveResult.validMove) // player_2
         controller.moveConqueredPiece("Z", (0, 2)) should be(false)
       }
       "should be false when conquered piece wants to be moved on a field its not allowed to be moved" in {
