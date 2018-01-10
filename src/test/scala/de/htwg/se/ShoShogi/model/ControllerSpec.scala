@@ -579,4 +579,40 @@ class ControllerSpec extends WordSpec with Matchers {
       }
     }
   }
+
+  "Controller" when {
+    "called moveConqueredPiece" should {
+      "should be true when conquered pawn was set on column with no other row of the same player" in {
+        controller.createNewBoard()
+        controller.movePiece((0, 2), (0, 3)) should be(controller.MoveResult.validMove) // player_1
+        controller.movePiece((0, 6), (0, 5)) should be(controller.MoveResult.validMove) // player_2
+        controller.movePiece((0, 3), (0, 4)) should be(controller.MoveResult.validMove) // player_1
+        controller.movePiece((1, 6), (1, 5)) should be(controller.MoveResult.validMove) // player_2
+        controller.movePiece((0, 4), (0, 5)) should be(controller.MoveResult.validMove) // player_1
+        controller.movePiece((0, 8), (0, 5)) should be(controller.MoveResult.validMove) // player_2
+        controller.moveConqueredPiece("P°", (0, 6)) should be(true) // player_1
+      }
+      "should be false when a non existing piece wants to be moved" in {
+        controller.createNewBoard()
+        controller.movePiece((0, 6), (0, 5)) should be(controller.MoveResult.validMove) // player_2
+        controller.movePiece((0, 2), (0, 3)) should be(controller.MoveResult.validMove) // player_1
+        controller.movePiece((0, 5), (0, 4)) should be(controller.MoveResult.validMove) // player_2
+        controller.movePiece((0, 3), (0, 4)) should be(controller.MoveResult.validMove) // player_1
+        controller.movePiece((1, 6), (1, 5)) should be(controller.MoveResult.validMove) // player_2
+        controller.movePiece((1, 2), (1, 3)) should be(controller.MoveResult.validMove) // player_1
+        controller.movePiece((0, 8), (0, 4)) should be(controller.MoveResult.validMove) // player_2
+        controller.moveConqueredPiece("Z", (0, 2)) should be(false)
+      }
+      "should be false when conquered piece wants to be moved on a field its not allowed to be moved" in {
+        controller.createNewBoard()
+        controller.movePiece((0, 2), (0, 3)) should be(controller.MoveResult.validMove) // player_1
+        controller.movePiece((0, 6), (0, 5)) should be(controller.MoveResult.validMove) // player_2
+        controller.movePiece((0, 3), (0, 4)) should be(controller.MoveResult.validMove) // player_1
+        controller.movePiece((1, 6), (1, 5)) should be(controller.MoveResult.validMove) // player_2
+        controller.movePiece((0, 4), (0, 5)) should be(controller.MoveResult.validMove) // player_1
+        controller.movePiece((0, 8), (0, 5)) should be(controller.MoveResult.validMove) // player_2
+        controller.moveConqueredPiece("P", (0, -10)) should be(false)
+      }
+    }
+  }
 }
