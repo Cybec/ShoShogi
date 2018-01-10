@@ -68,11 +68,17 @@ class Controller(private var board: Board, val player_1: Player, val player_2: P
 
   def boardToString(): String = board.toString
 
-  def boardToList(): List[Piece] = board.toList
+  def boardToArray(): Array[Array[Piece]] = board.toArray
 
   def possibleMoves(pos: (Int, Int)): List[(Int, Int)] = {
     board.cell(pos._1, pos._2) match {
-      case Some(piece) => piece.getMoveSet((pos._1, pos._2), board)
+      case Some(piece) => {
+        if (state == piece.player.first) {
+          piece.getMoveSet((pos._1, pos._2), board)
+        } else {
+          List()
+        }
+      }
       case None => List()
     }
   }

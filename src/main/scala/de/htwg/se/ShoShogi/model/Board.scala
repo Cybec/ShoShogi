@@ -124,16 +124,16 @@ case class Board(board: Vector[Vector[Piece]], containerPlayer_0: List[Piece], c
     returnValue.toString()
   }
 
-  def toList: List[Piece] = {
-    var returnList: List[Piece] = List[Piece]()
+  def toArray: Array[Array[Piece]] = {
+    val returnList: Array[Array[Piece]] = Array.ofDim[Piece](size, size)
 
     for {
-      x <- 0 until size
-      y <- 0 until size
+      col <- 0 until size
+      row <- 0 until size
     } {
-      cell(y, x) match {
-        case Some(piece) => returnList = returnList :+ piece
-        case None => returnList = returnList :+ new EmptyPiece
+      cell(col, row) match {
+        case Some(piece) => returnList(col)(row) = piece
+        case None => returnList(col)(row) = new EmptyPiece
       }
     }
 
