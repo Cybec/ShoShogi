@@ -9,10 +9,10 @@ import scala.collection.mutable.ListBuffer
 //noinspection ScalaStyle
 @RunWith(classOf[JUnitRunner])
 class BoardSpec extends WordSpec with Matchers {
-  val player_1 = Player("Nick", true)
-  val player_2 = Player("Mert", false)
   "A Board is the playing field of Shogi. A Board" when {
     "to be constructed" should {
+      val player_1 = Player("Nick", true)
+      val player_2 = Player("Mert", false)
       val smallBoard = new Board(1, pieceFactory.apply("EmptyPiece", player_1))
       val biggerBoard = new Board(2, pieceFactory.apply("EmptyPiece", player_1))
       val board = new Board(9, pieceFactory.apply("EmptyPiece", player_1))
@@ -36,6 +36,7 @@ class BoardSpec extends WordSpec with Matchers {
       }
     }
     "using an actual Board" should {
+      val player_1 = Player("Nick", true)
       var board = new Board(9, pieceFactory.apply("EmptyPiece", player_1))
 
       board = board.replaceCell(0, 0, pieceFactory.apply("Lancer", player_1))
@@ -73,6 +74,8 @@ class BoardSpec extends WordSpec with Matchers {
   "Board" when {
     "something added to container" should {
       "have pieces in both container" in {
+        val player_1 = Player("Nick", true)
+        val player_2 = Player("Mert", false)
         var board = new Board(9, pieceFactory.apply("EmptyPiece", player_1))
 
         board = board.addToPlayerContainer(player_1, pieceFactory.apply("Lancer", player_2))
@@ -91,6 +94,8 @@ class BoardSpec extends WordSpec with Matchers {
   "Board" when {
     "something removed from container" should {
       "have less pieces in both container" in {
+        val player_1 = Player("Nick", true)
+        val player_2 = Player("Mert", false)
 
         var board = new Board(9, pieceFactory.apply("EmptyPiece", player_1))
         var wantedPiece_0: Piece = pieceFactory.apply("EmptyPiece", player_1)
@@ -137,6 +142,8 @@ class BoardSpec extends WordSpec with Matchers {
         wantedPiece_1 shouldBe a[King]
       }
       "return None if there is no such piece" in {
+        val player_1 = Player("Nick", true)
+        val player_2 = Player("Mert", false)
         var board = new Board(9, pieceFactory.apply("EmptyPiece", player_1))
         var wantedPiece_0: Piece = pieceFactory.apply("EmptyPiece", player_1)
         var wantedPiece_1: Piece = pieceFactory.apply("EmptyPiece", player_1)
@@ -185,6 +192,8 @@ class BoardSpec extends WordSpec with Matchers {
     }
   }
   "Board" when {
+    val player_1 = Player("Nick", true)
+    val player_2 = Player("Mert", false)
     var board = new Board(9, pieceFactory.apply("EmptyPiece", player_1))
     val pawn = pieceFactory.apply("Pawn", player_1)
     val lancer = pieceFactory.apply("Lancer", player_1)
