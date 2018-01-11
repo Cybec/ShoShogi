@@ -1,5 +1,6 @@
 package de.htwg.se.ShoShogi.model
 
+import de.htwg.se.ShoShogi.ShoShogi.boardSize
 import org.scalatest.{ Matchers, WordSpec }
 import de.htwg.se.ShoShogi.aview.Tui
 import de.htwg.se.ShoShogi.controller.Controller
@@ -9,7 +10,10 @@ import org.scalatest.junit.JUnitRunner
 @RunWith(classOf[JUnitRunner])
 class TuiSpec extends WordSpec with Matchers {
   val boardSize = 9
-  val controller = new Controller(new Board(boardSize, new EmptyPiece), Player("Player1", true), Player("Player2", false))
+  val player_1 = Player("Player1", true)
+  val player_2 = Player("Player2", false)
+
+  val controller = new Controller(new Board(boardSize, pieceFactory.apply("EmptyPiece", player_1)), player_1, player_2)
   val tui = new Tui(controller)
 
   "A Tui" when {
