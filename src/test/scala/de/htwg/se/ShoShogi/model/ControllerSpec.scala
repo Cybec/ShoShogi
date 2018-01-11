@@ -23,6 +23,7 @@ class ControllerSpec extends WordSpec with Matchers {
       }
     }
   }
+
   "Controller" when {
     "called printPossibleMoves" should {
       "print wrong cell numbers" in {
