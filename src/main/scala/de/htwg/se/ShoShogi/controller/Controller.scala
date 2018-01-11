@@ -4,6 +4,7 @@ import de.htwg.se.ShoShogi.model._
 import de.htwg.se.ShoShogi.util.Observable
 
 import scala.collection.mutable.ListBuffer
+import scala.swing.Publisher
 
 // TODO 1: schauen ob vals und vars aus dem Klassen parameter entfernt werden koennen
 
@@ -12,7 +13,7 @@ trait State {
 }
 
 //noinspection ScalaStyle
-class Controller(private var board: Board, val player_1: Player, val player_2: Player) extends Observable with State {
+class Controller(private var board: Board, val player_1: Player, val player_2: Player) extends Publisher with State {
   val boardSize = 9
   var container: (List[Piece], List[Piece]) = board.getContainer()
   var state = true
@@ -24,7 +25,7 @@ class Controller(private var board: Board, val player_1: Player, val player_2: P
 
   def createEmptyBoard(): Unit = {
     board = new Board(boardSize, new EmptyPiece)
-    notifyObservers
+    publish(new UpdateAll)
   }
 
   def createNewBoard(): Unit = {
@@ -62,16 +63,23 @@ class Controller(private var board: Board, val player_1: Player, val player_2: P
       board = board.replaceCell(i, 6, Pawn(player_2))
     }
 
+    publish(new UpdateAll)
     state = true
-
-    notifyObservers
   }
 
   def boardToString(): String = board.toString
 
+  def boardToArray(): Array[Array[Piece]] = board.toArray
+
   def possibleMoves(pos: (Int, Int)): List[(Int, Int)] = {
     board.cell(pos._1, pos._2) match {
-      case Some(piece) => piece.getMoveSet((pos._1, pos._2), board)
+      case Some(piece) => {
+        if (state == piece.player.first) {
+          piece.getMoveSet((pos._1, pos._2), board)
+        } else {
+          List()
+        }
+      }
       case None => List()
     }
   }
@@ -89,7 +97,7 @@ class Controller(private var board: Board, val player_1: Player, val player_2: P
 
         board = board.addToPlayerContainer(tempPieceCurrent.player, tempPieceDestination)
         state = changePlayer(state)
-        notifyObservers
+        publish(new UpdateAll)
 
         if (tempPieceDestination.isInstanceOf[King]) {
           MoveResult.kingSlain
@@ -210,7 +218,8 @@ class Controller(private var board: Board, val player_1: Player, val player_2: P
         board = board.replaceCell(destination._1, destination._2, tempPiece)
 
         state = changePlayer(state)
-        notifyObservers
+        publish(new UpdateAll)
+
         true
       } else {
         false
@@ -229,7 +238,7 @@ class Controller(private var board: Board, val player_1: Player, val player_2: P
     var piece = board.cell(piecePosition._1, piecePosition._2).getOrElse(return false)
     piece = piece.promotePiece.getOrElse(return false)
     board = board.replaceCell(piecePosition._1, piecePosition._2, piece)
-    notifyObservers
+    publish(new UpdateAll)
     true
   }
 }
