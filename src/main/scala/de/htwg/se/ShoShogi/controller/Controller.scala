@@ -63,7 +63,7 @@ class Controller(private var board: Board, val player_1: Player, val player_2: P
       board = board.replaceCell(i, 6, pieceFactory.apply("Pawn", player_2))
     }
 
-    publish(new UpdateAll)
+    publish(new StartNewGame)
     state = true
   }
 

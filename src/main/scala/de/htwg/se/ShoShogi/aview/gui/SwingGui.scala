@@ -4,7 +4,7 @@ import java.awt.Color
 import javax.swing.{ ImageIcon, WindowConstants }
 
 import scala.swing.GridBagPanel.Anchor
-import de.htwg.se.ShoShogi.controller.{ Controller, UpdateAll }
+import de.htwg.se.ShoShogi.controller.{ Controller, StartNewGame, UpdateAll }
 import de.htwg.se.ShoShogi.model.Piece
 
 import scala.swing.Swing.LineBorder
@@ -160,6 +160,10 @@ class SwingGui(controller: Controller) extends Frame {
       containerPanel_1.background = containerBackgroundColor
       containerPanel_1.opaque = true
     })
+    if (controller.getContainer._1.size == 0) {
+      containerPanel_1.opaque = false
+      containerPanel_1.border = Swing.EmptyBorder(0, 0, 0, 0)
+    }
   }
 
   def fillDataContainer2(): Unit = {
@@ -172,6 +176,10 @@ class SwingGui(controller: Controller) extends Frame {
       containerPanel_2.background = containerBackgroundColor
       containerPanel_2.opaque = true
     })
+    if (controller.getContainer._2.size == 0) {
+      containerPanel_2.opaque = false
+      containerPanel_2.border = Swing.EmptyBorder(0, 0, 0, 0)
+    }
   }
 
   case class CustomButton(currentPiece: Piece, pos: (Int, Int) = (-1, -1)) extends Button
@@ -262,6 +270,9 @@ class SwingGui(controller: Controller) extends Frame {
 
   reactions += {
     case _: UpdateAll => {
+      redrawPanel(Panels.All)
+    }
+    case _: StartNewGame => {
       redrawPanel(Panels.All)
     }
   }
