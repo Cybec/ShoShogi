@@ -24,47 +24,47 @@ class Controller(private var board: Board, val player_1: Player, val player_2: P
   }
 
   def createEmptyBoard(): Unit = {
-    board = new Board(boardSize, new EmptyPiece)
+    board = new Board(boardSize, pieceFactory.apply("EmptyPiece", player_1))
     publish(new UpdateAll)
   }
 
   def createNewBoard(): Unit = {
-    board = new Board(boardSize, new EmptyPiece)
+    board = new Board(boardSize, pieceFactory.apply("EmptyPiece", player_1))
 
     //Steine fuer Spieler 1
-    board = board.replaceCell(0, 0, Lancer(player_1))
-    board = board.replaceCell(1, 0, Knight(player_1))
-    board = board.replaceCell(2, 0, SilverGeneral(player_1))
-    board = board.replaceCell(3, 0, GoldenGeneral(player_1))
-    board = board.replaceCell(4, 0, King(player_1))
-    board = board.replaceCell(5, 0, GoldenGeneral(player_1))
-    board = board.replaceCell(6, 0, SilverGeneral(player_1))
-    board = board.replaceCell(7, 0, Knight(player_1))
-    board = board.replaceCell(8, 0, Lancer(player_1))
-    board = board.replaceCell(7, 1, Bishop(player_1))
-    board = board.replaceCell(1, 1, Rook(player_1))
+    board = board.replaceCell(0, 0, pieceFactory.apply("Lancer", player_1))
+    board = board.replaceCell(1, 0, pieceFactory.apply("Knight", player_1))
+    board = board.replaceCell(2, 0, pieceFactory.apply("SilverGeneral", player_1))
+    board = board.replaceCell(3, 0, pieceFactory.apply("GoldenGeneral", player_1))
+    board = board.replaceCell(4, 0, pieceFactory.apply("King", player_1))
+    board = board.replaceCell(5, 0, pieceFactory.apply("GoldenGeneral", player_1))
+    board = board.replaceCell(6, 0, pieceFactory.apply("SilverGeneral", player_1))
+    board = board.replaceCell(7, 0, pieceFactory.apply("Knight", player_1))
+    board = board.replaceCell(8, 0, pieceFactory.apply("Lancer", player_1))
+    board = board.replaceCell(7, 1, pieceFactory.apply("Bishop", player_1))
+    board = board.replaceCell(1, 1, pieceFactory.apply("Rook", player_1))
     for (i <- 0 to 8) {
-      board = board.replaceCell(i, 2, Pawn(player_1))
+      board = board.replaceCell(i, 2, pieceFactory.apply("Pawn", player_1))
     }
 
     //Steine fuer Spieler 2
-    board = board.replaceCell(0, 8, Lancer(player_2))
-    board = board.replaceCell(1, 8, Knight(player_2))
-    board = board.replaceCell(2, 8, SilverGeneral(player_2))
-    board = board.replaceCell(3, 8, GoldenGeneral(player_2))
-    board = board.replaceCell(4, 8, King(player_2))
-    board = board.replaceCell(5, 8, GoldenGeneral(player_2))
-    board = board.replaceCell(6, 8, SilverGeneral(player_2))
-    board = board.replaceCell(7, 8, Knight(player_2))
-    board = board.replaceCell(8, 8, Lancer(player_2))
-    board = board.replaceCell(1, 7, Bishop(player_2))
-    board = board.replaceCell(7, 7, Rook(player_2))
+    board = board.replaceCell(0, 8, pieceFactory.apply("Lancer", player_2))
+    board = board.replaceCell(1, 8, pieceFactory.apply("Knight", player_2))
+    board = board.replaceCell(2, 8, pieceFactory.apply("SilverGeneral", player_2))
+    board = board.replaceCell(3, 8, pieceFactory.apply("GoldenGeneral", player_2))
+    board = board.replaceCell(4, 8, pieceFactory.apply("King", player_2))
+    board = board.replaceCell(5, 8, pieceFactory.apply("GoldenGeneral", player_2))
+    board = board.replaceCell(6, 8, pieceFactory.apply("SilverGeneral", player_2))
+    board = board.replaceCell(7, 8, pieceFactory.apply("Knight", player_2))
+    board = board.replaceCell(8, 8, pieceFactory.apply("Lancer", player_2))
+    board = board.replaceCell(1, 7, pieceFactory.apply("Bishop", player_2))
+    board = board.replaceCell(7, 7, pieceFactory.apply("Rook", player_2))
     for (i <- 0 to 8) {
-      board = board.replaceCell(i, 6, Pawn(player_2))
+      board = board.replaceCell(i, 6, pieceFactory.apply("Pawn", player_2))
     }
-    state = true
 
     publish(new UpdateAll)
+    state = true
   }
 
   def boardToString(): String = board.toString
@@ -136,12 +136,11 @@ class Controller(private var board: Board, val player_1: Player, val player_2: P
           } else {
             for (row <- 0 to 8) {
               board.cell(column, row) match {
-                case Some(piece) => if (piece.isInstanceOf[EmptyPiece] && row != 8) {
+                case Some(piece) => if (piece.isInstanceOf[EmptyPiece]) {
                   possibleMoves = possibleMoves :+ (column, row)
                 } else if (piece.isInstanceOf[King] && !piece.player.first) {
                   possibleMoves = possibleMoves.filter(_ != (column, row - 1))
                 }
-                case None => {}
               }
             }
           }
@@ -161,13 +160,13 @@ class Controller(private var board: Board, val player_1: Player, val player_2: P
 
   def getPossibleMvConPlayer2(piece: String): List[(Int, Int)] = {
     var possibleMoves = List[(Int, Int)]()
+    var count = 0
     if (piece == "P" || piece == "P°") {
       for (column: Int <- 0 until board.size) {
         if (!board.getPiecesInColumn(column, state).exists(x => x.typeEquals("P") || x.typeEquals("P°"))) {
           if (!board.getPiecesInColumn(column, state).exists(x => x.typeEquals("K") || x.typeEquals("K°"))) {
             possibleMoves = possibleMoves ::: board.getEmptyCellsInColumn(column, (1, 8))
           } else {
-            var count = 0
             for (row <- 0 to 8) {
               board.cell(column, row + board.size - 1 - count) match {
                 case Some(piece) => if (piece.isInstanceOf[EmptyPiece]) {
@@ -175,7 +174,6 @@ class Controller(private var board: Board, val player_1: Player, val player_2: P
                 } else if (piece.isInstanceOf[King] && piece.player.first) {
                   possibleMoves = possibleMoves.filter(_ != (column, row + board.size - count))
                 }
-                case None => {}
               }
               count = count + 2
             }
@@ -203,7 +201,7 @@ class Controller(private var board: Board, val player_1: Player, val player_2: P
       } else {
         player_2
       }
-      var tempPiece: Piece = new EmptyPiece
+      var tempPiece: Piece = pieceFactory.apply("EmptyPiece", player_1)
 
       val success = board.getFromPlayerContainer(currentPlayer) {
         _.typeEquals(pieceAbbreviation)
@@ -218,8 +216,7 @@ class Controller(private var board: Board, val player_1: Player, val player_2: P
         board = board.replaceCell(destination._1, destination._2, tempPiece)
 
         state = changePlayer(state)
-        publish(new UpdateAll)
-
+        notifyObservers
         true
       } else {
         false
@@ -238,7 +235,7 @@ class Controller(private var board: Board, val player_1: Player, val player_2: P
     var piece = board.cell(piecePosition._1, piecePosition._2).getOrElse(return false)
     piece = piece.promotePiece.getOrElse(return false)
     board = board.replaceCell(piecePosition._1, piecePosition._2, piece)
-    publish(new UpdateAll)
+    notifyObservers
     true
   }
 }
