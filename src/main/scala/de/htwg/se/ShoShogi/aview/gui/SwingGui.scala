@@ -21,6 +21,10 @@ class SwingGui(controller: Controller) extends Frame {
   var highlightedPiece: (Int, Int) = (-1, -1)
   val boardColor: Color = getColorFromRGB(Array[Int](255, 222, 162))
   val pieceColor: Color = getColorFromRGB(Array[Int](249, 250, 242))
+  val containerBorderColor: Color = getColorFromRGB(Array[Int](153, 51, 0))
+  val containerBackgroundColor: Color = getColorFromRGB(Array[Int](246, 217, 157))
+  val backgroundPath = "/home/mert/MEGAsync/HTWG/E_2017_2018_WS_HTWG/SE/ShoShogi_Repo/ShoShogi" +
+    "/src/main/scala/de/htwg/se/ShoShogi/zresources/pieceImages/background.jpg"
 
   def getBoardArray: Array[Array[Piece]] = controller.boardToArray()
 
@@ -38,8 +42,6 @@ class SwingGui(controller: Controller) extends Frame {
   title = "Shogi"
   maximize()
 
-  iconImage = new ImageIcon("/home/mert/MEGAsync/HTWG/E_2017_2018_WS_HTWG/SE/ShoShogi_Repo/ShoShogi/src/main/scala/de/htwg/se/ShoShogi/zresources/pieceImages/background.jpg").getImage
-
   menuBar = new MenuBar {
     contents += new Menu("Game") {
       mnemonic = Key.N
@@ -53,6 +55,7 @@ class SwingGui(controller: Controller) extends Frame {
   }
 
   initPanel(Panels.All)
+  iconImage = new ImageIcon(backgroundPath).getImage
 
   contents = new GridBagPanel {
     def constraints(x: Int, y: Int,
@@ -76,7 +79,10 @@ class SwingGui(controller: Controller) extends Frame {
     add(boardPanel, constraints(1, 0, gridHeight = 3))
     add(containerPanel_2, constraints(2, 0, gridHeight = 3, weightX = 0.0, anchor = Anchor.SouthWest))
     add(statisticsPanel, constraints(3, 0, gridHeight = 3))
-    background = Color.WHITE
+
+    override def paintComponent(g: java.awt.Graphics2D) {
+      g.drawImage(new ImageIcon(backgroundPath).getImage, 0, 0, null)
+    }
   }
 
   visible = true
@@ -103,16 +109,16 @@ class SwingGui(controller: Controller) extends Frame {
     if (panel == Panels.containerP_1 || panel == Panels.All) {
       containerPanel_1 = new BoxPanel(Orientation.Vertical) {
         fillDataContainer1
-        background = boardColor
-        containerPanel_1.revalidate()
+        opaque = false
+        revalidate()
       }
     }
 
     if (panel == Panels.containerP_2 || panel == Panels.All) {
       containerPanel_2 = new BoxPanel(Orientation.Vertical) {
         fillDataContainer2
-        background = boardColor
-        containerPanel_2.revalidate()
+        opaque = false
+        revalidate()
       }
     }
   }
@@ -150,7 +156,9 @@ class SwingGui(controller: Controller) extends Frame {
       containerPanel_1.yLayoutAlignment = 0.0
       containerPanel_1.contents += Swing.VStrut(5)
       containerPanel_1.contents += newPieceButton(x)
-      containerPanel_1.border = Swing.EmptyBorder(10, 10, 10, 10)
+      containerPanel_1.border = Swing.LineBorder(containerBorderColor, 2)
+      containerPanel_1.background = containerBackgroundColor
+      containerPanel_1.opaque = true
     })
   }
 
@@ -160,7 +168,9 @@ class SwingGui(controller: Controller) extends Frame {
       containerPanel_2.xLayoutAlignment = 0.0
       containerPanel_2.yLayoutAlignment = 1.0
       containerPanel_2.contents += Swing.VStrut(5)
-      containerPanel_2.border = Swing.EmptyBorder(10, 10, 10, 10)
+      containerPanel_2.border = Swing.LineBorder(containerBorderColor, 2)
+      containerPanel_2.background = containerBackgroundColor
+      containerPanel_2.opaque = true
     })
   }
 
@@ -193,10 +203,41 @@ class SwingGui(controller: Controller) extends Frame {
         }
 
         if (background == Color.BLUE) {
-          controller.movePiece(highlightedPiece, (pos._1, pos._2))
+          controller.movePiece(highlightedPiece, (pos._1, pos._2)) match {
+            case controller.MoveResult.validMove => promoteQuery((pos._1, pos._2))
+            case controller.MoveResult.kingSlain => {
+              val res = Dialog.showConfirmation(
+                contents.head,
+                "You Won! Do you want to start a new game?",
+                optionType = Dialog.Options.YesNo,
+                title = "End"
+              )
+
+              if (res == Dialog.Result.Ok) {
+                controller.createNewBoard()
+              } else {
+                System.exit(0)
+              }
+            }
+          }
         }
 
         highlightCells(pmv)
+      }
+    }
+  }
+
+  private def promoteQuery(value: (Int, Int)): Unit = {
+    if (controller.promotable(value._1, value._2)) {
+      val res = Dialog.showConfirmation(
+        contents.head,
+        "Do you want to promote your piece?",
+        optionType = Dialog.Options.YesNo,
+        title = "Promotion"
+      )
+
+      if (res == Dialog.Result.Ok) {
+        controller.promotePiece(value._1, value._2)
       }
     }
   }
