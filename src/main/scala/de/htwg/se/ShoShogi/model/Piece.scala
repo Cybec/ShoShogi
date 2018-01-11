@@ -33,6 +33,26 @@ abstract class Piece(name: String, val player: Player) {
   def typeEquals(piecesAbbreviation: String): Boolean = this.toString().trim == piecesAbbreviation.trim
 }
 
+object pieceFactory {
+  def apply(pieceType: String, player: Player): Piece = pieceType match {
+    case "King" => new King(player)
+    case "GoldenGeneral" => new GoldenGeneral(player)
+    case "SilverGeneral" => new SilverGeneral(player)
+    case "PromotedSilver" => new PromotedSilver(player)
+    case "Knight" => new Knight(player)
+    case "PromotedKnight" => new PromotedKnight(player)
+    case "Lancer" => new Lancer(player)
+    case "PromotedLancer" => new PromotedLancer(player)
+    case "Bishop" => new Bishop(player)
+    case "PromotedBishop" => new PromotedBishop(player)
+    case "Rook" => new Rook(player)
+    case "PromotedRook" => new PromotedRook(player)
+    case "Pawn" => new Pawn(player)
+    case "PromotedPawn" => new PromotedPawn(player)
+    case "EmptyPiece" => new EmptyPiece
+  }
+}
+
 //region King
 
 /*Author:   Mert, Nick
