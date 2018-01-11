@@ -2,7 +2,6 @@ package de.htwg.se.ShoShogi.model
 
 import de.htwg.se.ShoShogi.ShoShogi.boardSize
 import de.htwg.se.ShoShogi.controller.Controller
-import de.htwg.se.ShoShogi.util.Observer
 
 import scala.language.reflectiveCalls
 import org.junit.runner.RunWith
@@ -12,8 +11,10 @@ import org.scalatest.junit.JUnitRunner
 //noinspection ScalaStyle
 @RunWith(classOf[JUnitRunner])
 class ControllerSpec extends WordSpec with Matchers {
-  val controller = new Controller(new Board(boardSize, new EmptyPiece), Player("Player1", true), Player("Player2", false))
-  //TODO: Testing for false in movePiece
+  val player_1 = Player("Player1", true)
+  val player_2 = Player("Player2", false)
+
+  val controller = new Controller(new Board(boardSize, pieceFactory.apply("EmptyPiece", player_1)), player_1, player_2)
   "Controller" when {
     "called printPossibleMoves" should {
       "print for \"pmv 0c\"" in {
