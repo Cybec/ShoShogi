@@ -216,7 +216,7 @@ class Controller(private var board: Board, val player_1: Player, val player_2: P
         board = board.replaceCell(destination._1, destination._2, tempPiece)
 
         state = changePlayer(state)
-        notifyObservers
+        publish(new UpdateAll)
         true
       } else {
         false
@@ -235,7 +235,7 @@ class Controller(private var board: Board, val player_1: Player, val player_2: P
     var piece = board.cell(piecePosition._1, piecePosition._2).getOrElse(return false)
     piece = piece.promotePiece.getOrElse(return false)
     board = board.replaceCell(piecePosition._1, piecePosition._2, piece)
-    notifyObservers
+    publish(new UpdateAll)
     true
   }
 }
