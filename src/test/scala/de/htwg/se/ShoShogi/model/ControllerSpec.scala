@@ -8,6 +8,8 @@ import org.junit.runner.RunWith
 import org.scalatest.{ Matchers, WordSpec }
 import org.scalatest.junit.JUnitRunner
 
+import scala.collection.mutable.ListBuffer
+
 //noinspection ScalaStyle
 @RunWith(classOf[JUnitRunner])
 class ControllerSpec extends WordSpec with Matchers {
@@ -15,6 +17,21 @@ class ControllerSpec extends WordSpec with Matchers {
   val player_2 = Player("Player2", false)
 
   val controller = new Controller(new Board(boardSize, pieceFactory.apply("EmptyPiece", player_1)), player_1, player_2)
+  "Controller" when {
+    "called getContainer" should {
+      "should return 2 Lists with the captured Piece of each player" in {
+        controller.createNewBoard()
+        controller.movePiece((0, 2), (0, 3)) should be(controller.MoveResult.validMove) // player_1
+        controller.movePiece((0, 6), (0, 5)) should be(controller.MoveResult.validMove) // player_2
+        controller.movePiece((0, 3), (0, 4)) should be(controller.MoveResult.validMove) // player_1
+        controller.movePiece((0, 5), (0, 4)) should be(controller.MoveResult.validMove) // player_2
+        controller.getContainer should be((
+          ListBuffer(),
+          ListBuffer(pieceFactory.apply("Pawn", player_2))
+        ))
+      }
+    }
+  }
   "Controller" when {
     "called printPossibleMoves" should {
       "print for \"pmv 0c\"" in {
@@ -279,6 +296,8 @@ class ControllerSpec extends WordSpec with Matchers {
         controller.movePiece((1, 7), (8, 7)) should be(controller.MoveResult.invalidMove)
         controller.movePiece((1, 7), (8, 8)) should be(controller.MoveResult.invalidMove)
         controller.movePiece((1, 7), (8, -8)) should be(controller.MoveResult.invalidMove)
+        controller.movePiece((-3, 2), (0, 3)) should be(controller.MoveResult.invalidMove)
+        controller.movePiece((0, 6), (0, 5)) should be(controller.MoveResult.invalidMove)
       }
     }
   }
@@ -673,6 +692,38 @@ class ControllerSpec extends WordSpec with Matchers {
         controller.movePiece((0, 4), (0, 5)) should be(controller.MoveResult.validMove) // player_1
         controller.movePiece((0, 8), (0, 5)) should be(controller.MoveResult.validMove) // player_2
         controller.moveConqueredPiece("P", (0, -10)) should be(false)
+      }
+    }
+  }
+
+  "Controller" when {
+    "called boardToArray" should {
+      "return all Pieces in a 2 dimensional Array" in {
+        controller.createNewBoard()
+        val pawn1 = pieceFactory.apply("Pawn", player_1)
+        val pawn2 = pieceFactory.apply("Pawn", player_2)
+        val lancer1 = pieceFactory.apply("Lancer", player_1)
+        val lancer2 = pieceFactory.apply("Lancer", player_2)
+        val knight1 = pieceFactory.apply("Knight", player_1)
+        val knight2 = pieceFactory.apply("Knight", player_2)
+        val silverGeneral1 = pieceFactory.apply("SilverGeneral", player_1)
+        val silverGeneral2 = pieceFactory.apply("SilverGeneral", player_2)
+        val goldenGeneral1 = pieceFactory.apply("GoldenGeneral", player_1)
+        val goldenGeneral2 = pieceFactory.apply("GoldenGeneral", player_2)
+        val king1 = pieceFactory.apply("King", player_1)
+        val king2 = pieceFactory.apply("King", player_2)
+        val rook1 = pieceFactory.apply("Rook", player_1)
+        val rook2 = pieceFactory.apply("Rook", player_2)
+        val bishop1 = pieceFactory.apply("Bishop", player_1)
+        val bishop2 = pieceFactory.apply("Bishop", player_2)
+        val empty = pieceFactory.apply("EmptyPiece", player_1)
+        controller.boardToArray() should be(Array[Array[Piece]](
+          Array(lancer1, empty, pawn1, empty, empty, empty, pawn2, empty, lancer2),
+          Array(knight1, rook1, pawn1, empty, empty, empty, pawn2, bishop2, knight2), Array(silverGeneral1, empty, pawn1, empty, empty, empty, pawn2, empty, silverGeneral2),
+          Array(goldenGeneral1, empty, pawn1, empty, empty, empty, pawn2, empty, goldenGeneral2), Array(king1, empty, pawn1, empty, empty, empty, pawn2, empty, king2),
+          Array(goldenGeneral1, empty, pawn1, empty, empty, empty, pawn2, empty, goldenGeneral2), Array(silverGeneral1, empty, pawn1, empty, empty, empty, pawn2, empty, silverGeneral2),
+          Array(knight1, bishop1, pawn1, empty, empty, empty, pawn2, rook2, knight2), Array(lancer1, empty, pawn1, empty, empty, empty, pawn2, empty, lancer2)
+        ))
       }
     }
   }

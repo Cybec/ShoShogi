@@ -12,7 +12,6 @@ class BoardSpec extends WordSpec with Matchers {
   "A Board is the playing field of Shogi. A Board" when {
     "to be constructed" should {
       val player_1 = Player("Nick", true)
-      val player_2 = Player("Mert", false)
       val smallBoard = new Board(1, pieceFactory.apply("EmptyPiece", player_1))
       val biggerBoard = new Board(2, pieceFactory.apply("EmptyPiece", player_1))
       val board = new Board(9, pieceFactory.apply("EmptyPiece", player_1))
@@ -215,6 +214,21 @@ class BoardSpec extends WordSpec with Matchers {
       "have () when the column is not in the board" in {
         board.getEmptyCellsInColumn(10, (-4, -8)) should be(List[(Int, Int)]())
         board.getEmptyCellsInColumn(0, (0, 10)) should be(List[(Int, Int)]((0, 0), (0, 1), (0, 2), (0, 3), (0, 5), (0, 6), (0, 8)))
+      }
+    }
+  }
+  "Board" when {
+    "called toArray" should {
+      "return a two dimensional Array of all Pieces" in {
+        val player_1 = Player("Nick", true)
+        val player_2 = Player("Mert", false)
+        var board = new Board(2, pieceFactory.apply("EmptyPiece", player_1))
+        val pawn = pieceFactory.apply("Pawn", player_2)
+        val empty = pieceFactory.apply("EmptyPiece", player_1)
+        board = board.replaceCell(0, 0, pawn)
+        board.cell(0, 0) should be(Some(pawn))
+        board.toArray should be(Array[Array[Piece]](Array(pawn, empty), Array(empty, empty)))
+
       }
     }
   }
