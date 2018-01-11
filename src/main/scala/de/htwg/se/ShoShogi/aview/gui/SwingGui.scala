@@ -16,11 +16,19 @@ class SwingGui(controller: Controller) extends Frame {
   listenTo(controller)
 
   var boardPanel: GridPanel = new GridPanel(controller.boardSize, controller.boardSize) {}
-  var containerPanel_1: FlowPanel = new FlowPanel {}
-  var containerPanel_2: FlowPanel = new FlowPanel {}
+  var containerPanel_1: BoxPanel = new BoxPanel(Orientation.Vertical) {}
+  var containerPanel_2: BoxPanel = new BoxPanel(Orientation.Vertical) {}
   var highlightedPiece: (Int, Int) = (-1, -1)
+  val boardColor: Color = getColorFromRGB(Array[Int](255, 222, 162))
+  val pieceColor: Color = getColorFromRGB(Array[Int](249, 250, 242))
 
   def getBoardArray: Array[Array[Piece]] = controller.boardToArray()
+
+  def getColorFromRGB(xyz: Array[Int]): Color = {
+    val ret: Array[Float] = Array.ofDim[Float](3)
+    Color.RGBtoHSB(xyz(0), xyz(1), xyz(2), ret)
+    Color.getHSBColor(ret(0), ret(1), ret(2))
+  }
 
   object Panels extends Enumeration {
     type EnumType = Value
@@ -28,7 +36,9 @@ class SwingGui(controller: Controller) extends Frame {
   }
 
   title = "Shogi"
-  size = java.awt.Toolkit.getDefaultToolkit.getScreenSize
+  maximize()
+
+  iconImage = new ImageIcon("/home/mert/MEGAsync/HTWG/E_2017_2018_WS_HTWG/SE/ShoShogi_Repo/ShoShogi/src/main/scala/de/htwg/se/ShoShogi/zresources/pieceImages/background.jpg").getImage
 
   menuBar = new MenuBar {
     contents += new Menu("Game") {
@@ -62,9 +72,9 @@ class SwingGui(controller: Controller) extends Frame {
       c
     }
 
-    add(containerPanel_1, constraints(0, 0, anchor = Anchor.NorthEast))
+    add(containerPanel_1, constraints(0, 0, gridHeight = 3, weightX = 0.0, anchor = Anchor.NorthEast))
     add(boardPanel, constraints(1, 0, gridHeight = 3))
-    add(containerPanel_2, constraints(2, 2, anchor = Anchor.SouthWest))
+    add(containerPanel_2, constraints(2, 0, gridHeight = 3, weightX = 0.0, anchor = Anchor.SouthWest))
     add(statisticsPanel, constraints(3, 0, gridHeight = 3))
     background = Color.WHITE
   }
@@ -75,7 +85,8 @@ class SwingGui(controller: Controller) extends Frame {
   def initPanel(panel: Panels.Value): Unit = {
     if (panel == Panels.boardP || panel == Panels.All) {
       boardPanel = new GridPanel(controller.boardSize, controller.boardSize) {
-        border = LineBorder(java.awt.Color.BLACK, 2)
+        border = LineBorder(java.awt.Color.BLACK, 0)
+        background = boardColor
 
         val tempArray = getBoardArray
 
@@ -90,18 +101,17 @@ class SwingGui(controller: Controller) extends Frame {
     }
 
     if (panel == Panels.containerP_1 || panel == Panels.All) {
-      containerPanel_1 = new FlowPanel {
-        controller.container._1.foreach(x => contents += newPieceButton(x))
-        background = java.awt.Color.BLACK
+      containerPanel_1 = new BoxPanel(Orientation.Vertical) {
+        fillDataContainer1
+        background = boardColor
         containerPanel_1.revalidate()
       }
     }
 
     if (panel == Panels.containerP_2 || panel == Panels.All) {
-      containerPanel_2 = new FlowPanel {
-        controller.container._2.foreach(x => contents += newPieceButton(x))
-        background = java.awt.Color.BLACK
-        maximumSize = new Dimension(300, 300)
+      containerPanel_2 = new BoxPanel(Orientation.Vertical) {
+        fillDataContainer2
+        background = boardColor
         containerPanel_2.revalidate()
       }
     }
@@ -123,15 +133,35 @@ class SwingGui(controller: Controller) extends Frame {
 
     if (panel == Panels.containerP_1 || panel == Panels.All) {
       containerPanel_1.contents.clear()
-      controller.container._1.foreach(x => containerPanel_1.contents += newPieceButton(x))
+      fillDataContainer1
       containerPanel_1.revalidate()
     }
 
     if (panel == Panels.containerP_2 || panel == Panels.All) {
       containerPanel_2.contents.clear()
-      controller.container._2.foreach(x => containerPanel_2.contents += newPieceButton(x))
+      fillDataContainer2
       containerPanel_2.revalidate()
     }
+  }
+
+  def fillDataContainer1(): Unit = {
+    controller.getContainer._1.foreach(x => {
+      containerPanel_1.xLayoutAlignment = 0.0
+      containerPanel_1.yLayoutAlignment = 0.0
+      containerPanel_1.contents += Swing.VStrut(5)
+      containerPanel_1.contents += newPieceButton(x)
+      containerPanel_1.border = Swing.EmptyBorder(10, 10, 10, 10)
+    })
+  }
+
+  def fillDataContainer2(): Unit = {
+    controller.getContainer._2.foreach(x => {
+      containerPanel_2.contents += newPieceButton(x)
+      containerPanel_2.xLayoutAlignment = 0.0
+      containerPanel_2.yLayoutAlignment = 1.0
+      containerPanel_2.contents += Swing.VStrut(5)
+      containerPanel_2.border = Swing.EmptyBorder(10, 10, 10, 10)
+    })
   }
 
   case class CustomButton(currentPiece: Piece, pos: (Int, Int) = (-1, -1)) extends Button
@@ -141,13 +171,11 @@ class SwingGui(controller: Controller) extends Frame {
 
     if (piece.toString.trim.size > 0) {
       //      icon = new ImageIcon("de/htwg/se/ShoShogi/zresources/pieceImages/shogiExample.png")
-      if (piece.player.first) {
-        background = Color.orange
-      } else {
-        background = Color.green
-      }
+
+      background = pieceColor
     } else {
-      background = Color.white
+      background = boardColor
+
     }
 
     listenTo(mouse.clicks)
@@ -174,13 +202,14 @@ class SwingGui(controller: Controller) extends Frame {
   }
 
   def statisticsPanel: GridPanel = new GridPanel(5, 1) {
-    background = java.awt.Color.BLACK
+    //    background = java.awt.Color.BLACK
+    opaque = false
   }
 
   def highlightCells(cells: List[(Int, Int)]): Unit = {
     boardPanel.contents.foreach(x =>
       if (x.background == Color.BLUE) {
-        x.background = Color.white
+        x.background = boardColor
       })
 
     for (cell <- cells) {
@@ -192,7 +221,7 @@ class SwingGui(controller: Controller) extends Frame {
 
   reactions += {
     case _: UpdateAll => {
-      redrawPanel(Panels.boardP)
+      redrawPanel(Panels.All)
     }
   }
 }
