@@ -15,7 +15,7 @@ trait State {
 //noinspection ScalaStyle
 class Controller(private var board: Board, val player_1: Player, val player_2: Player) extends Publisher with State {
   val boardSize = 9
-  var container: (List[Piece], List[Piece]) = board.getContainer()
+  def getContainer: (List[Piece], List[Piece]) = board.getContainer()
   var state = true
 
   object MoveResult extends Enumeration {
@@ -169,7 +169,7 @@ class Controller(private var board: Board, val player_1: Player, val player_2: P
           } else {
             for (row <- 0 to 8) {
               board.cell(column, row + board.size - 1 - count) match {
-                case Some(piece) => if (piece.isInstanceOf[EmptyPiece]) {
+                case Some(piece) => if (piece.isInstanceOf[EmptyPiece] && row != 8) {
                   possibleMoves = possibleMoves :+ (column, row + board.size - 1 - count)
                 } else if (piece.isInstanceOf[King] && piece.player.first) {
                   possibleMoves = possibleMoves.filter(_ != (column, row + board.size - count))
@@ -216,7 +216,7 @@ class Controller(private var board: Board, val player_1: Player, val player_2: P
         board = board.replaceCell(destination._1, destination._2, tempPiece)
 
         state = changePlayer(state)
-        notifyObservers
+        publish(new UpdateAll)
         true
       } else {
         false
@@ -235,7 +235,7 @@ class Controller(private var board: Board, val player_1: Player, val player_2: P
     var piece = board.cell(piecePosition._1, piecePosition._2).getOrElse(return false)
     piece = piece.promotePiece.getOrElse(return false)
     board = board.replaceCell(piecePosition._1, piecePosition._2, piece)
-    notifyObservers
+    publish(new UpdateAll)
     true
   }
 }
