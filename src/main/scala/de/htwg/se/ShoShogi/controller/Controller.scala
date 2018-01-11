@@ -62,9 +62,12 @@ class Controller(private var board: Board, val player_1: Player, val player_2: P
     for (i <- 0 to 8) {
       board = board.replaceCell(i, 6, Pawn(player_2))
     }
-    state = true
 
     publish(new UpdateAll)
+    state = true
+
+    notifyObservers
+>>>>>>>>> Temporary merge branch 2
   }
 
   def boardToString(): String = board.toString
