@@ -111,7 +111,7 @@ class PieceSpec extends WordSpec with Matchers {
         piece.hasPromotion should be(true)
       }
       "promotion should be none" in {
-        piece.promotePiece should be(Some(PromotedSilver(piece.player)))
+        piece.promotePiece should be(Some(pieceFactory.apply("PromotedSilver", piece.player)))
       }
       "have a nice String representation" in {
         piece.toString should be("SG°")
@@ -168,19 +168,19 @@ class PieceSpec extends WordSpec with Matchers {
         piece.hasPromotion should be(true)
       }
       "promotion should be none" in {
-        piece.promotePiece should be(Some(PromotedKnight(piece.player)))
+        piece.promotePiece should be(Some(pieceFactory.apply("PromotedKnight", piece.player)))
       }
       "have a nice String representation" in {
         piece.toString should be("KN°")
       }
       "have a List of Moves (1, 0)" in {
-        piece.getMoveSet((1, 0), board) should be(List[(Int, Int)]((3, 1)))
+        piece.getMoveSet((1, 0), board) should be(List[(Int, Int)]())
       }
       "have a List of Moves (1, 8)" in {
-        piece2.getMoveSet((1, 8), board) should be(List[(Int, Int)]((3, 7)))
+        piece2.getMoveSet((1, 8), board) should be(List[(Int, Int)]())
       }
-      "have a List of Moves (4,4) " in {
-        piece2.getMoveSet((4, 4), board) should be(List[(Int, Int)]((6, 5), (6, 3), (3, 2), (5, 2), (2, 5), (2, 3)))
+      "have a List of Moves (4, 5) " in {
+        piece2.getMoveSet((4, 5), board) should be(List[(Int, Int)]((3, 3), (5, 3)))
       }
     }
   }
@@ -225,7 +225,7 @@ class PieceSpec extends WordSpec with Matchers {
         piece.hasPromotion should be(true)
       }
       "promotion should be none" in {
-        piece.promotePiece should be(Some(PromotedLancer(piece.player)))
+        piece.promotePiece should be(Some(pieceFactory.apply("PromotedLancer", piece.player)))
       }
       "have a nice String representation" in {
         piece.toString should be("L° ")
@@ -282,7 +282,7 @@ class PieceSpec extends WordSpec with Matchers {
         piece.hasPromotion should be(true)
       }
       "promotion should be none" in {
-        piece.promotePiece should be(Some(PromotedBishop(piece.player)))
+        piece.promotePiece should be(Some(pieceFactory.apply("PromotedBishop", piece.player)))
       }
       "have a nice String representation" in {
         piece.toString should be("B° ")
@@ -339,7 +339,7 @@ class PieceSpec extends WordSpec with Matchers {
         piece.hasPromotion should be(true)
       }
       "promotion should be none" in {
-        piece.promotePiece should be(Some(PromotedRook(piece.player)))
+        piece.promotePiece should be(Some(pieceFactory.apply("PromotedRook", piece.player)))
       }
       "have a nice String representation" in {
         piece.toString should be("R° ")
@@ -396,7 +396,7 @@ class PieceSpec extends WordSpec with Matchers {
         piece.hasPromotion should be(true)
       }
       "promotion should be none" in {
-        piece.promotePiece should be(Some(PromotedPawn(piece.player)))
+        piece.promotePiece should be(Some(pieceFactory.apply("PromotedPawn", piece.player)))
       }
       "have a nice String representation" in {
         piece.toString should be("P° ")

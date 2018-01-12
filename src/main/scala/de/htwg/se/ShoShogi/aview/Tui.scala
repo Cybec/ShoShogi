@@ -1,10 +1,11 @@
 package de.htwg.se.ShoShogi.aview
 
-import de.htwg.se.ShoShogi.controller.{ UpdateAll, Controller }
+import de.htwg.se.ShoShogi.controller.{ Controller, ControllerInterface, UpdateAll }
 import de.htwg.se.ShoShogi.util.Observer
 
 import scala.swing.Reactor
 
+//State Pattern
 trait State {
   var state = true
   val newGame = false
@@ -34,7 +35,7 @@ trait State {
   )
 }
 
-class Tui(controller: Controller) extends Reactor with State {
+class Tui(controller: ControllerInterface) extends Reactor with State {
   listenTo(controller)
 
   case class Event(command: String, input: Array[String])
