@@ -5,7 +5,7 @@ import javax.swing.{ ImageIcon, WindowConstants }
 
 import scala.swing.GridBagPanel.Anchor
 import de.htwg.se.ShoShogi.controller.{ Controller, StartNewGame, UpdateAll }
-import de.htwg.se.ShoShogi.model.Piece
+import de.htwg.se.ShoShogi.model.{ EmptyPiece, Piece }
 
 import scala.swing.Swing.LineBorder
 import scala.swing._
@@ -19,6 +19,7 @@ class SwingGui(controller: Controller) extends Frame {
   var containerPanel_1: BoxPanel = new BoxPanel(Orientation.Vertical) {}
   var containerPanel_2: BoxPanel = new BoxPanel(Orientation.Vertical) {}
   var highlightedPiece: (Int, Int) = (-1, -1)
+  var containerPiece: Piece = new EmptyPiece
   val boardColor: Color = getColorFromRGB(Array[Int](255, 222, 162))
   val pieceColor: Color = getColorFromRGB(Array[Int](249, 250, 242))
   val containerBorderColor: Color = getColorFromRGB(Array[Int](153, 51, 0))
@@ -100,7 +101,7 @@ class SwingGui(controller: Controller) extends Frame {
           row: Int <- 0 until controller.boardSize
           col: Int <- 0 until controller.boardSize
         } {
-          contents += newPieceButton(tempArray(col)(row), (col, row))
+          contents += newPieceButton(tempArray(col)(row), false, (col, row))
         }
       }
       boardPanel.revalidate()
@@ -132,7 +133,7 @@ class SwingGui(controller: Controller) extends Frame {
         row: Int <- 0 until controller.boardSize
         col: Int <- 0 until controller.boardSize
       } {
-        boardPanel.contents += newPieceButton(tempArray(col)(row), (col, row))
+        boardPanel.contents += newPieceButton(tempArray(col)(row), false, (col, row))
       }
       boardPanel.revalidate()
     }
@@ -152,10 +153,8 @@ class SwingGui(controller: Controller) extends Frame {
 
   def fillDataContainer1(): Unit = {
     controller.getContainer._1.foreach(x => {
-      containerPanel_1.xLayoutAlignment = 0.0
-      containerPanel_1.yLayoutAlignment = 0.0
       containerPanel_1.contents += Swing.VStrut(5)
-      containerPanel_1.contents += newPieceButton(x)
+      containerPanel_1.contents += newPieceButton(x, true)
       containerPanel_1.border = Swing.LineBorder(containerBorderColor, 2)
       containerPanel_1.background = containerBackgroundColor
       containerPanel_1.opaque = true
@@ -168,10 +167,8 @@ class SwingGui(controller: Controller) extends Frame {
 
   def fillDataContainer2(): Unit = {
     controller.getContainer._2.foreach(x => {
-      containerPanel_2.contents += newPieceButton(x)
-      containerPanel_2.xLayoutAlignment = 0.0
-      containerPanel_2.yLayoutAlignment = 1.0
       containerPanel_2.contents += Swing.VStrut(5)
+      containerPanel_2.contents += newPieceButton(x, true)
       containerPanel_2.border = Swing.LineBorder(containerBorderColor, 2)
       containerPanel_2.background = containerBackgroundColor
       containerPanel_2.opaque = true
@@ -182,61 +179,47 @@ class SwingGui(controller: Controller) extends Frame {
     }
   }
 
-  case class CustomButton(currentPiece: Piece, pos: (Int, Int) = (-1, -1)) extends Button
-
-  def newPieceButton(piece: Piece, pos: (Int, Int) = (-1, -1)): Button = new CustomButton(piece, pos) {
+  def newPieceButton(piece: Piece, container: Boolean, pos: (Int, Int) = (-1, -1)): Button = new PieceClickedReaction.CustomButton(piece, pos, container) {
     text = piece.toString
-
     if (piece.toString.trim.size > 0) {
       //      icon = new ImageIcon("de/htwg/se/ShoShogi/zresources/pieceImages/shogiExample.png")
-
       background = pieceColor
     } else {
       background = boardColor
-
     }
-
     listenTo(mouse.clicks)
 
     reactions += {
       case MouseClicked(src, pt, mod, clicks, pops) => {
-        println("pos_1: " + pos._1)
-        println("pos_2: " + pos._2)
-        println(controller.possibleMoves(pos._1, pos._2))
-
-        val pmv = controller.possibleMoves(pos._1, pos._2)
-
-        if (pmv.size > 0) {
-          highlightedPiece = (pos._1, pos._2)
+        PieceClickedReaction.movePiece(controller, pos) match {
+          case controller.MoveResult.validMove => promoteQuery(controller, pos)
+          case controller.MoveResult.kingSlain => showWonDialog
+          case controller.MoveResult.invalidMove =>
+          case controller.MoveResult.validMoveContainer =>
         }
 
-        if (background == Color.BLUE) {
-          controller.movePiece(highlightedPiece, (pos._1, pos._2)) match {
-            case controller.MoveResult.validMove => promoteQuery((pos._1, pos._2))
-            case controller.MoveResult.kingSlain => {
-              val res = Dialog.showConfirmation(
-                contents.head,
-                "You Won! Do you want to start a new game?",
-                optionType = Dialog.Options.YesNo,
-                title = "End"
-              )
-
-              if (res == Dialog.Result.Ok) {
-                controller.createNewBoard()
-              } else {
-                System.exit(0)
-              }
-            }
-          }
-        }
-
+        val pmv: List[(Int, Int)] = PieceClickedReaction.getMoves(this, controller)
         highlightCells(pmv)
       }
     }
   }
 
-  private def promoteQuery(value: (Int, Int)): Unit = {
-    if (controller.promotable(value._1, value._2)) {
+  private def showWonDialog = {
+    val res = Dialog.showConfirmation(
+      contents.head,
+      "You Won! Do you want to start a new game?",
+      optionType = Dialog.Options.YesNo,
+      title = "End"
+    )
+    if (res == Dialog.Result.Ok) {
+      controller.createNewBoard()
+    } else {
+      System.exit(0)
+    }
+  }
+
+  private def promoteQuery(controller: Controller, desPos: (Int, Int)): Unit = {
+    if (controller.promotable(desPos._1, desPos._2)) {
       val res = Dialog.showConfirmation(
         contents.head,
         "Do you want to promote your piece?",
@@ -245,7 +228,7 @@ class SwingGui(controller: Controller) extends Frame {
       )
 
       if (res == Dialog.Result.Ok) {
-        controller.promotePiece(value._1, value._2)
+        controller.promotePiece(desPos._1, desPos._2)
       }
     }
   }
@@ -256,16 +239,12 @@ class SwingGui(controller: Controller) extends Frame {
   }
 
   def highlightCells(cells: List[(Int, Int)]): Unit = {
-    boardPanel.contents.foreach(x =>
-      if (x.background == Color.BLUE) {
-        x.background = boardColor
-      })
+    redrawPanel(Panels.All)
 
     for (cell <- cells) {
       boardPanel.contents((cell._1 + (cell._2 * 9))).background = Color.BLUE
     }
     boardPanel.revalidate()
-
   }
 
   reactions += {
