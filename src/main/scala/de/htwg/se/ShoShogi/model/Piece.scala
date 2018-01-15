@@ -10,6 +10,8 @@ abstract class Piece(name: String, val player: Player) {
 
   override def toString: String
 
+  def toStringLong: String
+
   def getMoveSet(pos: (Int, Int), board: Board): List[(Int, Int)]
 
   def rekMoveSet(board: Board, newPos: (Int, Int), rek: Int, value: (Int, Int)): List[(Int, Int)] = {
@@ -76,6 +78,8 @@ case class King(override val player: Player)
     })
   }
 
+  def toStringLong: String = "King"
+
   /*Author:   Mert, Nick
   * Role:     Gibt die moeglichen Bewegungsfelder zurueck
   * Return:   List[(Int, Int)] mit den Koordinaten */
@@ -119,6 +123,8 @@ case class GoldenGeneral(override val player: Player)
       " "
     })
   }
+
+  def toStringLong: String = "GoldenGeneral"
 
   /*Author:   Mert, Nick
   * Role:     Gibt die moeglichen Bewegungsfelder zurueck
@@ -171,6 +177,8 @@ case class SilverGeneral(override val player: Player)
     })
   }
 
+  def toStringLong: String = "SilverGeneral"
+
   /*Author:   Mert, Nick
   * Role:     Gibt die moeglichen Bewegungsfelder zurueck
   * Return:   List[(Int, Int)] mit den Koordinaten */
@@ -208,6 +216,8 @@ case class PromotedSilver(override val player: Player)
       " "
     })
   }
+
+  def toStringLong: String = "PromotedSilver"
 
   def getMoveSet(pos: (Int, Int), board: Board): List[(Int, Int)] = {
     //    Jede Richtung ein Feld
@@ -258,6 +268,8 @@ case class Knight(override val player: Player)
     })
   }
 
+  def toStringLong: String = "Knight"
+
   /*Author:   Mert, Nick
   * Role:     Gibt die moeglichen Bewegungsfelder zurueck
   * Return:   List[(Int, Int)] mit den Koordinaten */
@@ -291,6 +303,8 @@ case class PromotedKnight(override val player: Player)
       " "
     })
   }
+
+  def toStringLong: String = "PromotedKnight"
 
   def getMoveSet(pos: (Int, Int), board: Board): List[(Int, Int)] = {
     if (this.player.first) {
@@ -339,6 +353,8 @@ case class Lancer(override val player: Player)
     })
   }
 
+  def toStringLong: String = "Lancer"
+
   /*Author:   Mert, Nick
   * Role:     Gibt die moeglichen Bewegungsfelder zurueck
   * Return:   List[(Int, Int)] mit den Koordinaten */
@@ -368,6 +384,8 @@ case class PromotedLancer(override val player: Player)
       " "
     })
   }
+
+  def toStringLong: String = "PromotedLancer"
 
   def getMoveSet(pos: (Int, Int), board: Board): List[(Int, Int)] = {
     if (this.player.first) {
@@ -416,6 +434,8 @@ case class Bishop(override val player: Player)
     })
   }
 
+  def toStringLong: String = "Bishop"
+
   /*Author:   Mert, Nick
   * Role:     Gibt die moeglichen Bewegungsfelder zurueck
   * Return:   List[(Int, Int)] mit den Koordinaten */
@@ -444,6 +464,8 @@ case class PromotedBishop(override val player: Player)
       " "
     })
   }
+
+  def toStringLong: String = "PromotedBishop"
 
   def getMoveSet(pos: (Int, Int), board: Board): List[(Int, Int)] = {
     rekMoveSet(board, (pos._1 - 1, pos._2 - 1), board.size, (-1, -1)) :::
@@ -484,6 +506,8 @@ case class Rook(override val player: Player)
     })
   }
 
+  def toStringLong: String = "Rook"
+
   /*Author:   Mert, Nick
   * Role:     Gibt die moeglichen Bewegungsfelder zurueck
   * Return:   List[(Int, Int)] mit den Koordinaten */
@@ -512,6 +536,8 @@ case class PromotedRook(override val player: Player)
       " "
     })
   }
+
+  def toStringLong: String = "PromotedRook"
 
   def getMoveSet(pos: (Int, Int), board: Board): List[(Int, Int)] = {
     rekMoveSet(board, (pos._1, pos._2 + 1), board.size, (0, 1)) :::
@@ -552,6 +578,8 @@ case class Pawn(override val player: Player)
     })
   }
 
+  def toStringLong: String = "Pawn"
+
   /*Author:   Mert, Nick
   * Role:     Gibt die moeglichen Bewegungsfelder zurueck
   * Return:   List[(Int, Int)] mit den Koordinaten */
@@ -581,6 +609,8 @@ case class PromotedPawn(override val player: Player)
       " "
     })
   }
+
+  def toStringLong: String = "PromotedPawn"
 
   def getMoveSet(pos: (Int, Int), board: Board): List[(Int, Int)] = {
     if (this.player.first) {
@@ -619,6 +649,8 @@ case class EmptyPiece()
   }
 
   override def toString: String = "   "
+
+  def toStringLong: String = "   "
 
   /*Author:   Mert, Nick
   * Role:     Gibt die moeglichen Bewegungsfelder zurueck

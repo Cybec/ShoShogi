@@ -15,12 +15,14 @@ trait State {
 //noinspection ScalaStyle
 class Controller(private var board: Board, val player_1: Player, val player_2: Player) extends Publisher with State {
   val boardSize = 9
+
   def getContainer: (List[Piece], List[Piece]) = board.getContainer()
+
   var state = true
 
   object MoveResult extends Enumeration {
     type EnumType = Value
-    val invalidMove, validMove, kingSlain = Value
+    val invalidMove, validMove, kingSlain, validMoveContainer = Value
   }
 
   def createEmptyBoard(): Unit = {
@@ -114,15 +116,12 @@ class Controller(private var board: Board, val player_1: Player, val player_2: P
 
   //TODO: Sonderfall direkt schachmatt beim einsetzten
   def possibleMovesConqueredPiece(piece: String): List[(Int, Int)] = {
-    var possibleMoves = List[(Int, Int)]()
-
     if (state) {
-      possibleMoves = getPossibleMvConPlayer1(piece)
+      getPossibleMvConPlayer1(piece)
     } else {
-      possibleMoves = getPossibleMvConPlayer2(piece)
+      getPossibleMvConPlayer2(piece)
     }
 
-    possibleMoves
   }
 
   def getPossibleMvConPlayer1(piece: String): List[(Int, Int)] = {
