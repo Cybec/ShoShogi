@@ -1,21 +1,19 @@
 package de.htwg.se.ShoShogi.aview.gui
 
 import java.awt.Color
-import java.awt.event.ComponentEvent
 import java.io.File
-import javax.swing.{ImageIcon, WindowConstants}
+import javax.swing.{ ImageIcon, WindowConstants }
 
 import scala.swing.event._
 import scala.swing.GridBagPanel.Anchor
-import de.htwg.se.ShoShogi.controller.{Controller, StartNewGame, UpdateAll}
-import de.htwg.se.ShoShogi.model.{EmptyPiece, Piece}
+import de.htwg.se.ShoShogi.controller._
+import de.htwg.se.ShoShogi.model.{ EmptyPiece, Piece }
 
-import scala.swing.Swing.LineBorder
 import scala.swing._
-import scala.swing.event.{Key, MouseClicked}
+import scala.swing.event.{ Key, MouseClicked }
 // scalastyle:off magic.number
 
-class SwingGui(controller: Controller) extends Frame {
+class SwingGui(controller: ControllerInterface) extends Frame {
   listenTo(controller)
 
   var boardPanel: GridPanel = new GridPanel(controller.boardSize, controller.boardSize) {}
@@ -73,10 +71,10 @@ class SwingGui(controller: Controller) extends Frame {
 
   contents = new GridBagPanel {
     def constraints(x: Int, y: Int,
-                    gridWidth: Int = 1, gridHeight: Int = 1,
-                    weightX: Double = 1.0, weightY: Double = 1.0,
-                    fill: GridBagPanel.Fill.Value = GridBagPanel.Fill.Both,
-                    anchor: Anchor.Value = Anchor.Center): Constraints = {
+      gridWidth: Int = 1, gridHeight: Int = 1,
+      weightX: Double = 1.0, weightY: Double = 1.0,
+      fill: GridBagPanel.Fill.Value = GridBagPanel.Fill.Both,
+      anchor: Anchor.Value = Anchor.Center): Constraints = {
       val c = new Constraints
       c.gridx = x
       c.gridy = y
@@ -205,10 +203,10 @@ class SwingGui(controller: Controller) extends Frame {
       reactions += {
         case MouseClicked(src, pt, mod, clicks, pops) => {
           PieceClickedReaction.movePiece(controller, pos) match {
-            case controller.MoveResult.validMove => promoteQuery(controller, pos)
-            case controller.MoveResult.kingSlain => showWonDialog
-            case controller.MoveResult.invalidMove =>
-            case controller.MoveResult.validMoveContainer =>
+            case MoveResult.validMove => promoteQuery(controller, pos)
+            case MoveResult.kingSlain => showWonDialog
+            case MoveResult.invalidMove =>
+            case MoveResult.validMoveContainer =>
           }
           highlightCells(PieceClickedReaction.getMoves(this, controller))
         }
@@ -230,7 +228,7 @@ class SwingGui(controller: Controller) extends Frame {
     }
   }
 
-  private def promoteQuery(controller: Controller, desPos: (Int, Int)): Unit = {
+  private def promoteQuery(controller: ControllerInterface, desPos: (Int, Int)): Unit = {
     if (controller.promotable(desPos._1, desPos._2)) {
       val res = Dialog.showConfirmation(
         contents.head,

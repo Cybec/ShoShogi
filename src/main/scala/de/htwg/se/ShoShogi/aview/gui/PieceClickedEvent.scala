@@ -1,28 +1,28 @@
 package de.htwg.se.ShoShogi.aview.gui
 
-import de.htwg.se.ShoShogi.controller.Controller
+import de.htwg.se.ShoShogi.controller.{ Controller, ControllerInterface, MoveResult }
 import de.htwg.se.ShoShogi.model.{ EmptyPiece, Piece }
 
-import scala.swing.{ Button, Dialog }
+import scala.swing.Button
 
 trait PieceClickedInterface {
 
   trait State {
-    def move(controller: Controller, desPos: (Int, Int)): controller.MoveResult.Value
+    def move(controller: ControllerInterface, desPos: (Int, Int)): MoveResult.Value
   }
 
   case class InitialState() extends State {
-    override def move(controller: Controller, desPos: (Int, Int)): controller.MoveResult.Value = {
-      controller.MoveResult.invalidMove
+    override def move(controller: ControllerInterface, desPos: (Int, Int)): MoveResult.Value = {
+      MoveResult.invalidMove
     }
   }
 
   case class OnBoardMarkedState() extends State {
-    override def move(controller: Controller, desPos: (Int, Int)): controller.MoveResult.Value = {
+    override def move(controller: ControllerInterface, desPos: (Int, Int)): MoveResult.Value = {
       val temp = controller.movePiece(piecePosOnBoard, desPos)
 
-      if (temp == controller.MoveResult.validMove ||
-        temp == controller.MoveResult.kingSlain) {
+      if (temp == MoveResult.validMove ||
+        temp == MoveResult.kingSlain) {
         resetPiecePosOnBoard
         currentState = new InitialState
       }
@@ -31,11 +31,11 @@ trait PieceClickedInterface {
   }
 
   case class ContainerMarkedState() extends State {
-    override def move(controller: Controller, desPos: (Int, Int)): controller.MoveResult.Value = {
+    override def move(controller: ControllerInterface, desPos: (Int, Int)): MoveResult.Value = {
       controller.moveConqueredPiece(pieceContainer.toString.trim, desPos)
       resetPieceContainer
       currentState = new InitialState
-      controller.MoveResult.validMoveContainer
+      MoveResult.validMoveContainer
     }
   }
 
@@ -57,11 +57,11 @@ trait PieceClickedInterface {
 }
 
 object PieceClickedReaction extends PieceClickedInterface {
-  def movePiece(controller: Controller, desPos: (Int, Int)): controller.MoveResult.Value = {
+  def movePiece(controller: ControllerInterface, desPos: (Int, Int)): MoveResult.Value = {
     currentState.move(controller, desPos: (Int, Int))
   }
 
-  def getMoves(customButton: CustomButton, controller: Controller): List[(Int, Int)] = {
+  def getMoves(customButton: CustomButton, controller: ControllerInterface): List[(Int, Int)] = {
     if (customButton.isInContainer) {
       setPieceContainer(customButton.currentPiece)
       currentState = new ContainerMarkedState
