@@ -218,10 +218,9 @@ class SwingGui(controller: ControllerInterface) extends Frame {
           PieceClickedReaction.movePiece(controller, pos) match {
             case MoveResult.validMove => promoteQuery(controller, pos)
             case MoveResult.kingSlain => showWonDialog
-            case MoveResult.invalidMove =>
+            case MoveResult.invalidMove => highlightCells(PieceClickedReaction.getMoves(this, controller))
             case MoveResult.validMoveContainer =>
           }
-          highlightCells(PieceClickedReaction.getMoves(this, controller))
         }
       }
     }
