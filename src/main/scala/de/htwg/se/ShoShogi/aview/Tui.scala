@@ -1,6 +1,6 @@
 package de.htwg.se.ShoShogi.aview
 
-import de.htwg.se.ShoShogi.controller.{ Controller, ControllerInterface, MoveResult, UpdateAll }
+import de.htwg.se.ShoShogi.controller._
 import de.htwg.se.ShoShogi.util.Observer
 
 import scala.swing.Reactor
@@ -284,5 +284,6 @@ class Tui(controller: ControllerInterface) extends Reactor with State {
 
   reactions += {
     case event: UpdateAll => printString(controller.boardToString())
+    case event: StartNewGame => printString(controller.boardToString())
   }
 }
