@@ -4,12 +4,20 @@ import de.htwg.se.ShoShogi.model.{ Board, Piece, Player }
 
 object MoveResult extends Enumeration {
   type EnumType = Value
-  val invalidMove, validMove, kingSlain = Value
+  val invalidMove, validMove, kingSlain, validMoveContainer = Value
 }
 
 trait ControllerInterface extends scala.swing.Publisher {
 
   def createController(board: Board, player1: Player, player2: Player): ControllerInterface = new Controller(board, player1, player2)
+
+  val boardSize = 9
+
+  def changeNamePlayer1(newName: String): Unit
+
+  def changeNamePlayer2(newName: String): Unit
+
+  def getContainer: (List[Piece], List[Piece])
 
   def createEmptyBoard(): Unit
 

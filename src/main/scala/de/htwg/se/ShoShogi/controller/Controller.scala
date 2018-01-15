@@ -5,27 +5,25 @@ import de.htwg.se.ShoShogi.model._
 // TODO 1: schauen ob vals und vars aus dem Klassen parameter entfernt werden koennen
 
 //noinspection ScalaStyle
-class Controller(private var board: Board, private var player_1: Player, private var player_2: Player) extends playerRounds with ControllerInterface {
+class Controller(private var board: Board, var player_1: Player, var player_2: Player) extends RoundState with ControllerInterface {
 
-  val playerOnesTurn: roundState = new playerOneRound(this)
-  val playerTwosTurn: roundState = new playerTwoRound(this)
-  var currentState: roundState = playerOnesTurn
-  val boardSize = 9
+  val playerOnesTurn: RoundState = new playerOneRound(this)
+  val playerTwosTurn: RoundState = new playerTwoRound(this)
+  var currentState: RoundState = playerOnesTurn
+  override val boardSize = 9
 
-  def changeNamePlayer1(newName: String): Unit = player_1 = new Player(newName, player_1.first)
+  override def changeNamePlayer1(newName: String): Unit = player_1 = new Player(newName, player_1.first)
 
-  def changeNamePlayer2(newName: String): Unit = player_2 = new Player(newName, player_2.first)
+  override def changeNamePlayer2(newName: String): Unit = player_2 = new Player(newName, player_2.first)
 
-  def getContainer: (List[Piece], List[Piece]) = board.getContainer()
+  override def getContainer: (List[Piece], List[Piece]) = board.getContainer()
 
-  var state = true
-
-  def createEmptyBoard(): Unit = {
+  override def createEmptyBoard(): Unit = {
     board = new Board(boardSize, pieceFactory.apply("EmptyPiece", player_1))
     publish(new UpdateAll)
   }
 
-  def createNewBoard(): Unit = {
+  override def createNewBoard(): Unit = {
     board = new Board(boardSize, pieceFactory.apply("EmptyPiece", player_1))
 
     //Steine fuer Spieler 1
@@ -64,42 +62,42 @@ class Controller(private var board: Board, private var player_1: Player, private
     currentState.changeState()
   }
 
-  def boardToString(): String = board.toString
+  override def boardToString(): String = board.toString
 
-  def boardToArray(): Array[Array[Piece]] = board.toArray
+  override def boardToArray(): Array[Array[Piece]] = board.toArray
 
-  def possibleMoves(pos: (Int, Int)): List[(Int, Int)] = {
+  override def possibleMoves(pos: (Int, Int)): List[(Int, Int)] = {
     currentState.possibleMoves(pos)
   }
 
-  def movePiece(currentPos: (Int, Int), destination: (Int, Int)): MoveResult.Value = {
+  override def movePiece(currentPos: (Int, Int), destination: (Int, Int)): MoveResult.Value = {
     val result: MoveResult.Value = currentState.movePiece(currentPos, destination)
     publish(new UpdateAll)
     currentState.changeState()
     result
   }
 
-  def possibleMovesConqueredPiece(piece: String): List[(Int, Int)] = {
+  override def possibleMovesConqueredPiece(piece: String): List[(Int, Int)] = {
     currentState.possibleMovesConqueredPiece(piece)
   }
 
-  def moveConqueredPiece(pieceAbbreviation: String, destination: (Int, Int)): Boolean = {
+  override def moveConqueredPiece(pieceAbbreviation: String, destination: (Int, Int)): Boolean = {
     val result: Boolean = currentState.moveConqueredPiece(pieceAbbreviation, destination)
     publish(new UpdateAll)
     currentState.changeState()
     result
   }
 
-  def getPossibleMvConPlayer(piece: String): List[(Int, Int)] = {
+  override def getPossibleMvConPlayer(piece: String): List[(Int, Int)] = {
     currentState.getPossibleMvConPlayer(piece)
   }
 
-  def promotable(position: (Int, Int)): Boolean = {
+  override def promotable(position: (Int, Int)): Boolean = {
     val piece = board.cell(position._1, position._2).getOrElse(return false)
     piece.hasPromotion && ((piece.player == player_1 && position._2 > 5) || (piece.player == player_2 && position._2 < 3))
   }
 
-  def promotePiece(piecePosition: (Int, Int)): Boolean = {
+  override def promotePiece(piecePosition: (Int, Int)): Boolean = {
     var piece = board.cell(piecePosition._1, piecePosition._2).getOrElse(return false)
     piece = piece.promotePiece.getOrElse(return false)
     board = board.replaceCell(piecePosition._1, piecePosition._2, piece)
@@ -107,7 +105,7 @@ class Controller(private var board: Board, private var player_1: Player, private
     true
   }
 
-  def changeState(): Unit = {
+  override def changeState(): Unit = {
     currentState.changeState()
   }
 
