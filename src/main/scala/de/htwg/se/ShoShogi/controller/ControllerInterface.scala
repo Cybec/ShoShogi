@@ -1,17 +1,15 @@
 package de.htwg.se.ShoShogi.controller
 
-import de.htwg.se.ShoShogi.ShoShogi.boardSize
-import de.htwg.se.ShoShogi.model.{Board, EmptyPiece, Piece, Player}
+import de.htwg.se.ShoShogi.model.{ Board, Piece, Player }
 
-import scala.swing.Publisher
+object MoveResult extends Enumeration {
+  type EnumType = Value
+  val invalidMove, validMove, kingSlain = Value
+}
 
-trait ControllerInterface extends playerRounds with Publisher {
-  def createController(board: Board, player1: Player, player2: Player): Controller = new Controller(board, player1, player2)
+trait ControllerInterface extends scala.swing.Publisher {
 
-  object MoveResult extends Enumeration {
-    type EnumType = Value
-    val invalidMove, validMove, kingSlain = Value
-  }
+  def createController(board: Board, player1: Player, player2: Player): ControllerInterface = new Controller(board, player1, player2)
 
   def createEmptyBoard(): Unit
 
@@ -27,9 +25,7 @@ trait ControllerInterface extends playerRounds with Publisher {
 
   def possibleMovesConqueredPiece(piece: String): List[(Int, Int)]
 
-  def getPossibleMvConPlayer1(piece: String): List[(Int, Int)]
-
-  def getPossibleMvConPlayer2(piece: String): List[(Int, Int)]
+  def getPossibleMvConPlayer(piece: String): List[(Int, Int)]
 
   def moveConqueredPiece(pieceAbbreviation: String, destination: (Int, Int)): Boolean
 

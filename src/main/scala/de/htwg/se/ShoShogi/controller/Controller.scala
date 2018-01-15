@@ -1,21 +1,19 @@
 package de.htwg.se.ShoShogi.controller
 
 import de.htwg.se.ShoShogi.model._
-import de.htwg.se.ShoShogi.util.Observable
-
-import scala.collection.mutable.ListBuffer
-import scala.swing.Publisher
 
 // TODO 1: schauen ob vals und vars aus dem Klassen parameter entfernt werden koennen
 
 //noinspection ScalaStyle
 class Controller(private var board: Board, val player_1: Player, val player_2: Player) extends playerRounds with ControllerInterface {
-  val playerRounds = playerRounds(board)
+
   val playerOnesTurn: roundState = new playerOneRound(this)
   val playerTwosTurn: roundState = new playerTwoRound(this)
   var currentState: roundState = playerOnesTurn
   val boardSize = 9
+
   def getContainer: (List[Piece], List[Piece]) = board.getContainer()
+
   var state = true
 
   def createEmptyBoard(): Unit = {
@@ -71,7 +69,8 @@ class Controller(private var board: Board, val player_1: Player, val player_2: P
   }
 
   def movePiece(currentPos: (Int, Int), destination: (Int, Int)): MoveResult.Value = {
-    val result = currentState.movePiece(currentPos, destination)
+    val result: MoveResult.Value = currentState.movePiece(currentPos, destination)
+    publish(new UpdateAll)
     currentState.changeState()
     result
   }
@@ -81,7 +80,8 @@ class Controller(private var board: Board, val player_1: Player, val player_2: P
   }
 
   def moveConqueredPiece(pieceAbbreviation: String, destination: (Int, Int)): Boolean = {
-    val result = currentState.moveConqueredPiece(pieceAbbreviation, destination)
+    val result: Boolean = currentState.moveConqueredPiece(pieceAbbreviation, destination)
+    publish(new UpdateAll)
     currentState.changeState()
     result
   }
@@ -106,4 +106,6 @@ class Controller(private var board: Board, val player_1: Player, val player_2: P
   def changeState(): Unit = {
     currentState.changeState()
   }
+
+  def getBoard = board
 }

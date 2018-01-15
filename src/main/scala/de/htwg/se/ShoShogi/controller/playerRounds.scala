@@ -1,23 +1,32 @@
 package de.htwg.se.ShoShogi.controller
 
 import de.htwg.se.ShoShogi.model._
+import scala.swing.Publisher
 
 //noinspection ScalaStyle
 class playerRounds() {
 
   trait roundState {
     def changeState()
+
     def possibleMovesConqueredPiece(piece: String): List[(Int, Int)]
+
     def moveConqueredPiece(pieceAbbreviation: String, destination: (Int, Int)): Boolean
+
     def possibleMoves(pos: (Int, Int)): List[(Int, Int)]
-    def movePiece(currentPos: (Int, Int), destination: (Int, Int))
+
+    def movePiece(currentPos: (Int, Int), destination: (Int, Int)): MoveResult.Value
+
     def getPossibleMvConPlayer(piece: String): List[(Int, Int)]
   }
+
   case class playerOneRound(controller: Controller) extends roundState {
 
-    def changeState() = controller.currentState = controller.playerTwosTurn
+    var board = controller.getBoard
 
-    def possibleMoves(pos: (Int, Int)): List[(Int, Int)] = {
+    override def changeState() = controller.currentState = controller.playerTwosTurn
+
+    override def possibleMoves(pos: (Int, Int)): List[(Int, Int)] = {
       board.cell(pos._1, pos._2) match {
         case Some(piece) => {
           if (controller.currentState.isInstanceOf[playerOneRound]) {
@@ -30,7 +39,7 @@ class playerRounds() {
       }
     }
 
-    def movePiece(currentPos: (Int, Int), destination: (Int, Int)): controller.MoveResult.Value = {
+    override def movePiece(currentPos: (Int, Int), destination: (Int, Int)): MoveResult.Value = {
       if (possibleMoves(currentPos).contains(destination)) {
 
         val tempPieceDestination = board.cell(destination._1, destination._2).getOrElse(return MoveResult.invalidMove)
@@ -39,10 +48,9 @@ class playerRounds() {
         if (controller.currentState.isInstanceOf[playerOneRound]) {
 
           board = board.replaceCell(destination._1, destination._2, tempPieceCurrent)
-          board = board.replaceCell(currentPos._1, currentPos._2, pieceFactory.apply("EmptyPiece", player_1))
+          board = board.replaceCell(currentPos._1, currentPos._2, pieceFactory.apply("EmptyPiece", controller.player_1))
 
           board = board.addToPlayerContainer(tempPieceCurrent.player, tempPieceDestination)
-          publish(new UpdateAll)
 
           if (tempPieceDestination.isInstanceOf[King]) {
             MoveResult.kingSlain
@@ -57,17 +65,17 @@ class playerRounds() {
       }
     }
 
-    def possibleMovesConqueredPiece(piece: String): List[(Int, Int)] = movesPossible = getPossibleMvConPlayer(piece)
+    override def possibleMovesConqueredPiece(piece: String): List[(Int, Int)] = getPossibleMvConPlayer(piece)
 
-    def moveConqueredPiece(pieceAbbreviation: String, destination: (Int, Int)): Boolean = {
+    override def moveConqueredPiece(pieceAbbreviation: String, destination: (Int, Int)): Boolean = {
       if (possibleMovesConqueredPiece(pieceAbbreviation).contains(destination)) {
 
-        var tempPiece: Piece = pieceFactory.apply("EmptyPiece", player_1)
+        var tempPiece: Piece = pieceFactory.apply("EmptyPiece", controller.player_1)
 
-        val success = board.getFromPlayerContainer(player_1) {
+        val success = board.getFromPlayerContainer(controller.player_1) {
           _.typeEquals(pieceAbbreviation)
         } match {
-          case Some((newBoard, piece)) =>
+          case Some((newBoard: Board, piece: Piece)) =>
             board = newBoard
             tempPiece = piece
             true
@@ -75,7 +83,6 @@ class playerRounds() {
         }
         if (success) {
           board = board.replaceCell(destination._1, destination._2, tempPiece)
-          publish(new UpdateAll)
           true
         } else {
           false
@@ -85,12 +92,12 @@ class playerRounds() {
       }
     }
 
-    def getPossibleMvConPlayer(piece: String): List[(Int, Int)] = {
+    override def getPossibleMvConPlayer(piece: String): List[(Int, Int)] = {
       var possibleMoves = List[(Int, Int)]()
 
       if (piece == "P") {
         for (column: Int <- 0 until board.size) {
-          if (!board.getPiecesInColumn(column, true).find((x: Piece) => x.typeEquals("P") || x.typeEquals("P°"))) {
+          if (!board.getPiecesInColumn(column, true).exists((x: Piece) => x.typeEquals("P") || x.typeEquals("P°"))) {
             if (!board.getPiecesInColumn(column, true).exists((x: Piece) => x.typeEquals("K") || x.typeEquals("K°"))) {
               possibleMoves = possibleMoves ::: board.getEmptyCellsInColumn(column, (0, 7))
             } else {
@@ -101,6 +108,7 @@ class playerRounds() {
                   } else if (piece.isInstanceOf[King] && !piece.player.first) {
                     possibleMoves = possibleMoves.filter(_ != (column, row - 1))
                   }
+                  case None => {}
                 }
               }
             }
@@ -121,12 +129,13 @@ class playerRounds() {
   }
 
   case class playerTwoRound(controller: Controller) extends roundState {
+    var board = controller.getBoard
 
     override def changeState() = controller.currentState = controller.playerOnesTurn
 
-    def possibleMoves(pos: (Int, Int)): List[(Int, Int)] = {
+    override def possibleMoves(pos: (Int, Int)): List[(Int, Int)] = {
       board.cell(pos._1, pos._2) match {
-        case Some(piece) => {
+        case Some(piece: Piece) => {
           if (controller.currentState.isInstanceOf[playerTwoRound]) {
             piece.getMoveSet((pos._1, pos._2), board)
           } else {
@@ -137,7 +146,7 @@ class playerRounds() {
       }
     }
 
-    def movePiece(currentPos: (Int, Int), destination: (Int, Int)): controller.MoveResult.Value = {
+    override def movePiece(currentPos: (Int, Int), destination: (Int, Int)): MoveResult.Value = {
       if (possibleMoves(currentPos).contains(destination)) {
 
         val tempPieceDestination = board.cell(destination._1, destination._2).getOrElse(return MoveResult.invalidMove)
@@ -146,10 +155,9 @@ class playerRounds() {
         if (controller.currentState.isInstanceOf[playerTwoRound]) {
 
           board = board.replaceCell(destination._1, destination._2, tempPieceCurrent)
-          board = board.replaceCell(currentPos._1, currentPos._2, pieceFactory.apply("EmptyPiece", player_2))
+          board = board.replaceCell(currentPos._1, currentPos._2, pieceFactory.apply("EmptyPiece", controller.player_2))
 
           board = board.addToPlayerContainer(tempPieceCurrent.player, tempPieceDestination)
-          publish(new UpdateAll)
 
           if (tempPieceDestination.isInstanceOf[King]) {
             MoveResult.kingSlain
@@ -164,17 +172,17 @@ class playerRounds() {
       }
     }
 
-    def possibleMovesConqueredPiece(piece: String): List[(Int, Int)] = movesPossible = getPossibleMvConPlayer2(piece)
+    override def possibleMovesConqueredPiece(piece: String): List[(Int, Int)] = getPossibleMvConPlayer(piece)
 
-    def moveConqueredPiece(pieceAbbreviation: String, destination: (Int, Int)): Boolean = {
+    override def moveConqueredPiece(pieceAbbreviation: String, destination: (Int, Int)): Boolean = {
       if (possibleMovesConqueredPiece(pieceAbbreviation).contains(destination)) {
 
-        var tempPiece: Piece = pieceFactory.apply("EmptyPiece", player_2)
+        var tempPiece: Piece = pieceFactory.apply("EmptyPiece", controller.player_2)
 
-        val success = board.getFromPlayerContainer(player_2) {
+        val success = board.getFromPlayerContainer(controller.player_2) {
           _.typeEquals(pieceAbbreviation)
         } match {
-          case Some((newBoard, piece)) =>
+          case Some((newBoard: Board, piece: Piece)) =>
             board = newBoard
             tempPiece = piece
             true
@@ -182,7 +190,6 @@ class playerRounds() {
         }
         if (success) {
           board = board.replaceCell(destination._1, destination._2, tempPiece)
-          publish(new UpdateAll)
           true
         } else {
           false
@@ -192,12 +199,12 @@ class playerRounds() {
       }
     }
 
-    def getPossibleMvConPlayer(piece: String): List[(Int, Int)] = {
+    override def getPossibleMvConPlayer(piece: String): List[(Int, Int)] = {
       var possibleMoves = List[(Int, Int)]()
       var count = 0
       if (piece == "P°") {
         for (column: Int <- 0 until board.size) {
-          if (!controller.board.getPiecesInColumn(column, false).exists((x: Piece) => x.typeEquals("P") || x.typeEquals("P°"))) {
+          if (!board.getPiecesInColumn(column, false).exists((x: Piece) => x.typeEquals("P") || x.typeEquals("P°"))) {
             if (!board.getPiecesInColumn(column, false).exists((x: Piece) => x.typeEquals("K") || x.typeEquals("K°"))) {
               possibleMoves = possibleMoves ::: board.getEmptyCellsInColumn(column, (1, 8))
             } else {
@@ -208,6 +215,7 @@ class playerRounds() {
                   } else if (piece.isInstanceOf[King] && piece.player.first) {
                     possibleMoves = possibleMoves.filter(_ != (column, row + board.size - count))
                   }
+                  case None => {}
                 }
                 count = count + 2
               }
@@ -226,7 +234,7 @@ class playerRounds() {
       }
       possibleMoves
     }
-
   }
+
 }
 
