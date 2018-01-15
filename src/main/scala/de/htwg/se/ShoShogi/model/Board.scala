@@ -10,6 +10,10 @@ case class Board(board: Vector[Vector[Piece]], containerPlayer_0: List[Piece], c
     (containerPlayer_0, containerPlayer_1)
   }
 
+  def setContainer(container: (List[Piece], List[Piece])): Board = {
+    copy(board, container._1, container._2)
+  }
+
   def addToPlayerContainer(player: Player, piece: Piece): Board = {
     if (!piece.isInstanceOf[EmptyPiece]) {
       if (player.first) {
@@ -57,6 +61,8 @@ case class Board(board: Vector[Vector[Piece]], containerPlayer_0: List[Piece], c
   def replaceCell(col: Int, row: Int, cell: Piece): Board =
     copy(board.updated(col, board(col).updated(row, cell)), containerPlayer_0, containerPlayer_1)
 
+  override def clone(): Board = copy(board, containerPlayer_0, containerPlayer_1)
+
   def getPiecesInColumn(column: Int, stateTurn: Boolean): List[Piece] = {
     var pieces = List[Piece]()
 
@@ -96,7 +102,7 @@ case class Board(board: Vector[Vector[Piece]], containerPlayer_0: List[Piece], c
     val alphabet = Array[Char]('a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i')
     val returnValue = new StringBuilder
 
-    returnValue.append("Captured Player 1: ")
+    returnValue.append("Captured: ")
     containerPlayer_0.foreach(x => returnValue.append(x).append("   "))
 
     returnValue.append("\n    0     1     2     3     4     5     6     7     8 \n \n")
@@ -117,7 +123,7 @@ case class Board(board: Vector[Vector[Piece]], containerPlayer_0: List[Piece], c
       returnValue.append("\n")
     }
 
-    returnValue.append("Captured Player 2: ")
+    returnValue.append("Captured: ")
     containerPlayer_1.foreach(x => returnValue.append(x).append("   "))
     returnValue.append("\n")
 

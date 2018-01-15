@@ -1,11 +1,14 @@
 package de.htwg.se.ShoShogi.controller
 
 import de.htwg.se.ShoShogi.model._
+import de.htwg.se.ShoShogi.util.UndoManager
+
 
 // TODO 1: schauen ob vals und vars aus dem Klassen parameter entfernt werden koennen
 
 //noinspection ScalaStyle
 class Controller(private var board: Board, var player_1: Player, var player_2: Player) extends RoundState with ControllerInterface {
+  private val undoManager = new UndoManager
 
   val playerOnesTurn: RoundState = new playerOneRound(this)
   val playerTwosTurn: RoundState = new playerTwoRound(this)
@@ -17,6 +20,30 @@ class Controller(private var board: Board, var player_1: Player, var player_2: P
   override def changeNamePlayer2(newName: String): Unit = player_2 = new Player(newName, player_2.first)
 
   override def getContainer: (List[Piece], List[Piece]) = board.getContainer()
+
+  def setContainer(container: (List[Piece], List[Piece])): Unit = board = board.setContainer(container)
+
+  def solve: Unit = {
+    undoManager.doStep(new SolveCommand(this))
+    currentState.changeState()
+    publish(new UpdateAll)
+  }
+
+  def undo: Unit = {
+    undoManager.undoStep
+    currentState.changeState()
+    publish(new UpdateAll)
+  }
+
+  def redo: Unit = {
+    undoManager.redoStep
+    currentState.changeState()
+    publish(new UpdateAll)
+  }
+
+  def getBoardClone: Board = board.clone()
+
+  def replaceBoard(newBoard: Board): Unit = board = newBoard
 
   override def createEmptyBoard(): Unit = {
     board = new Board(boardSize, pieceFactory.apply("EmptyPiece", player_1))

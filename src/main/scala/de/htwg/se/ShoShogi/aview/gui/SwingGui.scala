@@ -8,6 +8,8 @@ import scala.swing.event._
 import scala.swing.GridBagPanel.Anchor
 import de.htwg.se.ShoShogi.controller._
 import de.htwg.se.ShoShogi.model.{ EmptyPiece, Piece }
+import de.htwg.se.ShoShogi.controller.{ Controller, StartNewGame, UpdateAll }
+import de.htwg.se.ShoShogi.model.{ EmptyPiece, Piece }
 
 import scala.swing._
 import scala.swing.event.{ Key, MouseClicked }
@@ -69,6 +71,9 @@ class SwingGui(controller: ControllerInterface) extends Frame {
   initPanel(Panels.All)
   iconImage = new ImageIcon(backgroundPath).getImage
 
+  visible = true
+  peer.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE)
+
   contents = new GridBagPanel {
     def constraints(x: Int, y: Int,
       gridWidth: Int = 1, gridHeight: Int = 1,
@@ -97,8 +102,16 @@ class SwingGui(controller: ControllerInterface) extends Frame {
     }
   }
 
-  visible = true
-  peer.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE)
+  override def closeOperation() {
+    Dialog.showConfirmation(
+      parent = null,
+      title = "Exit",
+      message = "Are you sure you want to quit?"
+    ) match {
+      case Dialog.Result.Ok => System.exit(0)
+      case _ => ()
+    }
+  }
 
   def initPanel(panel: Panels.Value, scale: String = "100x100"): Unit = {
     if (panel == Panels.boardP || panel == Panels.All) {
