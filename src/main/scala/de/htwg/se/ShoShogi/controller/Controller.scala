@@ -13,14 +13,20 @@ trait State {
 }
 
 //noinspection ScalaStyle
-class Controller(private var board: Board, val player_1: Player, val player_2: Player) extends Publisher with State {
+class Controller(private var board: Board, private var player_1: Player, private var player_2: Player) extends Publisher with State {
   val boardSize = 9
+
+  def changeNamePlayer1(newName: String): Unit = player_1 = new Player(newName, player_1.first)
+
+  def changeNamePlayer2(newName: String): Unit = player_2 = new Player(newName, player_2.first)
+
   def getContainer: (List[Piece], List[Piece]) = board.getContainer()
+
   var state = true
 
   object MoveResult extends Enumeration {
     type EnumType = Value
-    val invalidMove, validMove, kingSlain = Value
+    val invalidMove, validMove, kingSlain, validMoveContainer = Value
   }
 
   def createEmptyBoard(): Unit = {
@@ -63,7 +69,7 @@ class Controller(private var board: Board, val player_1: Player, val player_2: P
       board = board.replaceCell(i, 6, pieceFactory.apply("Pawn", player_2))
     }
 
-    publish(new UpdateAll)
+    publish(new StartNewGame)
     state = true
   }
 
@@ -114,15 +120,12 @@ class Controller(private var board: Board, val player_1: Player, val player_2: P
 
   //TODO: Sonderfall direkt schachmatt beim einsetzten
   def possibleMovesConqueredPiece(piece: String): List[(Int, Int)] = {
-    var possibleMoves = List[(Int, Int)]()
-
     if (state) {
-      possibleMoves = getPossibleMvConPlayer1(piece)
+      getPossibleMvConPlayer1(piece)
     } else {
-      possibleMoves = getPossibleMvConPlayer2(piece)
+      getPossibleMvConPlayer2(piece)
     }
 
-    possibleMoves
   }
 
   def getPossibleMvConPlayer1(piece: String): List[(Int, Int)] = {
@@ -160,13 +163,13 @@ class Controller(private var board: Board, val player_1: Player, val player_2: P
 
   def getPossibleMvConPlayer2(piece: String): List[(Int, Int)] = {
     var possibleMoves = List[(Int, Int)]()
-    var count = 0
     if (piece == "P" || piece == "P°") {
       for (column: Int <- 0 until board.size) {
         if (!board.getPiecesInColumn(column, state).exists(x => x.typeEquals("P") || x.typeEquals("P°"))) {
           if (!board.getPiecesInColumn(column, state).exists(x => x.typeEquals("K") || x.typeEquals("K°"))) {
             possibleMoves = possibleMoves ::: board.getEmptyCellsInColumn(column, (1, 8))
           } else {
+            var count = 0
             for (row <- 0 to 8) {
               board.cell(column, row + board.size - 1 - count) match {
                 case Some(piece) => if (piece.isInstanceOf[EmptyPiece] && row != 8) {
@@ -174,6 +177,7 @@ class Controller(private var board: Board, val player_1: Player, val player_2: P
                 } else if (piece.isInstanceOf[King] && piece.player.first) {
                   possibleMoves = possibleMoves.filter(_ != (column, row + board.size - count))
                 }
+                case None => {}
               }
               count = count + 2
             }
@@ -217,6 +221,7 @@ class Controller(private var board: Board, val player_1: Player, val player_2: P
 
         state = changePlayer(state)
         publish(new UpdateAll)
+
         true
       } else {
         false

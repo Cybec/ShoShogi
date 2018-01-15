@@ -4,3 +4,4 @@ import scala.swing.event.Event
 
 class UpdateAll extends Event
 class CandidatesChanged extends Event
+class StartNewGame extends Event
