@@ -257,7 +257,7 @@ case class Knight(override val player: Player)
   * Role:     Stuft das Piece auf
   * Return:   Gibt das Promotete Piece zurueck*/
   def promotePiece: Option[Piece] = {
-    Some(PromotedKnight(player))
+    Some(pieceFactory.apply("PromotedKnight", player))
   }
 
   override def toString: String = {
@@ -274,14 +274,13 @@ case class Knight(override val player: Player)
   * Role:     Gibt die moeglichen Bewegungsfelder zurueck
   * Return:   List[(Int, Int)] mit den Koordinaten */
   def getMoveSet(pos: (Int, Int), board: Board): List[(Int, Int)] = {
-    rekMoveSet(board, (pos._1 - 1, pos._2 + 2), 1, (-1, 2)) :::
-      rekMoveSet(board, (pos._1 + 1, pos._2 + 2), 1, (1, 2)) :::
-      rekMoveSet(board, (pos._1 + 2, pos._2 + 1), 1, (2, 1)) :::
-      rekMoveSet(board, (pos._1 + 2, pos._2 - 1), 1, (2, -1)) :::
+    if (this.player.first) {
+      rekMoveSet(board, (pos._1 - 1, pos._2 + 2), 1, (-1, 2)) :::
+        rekMoveSet(board, (pos._1 + 1, pos._2 + 2), 1, (1, 2))
+    } else {
       rekMoveSet(board, (pos._1 - 1, pos._2 - 2), 1, (-1, -2)) :::
-      rekMoveSet(board, (pos._1 + 1, pos._2 - 2), 1, (1, -2)) :::
-      rekMoveSet(board, (pos._1 - 2, pos._2 + 1), 1, (-2, 1)) :::
-      rekMoveSet(board, (pos._1 - 2, pos._2 - 1), 1, (-2, -1))
+        rekMoveSet(board, (pos._1 + 1, pos._2 - 2), 1, (1, -2))
+    }
 
   }
 

@@ -1,10 +1,11 @@
 package de.htwg.se.ShoShogi.aview
 
-import de.htwg.se.ShoShogi.controller.{ UpdateAll, Controller }
+import de.htwg.se.ShoShogi.controller.{ Controller, ControllerInterface, MoveResult, UpdateAll }
 import de.htwg.se.ShoShogi.util.Observer
 
 import scala.swing.Reactor
 
+//State Pattern
 trait State {
   var state = true
   val newGame = false
@@ -34,7 +35,7 @@ trait State {
   )
 }
 
-class Tui(controller: Controller) extends Reactor with State {
+class Tui(controller: ControllerInterface) extends Reactor with State {
   listenTo(controller)
 
   case class Event(command: String, input: Array[String])
@@ -103,9 +104,9 @@ class Tui(controller: Controller) extends Reactor with State {
 
     private def move(e: Event, value: Vector[(Int, Int)]) = {
       controller.movePiece((value(0)._1, value(0)._2), (value(1)._1, value(1)._2)) match {
-        case controller.MoveResult.invalidMove => printString("You cant move this piece that way\n")
-        case controller.MoveResult.validMove => promoteQuery(value)
-        case controller.MoveResult.kingSlain => {
+        case MoveResult.invalidMove => printString("You cant move this piece that way\n")
+        case MoveResult.validMove => promoteQuery(value)
+        case MoveResult.kingSlain => {
           setGameState(mainMenu)
           printString("You won!")
         }
