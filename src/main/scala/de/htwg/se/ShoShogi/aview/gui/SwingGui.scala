@@ -3,16 +3,16 @@ package de.htwg.se.ShoShogi.aview.gui
 import java.awt.Color
 import java.awt.event.ComponentEvent
 import java.io.File
-import javax.swing.{ImageIcon, WindowConstants}
+import javax.swing.{ ImageIcon, WindowConstants }
 
 import scala.swing.event._
 import scala.swing.GridBagPanel.Anchor
-import de.htwg.se.ShoShogi.controller.{Controller, StartNewGame, UpdateAll}
-import de.htwg.se.ShoShogi.model.{EmptyPiece, Piece}
+import de.htwg.se.ShoShogi.controller.{ Controller, StartNewGame, UpdateAll }
+import de.htwg.se.ShoShogi.model.{ EmptyPiece, Piece }
 
 import scala.swing.Swing.LineBorder
 import scala.swing._
-import scala.swing.event.{Key, MouseClicked}
+import scala.swing.event.{ Key, MouseClicked }
 // scalastyle:off magic.number
 
 class SwingGui(controller: Controller) extends Frame {
@@ -60,7 +60,6 @@ class SwingGui(controller: Controller) extends Frame {
           controller.changeNamePlayer1(p1Name)
           controller.changeNamePlayer1(p2Name)
         }
-
       })
       contents += new MenuItem(Action("Quit") {
         System.exit(0)
@@ -71,12 +70,15 @@ class SwingGui(controller: Controller) extends Frame {
   initPanel(Panels.All)
   iconImage = new ImageIcon(backgroundPath).getImage
 
+  visible = true
+  peer.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE)
+
   contents = new GridBagPanel {
     def constraints(x: Int, y: Int,
-                    gridWidth: Int = 1, gridHeight: Int = 1,
-                    weightX: Double = 1.0, weightY: Double = 1.0,
-                    fill: GridBagPanel.Fill.Value = GridBagPanel.Fill.Both,
-                    anchor: Anchor.Value = Anchor.Center): Constraints = {
+      gridWidth: Int = 1, gridHeight: Int = 1,
+      weightX: Double = 1.0, weightY: Double = 1.0,
+      fill: GridBagPanel.Fill.Value = GridBagPanel.Fill.Both,
+      anchor: Anchor.Value = Anchor.Center): Constraints = {
       val c = new Constraints
       c.gridx = x
       c.gridy = y
@@ -99,8 +101,16 @@ class SwingGui(controller: Controller) extends Frame {
     }
   }
 
-  visible = true
-  peer.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE)
+  override def closeOperation() {
+    Dialog.showConfirmation(
+      parent = null,
+      title = "Exit",
+      message = "Are you sure you want to quit?"
+    ) match {
+      case Dialog.Result.Ok => System.exit(0)
+      case _ => ()
+    }
+  }
 
   def initPanel(panel: Panels.Value, scale: String = "100x100"): Unit = {
     if (panel == Panels.boardP || panel == Panels.All) {

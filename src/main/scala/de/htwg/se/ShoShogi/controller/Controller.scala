@@ -1,7 +1,7 @@
 package de.htwg.se.ShoShogi.controller
 
 import de.htwg.se.ShoShogi.model._
-import de.htwg.se.ShoShogi.util.Observable
+import de.htwg.se.ShoShogi.util.{ Observable, UndoManager }
 
 import scala.collection.mutable.ListBuffer
 import scala.swing.Publisher
@@ -15,6 +15,7 @@ trait State {
 //noinspection ScalaStyle
 class Controller(private var board: Board, private var player_1: Player, private var player_2: Player) extends Publisher with State {
   val boardSize = 9
+  private val undoManager = new UndoManager
 
   def changeNamePlayer1(newName: String): Unit = player_1 = new Player(newName, player_1.first)
 
@@ -22,12 +23,36 @@ class Controller(private var board: Board, private var player_1: Player, private
 
   def getContainer: (List[Piece], List[Piece]) = board.getContainer()
 
+  def setContainer(container: (List[Piece], List[Piece])): Unit = board = board.setContainer(container)
+
+  def solve: Unit = {
+    undoManager.doStep(new SolveCommand(this))
+    state = !state
+    publish(new UpdateAll)
+  }
+
+  def undo: Unit = {
+    undoManager.undoStep
+    state = !state
+    publish(new UpdateAll)
+  }
+
+  def redo: Unit = {
+    undoManager.redoStep
+    state = !state
+    publish(new UpdateAll)
+  }
+
   var state = true
 
   object MoveResult extends Enumeration {
     type EnumType = Value
     val invalidMove, validMove, kingSlain, validMoveContainer = Value
   }
+
+  def getBoardClone: Board = board.clone()
+
+  def replaceBoard(newBoard: Board): Unit = board = newBoard
 
   def createEmptyBoard(): Unit = {
     board = new Board(boardSize, pieceFactory.apply("EmptyPiece", player_1))
