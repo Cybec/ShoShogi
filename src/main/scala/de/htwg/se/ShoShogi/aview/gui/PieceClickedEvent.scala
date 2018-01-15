@@ -71,6 +71,9 @@ object PieceClickedReaction extends PieceClickedInterface {
       if (temp.size > 0) {
         setPiecePosOnBoard(customButton.pos)
         currentState = new OnBoardMarkedState
+      } else {
+        resetPiecePosOnBoard
+        currentState = new InitialState
       }
       temp
     }

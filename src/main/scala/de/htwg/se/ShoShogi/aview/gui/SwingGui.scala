@@ -2,16 +2,17 @@ package de.htwg.se.ShoShogi.aview.gui
 
 import java.awt.Color
 import java.awt.event.ComponentEvent
-import javax.swing.{ ImageIcon, WindowConstants }
+import java.io.File
+import javax.swing.{ImageIcon, WindowConstants}
 
 import scala.swing.event._
 import scala.swing.GridBagPanel.Anchor
-import de.htwg.se.ShoShogi.controller.{ Controller, StartNewGame, UpdateAll }
-import de.htwg.se.ShoShogi.model.{ EmptyPiece, Piece }
+import de.htwg.se.ShoShogi.controller.{Controller, StartNewGame, UpdateAll}
+import de.htwg.se.ShoShogi.model.{EmptyPiece, Piece}
 
 import scala.swing.Swing.LineBorder
 import scala.swing._
-import scala.swing.event.{ Key, MouseClicked }
+import scala.swing.event.{Key, MouseClicked}
 // scalastyle:off magic.number
 
 class SwingGui(controller: Controller) extends Frame {
@@ -26,8 +27,8 @@ class SwingGui(controller: Controller) extends Frame {
   val pieceColor: Color = getColorFromRGB(Array[Int](249, 250, 242))
   val containerBorderColor: Color = getColorFromRGB(Array[Int](153, 51, 0))
   val containerBackgroundColor: Color = getColorFromRGB(Array[Int](246, 217, 157))
-  val backgroundPath = "/home/mert/MEGAsync/HTWG/E_2017_2018_WS_HTWG/SE/ShoShogi_Repo/ShoShogi" +
-    "/src/main/scala/de/htwg/se/ShoShogi/zresources/pieceImages/background.jpg"
+  val resourcesPath: String = new File(".").getCanonicalPath() + "/src/main/scala/de/htwg/se/ShoShogi/zresources"
+  val backgroundPath = resourcesPath + "/images/background.jpg"
 
   def getBoardArray: Array[Array[Piece]] = controller.boardToArray()
 
@@ -49,7 +50,17 @@ class SwingGui(controller: Controller) extends Frame {
     contents += new Menu("Game") {
       mnemonic = Key.N
       contents += new MenuItem(Action("New") {
-        controller.createNewBoard()
+        val dialog = new ChangeNameDialog()
+        val res = dialog.showDialog()
+
+        if (res == Dialog.Result.Ok) {
+          controller.createNewBoard()
+          val p1Name: String = if (dialog.getNames()._1.size == 0) dialog.p1DefaultName else dialog.getNames()._1
+          val p2Name: String = if (dialog.getNames()._2.size == 0) dialog.p2DefaultName else dialog.getNames()._2
+          controller.changeNamePlayer1(p1Name)
+          controller.changeNamePlayer1(p2Name)
+        }
+
       })
       contents += new MenuItem(Action("Quit") {
         System.exit(0)
@@ -62,10 +73,10 @@ class SwingGui(controller: Controller) extends Frame {
 
   contents = new GridBagPanel {
     def constraints(x: Int, y: Int,
-      gridWidth: Int = 1, gridHeight: Int = 1,
-      weightX: Double = 1.0, weightY: Double = 1.0,
-      fill: GridBagPanel.Fill.Value = GridBagPanel.Fill.Both,
-      anchor: Anchor.Value = Anchor.Center): Constraints = {
+                    gridWidth: Int = 1, gridHeight: Int = 1,
+                    weightX: Double = 1.0, weightY: Double = 1.0,
+                    fill: GridBagPanel.Fill.Value = GridBagPanel.Fill.Both,
+                    anchor: Anchor.Value = Anchor.Center): Constraints = {
       val c = new Constraints
       c.gridx = x
       c.gridy = y
@@ -183,8 +194,7 @@ class SwingGui(controller: Controller) extends Frame {
     new PieceClickedReaction.CustomButton(piece, pos, container) {
       if (piece.toString.trim.size > 0) {
         val player = if (piece.isFirstOwner) "1" else "2"
-        icon = new ImageIcon("/home/mert/MEGAsync/HTWG/E_2017_2018_WS_HTWG/SE/ShoShogi_Repo" +
-          "/ShoShogi/src/main/scala/de/htwg/se/ShoShogi/zresources/pieceImages/player" + player + "/" + scale + "/"
+        icon = new ImageIcon(resourcesPath + "/images/player" + player + "/" + scale + "/"
           + piece.toStringLong + "_" + scale + ".png")
         background = boardColor
       } else {

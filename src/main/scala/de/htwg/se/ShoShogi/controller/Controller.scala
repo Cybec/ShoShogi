@@ -13,8 +13,12 @@ trait State {
 }
 
 //noinspection ScalaStyle
-class Controller(private var board: Board, val player_1: Player, val player_2: Player) extends Publisher with State {
+class Controller(private var board: Board, private var player_1: Player, private var player_2: Player) extends Publisher with State {
   val boardSize = 9
+
+  def changeNamePlayer1(newName: String): Unit = player_1 = new Player(newName, player_1.first)
+
+  def changeNamePlayer2(newName: String): Unit = player_2 = new Player(newName, player_2.first)
 
   def getContainer: (List[Piece], List[Piece]) = board.getContainer()
 
