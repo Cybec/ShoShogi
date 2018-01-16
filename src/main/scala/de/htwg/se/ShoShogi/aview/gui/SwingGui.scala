@@ -7,8 +7,7 @@ import javax.swing.{ Icon, ImageIcon, WindowConstants }
 import scala.swing.event._
 import scala.swing.GridBagPanel.Anchor
 import de.htwg.se.ShoShogi.controller._
-import de.htwg.se.ShoShogi.model.{ EmptyPiece, Piece }
-import de.htwg.se.ShoShogi.controller.{ Controller, StartNewGame, UpdateAll }
+import de.htwg.se.ShoShogi.controller.{ StartNewGame, UpdateAll }
 import de.htwg.se.ShoShogi.model.{ EmptyPiece, Piece }
 
 import scala.swing._
@@ -97,7 +96,7 @@ class SwingGui(controller: ControllerInterface) extends Frame {
     add(containerPanel_1, constraints(0, 0, gridHeight = 3, weightX = 0.0, anchor = Anchor.NorthEast))
     add(boardPanel, constraints(1, 0, gridHeight = 3))
     add(containerPanel_2, constraints(2, 0, gridHeight = 3, weightX = 0.0, anchor = Anchor.SouthWest))
-    add(statisticsPanel, constraints(3, 0, gridHeight = 3))
+    //    add(statisticsPanel, constraints(3, 0, gridHeight = 3))
 
     override def paintComponent(g: java.awt.Graphics2D) {
       g.drawImage(new ImageIcon(backgroundPath).getImage, 0, 0, null)
