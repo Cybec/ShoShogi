@@ -24,7 +24,7 @@ trait PieceClickedInterface {
       if (temp == MoveResult.validMove ||
         temp == MoveResult.kingSlain) {
         resetPiecePosOnBoard
-        currentState = new InitialState
+        currentState = initialState
       }
       temp
     }
@@ -34,21 +34,21 @@ trait PieceClickedInterface {
     override def move(controller: ControllerInterface, desPos: (Int, Int)): MoveResult.Value = {
       controller.moveConqueredPiece(pieceContainer.toString.trim, desPos)
       resetPieceContainer
-      currentState = new InitialState
+      currentState = initialState
       MoveResult.validMoveContainer
     }
   }
 
-  var currentState: State = new InitialState
+  var initialState: State = new InitialState
+  var onBoardMarkedState: State = new OnBoardMarkedState
+  var containerMarkedState: State = new ContainerMarkedState
+
+  var currentState: State = initialState
 
   case class CustomButton(currentPiece: Piece, pos: (Int, Int) = (-1, -1), isInContainer: Boolean) extends Button
 
-  private var piecePosOnBoard: (Int, Int) = (-1, -1)
-  private var pieceContainer: Piece = new EmptyPiece
-
-  def setPiecePosOnBoard(pos: (Int, Int)): Unit = piecePosOnBoard = pos
-
-  def setPieceContainer(piece: Piece): Unit = pieceContainer = piece
+  var piecePosOnBoard: (Int, Int) = (-1, -1)
+  var pieceContainer: Piece = new EmptyPiece
 
   def resetPiecePosOnBoard: Unit = piecePosOnBoard = (-1, -1)
 
@@ -61,21 +61,31 @@ object PieceClickedReaction extends PieceClickedInterface {
     currentState.move(controller, desPos: (Int, Int))
   }
 
-  def getMoves(customButton: CustomButton, controller: ControllerInterface): List[(Int, Int)] = {
+  def getPossibleMoves(customButton: CustomButton, controller: ControllerInterface): List[(Int, Int)] = {
+    var returnList = List[(Int, Int)]()
+
     if (customButton.isInContainer) {
-      setPieceContainer(customButton.currentPiece)
-      currentState = new ContainerMarkedState
-      controller.possibleMovesConqueredPiece(customButton.currentPiece.toString.trim)
+      resetPiecePosOnBoard
+      resetPieceContainer
+      pieceContainer = customButton.currentPiece
+      currentState = containerMarkedState
+      returnList = controller.getPossibleMovesConqueredPiece(customButton.currentPiece.toString.trim)
     } else {
-      val temp = controller.possibleMoves(customButton.pos)
-      if (temp.size > 0) {
-        setPiecePosOnBoard(customButton.pos)
-        currentState = new OnBoardMarkedState
+      if (piecePosOnBoard == (-1, -1) || piecePosOnBoard == customButton.pos) {
+        returnList = controller.getPossibleMoves(customButton.pos)
+        if (returnList.size > 0) {
+          resetPiecePosOnBoard
+          resetPieceContainer
+          piecePosOnBoard = customButton.pos
+          currentState = onBoardMarkedState
+        }
       } else {
         resetPiecePosOnBoard
-        currentState = new InitialState
+        resetPieceContainer
+        currentState = initialState
       }
-      temp
     }
+
+    returnList
   }
 }

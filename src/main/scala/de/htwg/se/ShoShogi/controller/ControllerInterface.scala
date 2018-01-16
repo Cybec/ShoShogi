@@ -27,11 +27,11 @@ trait ControllerInterface extends scala.swing.Publisher {
 
   def boardToArray(): Array[Array[Piece]]
 
-  def possibleMoves(pos: (Int, Int)): List[(Int, Int)]
+  def getPossibleMoves(pos: (Int, Int)): List[(Int, Int)]
 
   def movePiece(currentPos: (Int, Int), destination: (Int, Int)): MoveResult.Value
 
-  def possibleMovesConqueredPiece(piece: String): List[(Int, Int)]
+  def getPossibleMovesConqueredPiece(piece: String): List[(Int, Int)]
 
   def getPossibleMvConPlayer(piece: String): List[(Int, Int)]
 

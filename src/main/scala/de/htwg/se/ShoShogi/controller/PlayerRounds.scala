@@ -8,11 +8,9 @@ trait RoundState {
 
   def changeState()
 
-  def possibleMovesConqueredPiece(piece: String): List[(Int, Int)]
-
   def moveConqueredPiece(pieceAbbreviation: String, destination: (Int, Int)): Boolean
 
-  def possibleMoves(pos: (Int, Int)): List[(Int, Int)]
+  def getPossibleMoves(pos: (Int, Int)): List[(Int, Int)]
 
   def movePiece(currentPos: (Int, Int), destination: (Int, Int)): MoveResult.Value
 
@@ -23,10 +21,10 @@ case class playerOneRound(controller: Controller) extends RoundState {
 
   override def changeState() = controller.currentState = controller.playerTwosTurn
 
-  override def possibleMoves(pos: (Int, Int)): List[(Int, Int)] = {
+  override def getPossibleMoves(pos: (Int, Int)): List[(Int, Int)] = {
     controller.board.cell(pos._1, pos._2) match {
       case Some(piece) => {
-        if (controller.currentState.isInstanceOf[playerOneRound]) {
+        if (piece.player.first) {
           piece.getMoveSet((pos._1, pos._2), controller.board)
         } else {
           List()
@@ -37,7 +35,7 @@ case class playerOneRound(controller: Controller) extends RoundState {
   }
 
   override def movePiece(currentPos: (Int, Int), destination: (Int, Int)): MoveResult.Value = {
-    if (possibleMoves(currentPos).contains(destination) && controller.currentState.isInstanceOf[playerOneRound]) {
+    if (getPossibleMoves(currentPos).contains(destination) && controller.currentState.isInstanceOf[playerOneRound]) {
 
       val tempPieceDestination = controller.board.cell(destination._1, destination._2).getOrElse(return MoveResult.invalidMove)
       val tempPieceCurrent = controller.board.cell(currentPos._1, currentPos._2).getOrElse(return MoveResult.invalidMove)
@@ -57,10 +55,8 @@ case class playerOneRound(controller: Controller) extends RoundState {
     }
   }
 
-  override def possibleMovesConqueredPiece(piece: String): List[(Int, Int)] = getPossibleMvConPlayer(piece)
-
   override def moveConqueredPiece(pieceAbbreviation: String, destination: (Int, Int)): Boolean = {
-    if (possibleMovesConqueredPiece(pieceAbbreviation).contains(destination)) {
+    if (getPossibleMvConPlayer(pieceAbbreviation).contains(destination)) {
 
       var tempPiece: Piece = pieceFactory.apply("EmptyPiece", controller.player_1)
 
@@ -87,10 +83,14 @@ case class playerOneRound(controller: Controller) extends RoundState {
   override def getPossibleMvConPlayer(piece: String): List[(Int, Int)] = {
     var possibleMoves = List[(Int, Int)]()
 
-    if (piece == "P") {
+    if (!piece.endsWith("°")) {
+      return possibleMoves
+    }
+
+    if (piece == "P°") {
       for (column: Int <- 0 until controller.board.size) {
-        if (!controller.board.getPiecesInColumn(column, true).exists((x: Piece) => x.typeEquals("P") || x.typeEquals("P°"))) {
-          if (!controller.board.getPiecesInColumn(column, true).exists((x: Piece) => x.typeEquals("K") || x.typeEquals("K°"))) {
+        if (!controller.board.getPiecesInColumn(column, stateTurn = true).exists((x: Piece) => x.typeEquals("P°"))) {
+          if (!controller.board.getPiecesInColumn(column, stateTurn = true).exists((x: Piece) => x.typeEquals("K°"))) {
             possibleMoves = possibleMoves ::: controller.board.getEmptyCellsInColumn(column, (0, 7))
           } else {
             for (row <- 0 to 8) {
@@ -107,7 +107,7 @@ case class playerOneRound(controller: Controller) extends RoundState {
           }
         }
       }
-    } else if (piece == "KN" || piece == "L") {
+    } else if (piece == "KN°" || piece == "L°") {
       for (x <- 0 until controller.board.size) {
         possibleMoves = possibleMoves ::: controller.board.getEmptyCellsInColumn(x, (0, 7))
       }
@@ -125,10 +125,10 @@ case class playerTwoRound(controller: Controller) extends RoundState {
 
   override def changeState() = controller.currentState = controller.playerOnesTurn
 
-  override def possibleMoves(pos: (Int, Int)): List[(Int, Int)] = {
+  override def getPossibleMoves(pos: (Int, Int)): List[(Int, Int)] = {
     controller.board.cell(pos._1, pos._2) match {
       case Some(piece: Piece) => {
-        if (controller.currentState.isInstanceOf[playerTwoRound]) {
+        if (!piece.player.first) {
           piece.getMoveSet((pos._1, pos._2), controller.board)
         } else {
           List()
@@ -139,7 +139,7 @@ case class playerTwoRound(controller: Controller) extends RoundState {
   }
 
   override def movePiece(currentPos: (Int, Int), destination: (Int, Int)): MoveResult.Value = {
-    if (possibleMoves(currentPos).contains(destination) && controller.currentState.isInstanceOf[playerTwoRound]) {
+    if (getPossibleMoves(currentPos).contains(destination) && controller.currentState.isInstanceOf[playerTwoRound]) {
 
       val tempPieceDestination = controller.board.cell(destination._1, destination._2).getOrElse(return MoveResult.invalidMove)
       val tempPieceCurrent = controller.board.cell(currentPos._1, currentPos._2).getOrElse(return MoveResult.invalidMove)
@@ -159,10 +159,8 @@ case class playerTwoRound(controller: Controller) extends RoundState {
     }
   }
 
-  override def possibleMovesConqueredPiece(piece: String): List[(Int, Int)] = getPossibleMvConPlayer(piece)
-
   override def moveConqueredPiece(pieceAbbreviation: String, destination: (Int, Int)): Boolean = {
-    if (possibleMovesConqueredPiece(pieceAbbreviation).contains(destination)) {
+    if (getPossibleMvConPlayer(pieceAbbreviation).contains(destination)) {
 
       var tempPiece: Piece = pieceFactory.apply("EmptyPiece", controller.player_2)
 
@@ -188,11 +186,16 @@ case class playerTwoRound(controller: Controller) extends RoundState {
 
   override def getPossibleMvConPlayer(piece: String): List[(Int, Int)] = {
     var possibleMoves = List[(Int, Int)]()
+
+    if (piece.endsWith("°")) {
+      return possibleMoves
+    }
+
     var count = 0
-    if (piece == "P°") {
+    if (piece == "P") {
       for (column: Int <- 0 until controller.board.size) {
-        if (!controller.board.getPiecesInColumn(column, false).exists((x: Piece) => x.typeEquals("P") || x.typeEquals("P°"))) {
-          if (!controller.board.getPiecesInColumn(column, false).exists((x: Piece) => x.typeEquals("K") || x.typeEquals("K°"))) {
+        if (!controller.board.getPiecesInColumn(column, stateTurn = false).exists((x: Piece) => x.typeEquals("P"))) {
+          if (!controller.board.getPiecesInColumn(column, stateTurn = false).exists((x: Piece) => x.typeEquals("K"))) {
             possibleMoves = possibleMoves ::: controller.board.getEmptyCellsInColumn(column, (1, 8))
           } else {
             for (row <- 0 to 8) {
@@ -210,7 +213,7 @@ case class playerTwoRound(controller: Controller) extends RoundState {
         }
       }
 
-    } else if (piece == "KN°" || piece == "L°") {
+    } else if (piece == "KN" || piece == "L") {
       for (x: Int <- 0 until controller.board.size) {
         possibleMoves = possibleMoves ::: controller.board.getEmptyCellsInColumn(x, (1, 8))
       }

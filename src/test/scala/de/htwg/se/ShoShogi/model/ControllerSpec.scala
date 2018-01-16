@@ -36,7 +36,7 @@ class ControllerSpec extends WordSpec with Matchers {
     "called printPossibleMoves" should {
       "print for \"pmv 0c\"" in {
         controller.createNewBoard()
-        controller.possibleMoves(0, 2) should be(List[(Int, Int)]((0, 3)))
+        controller.getPossibleMoves(0, 2) should be(List[(Int, Int)]((0, 3)))
       }
     }
   }
@@ -44,12 +44,12 @@ class ControllerSpec extends WordSpec with Matchers {
   "Controller" when {
     "called printPossibleMoves" should {
       "print wrong cell numbers" in {
-        controller.possibleMoves(-1, 0) should be(List())
-        controller.possibleMoves(0, -1) should be(List())
-        controller.possibleMoves(9, 0) should be(List())
-        controller.possibleMoves(0, 9) should be(List())
-        controller.possibleMoves(-1, 9) should be(List())
-        controller.possibleMoves(9, -1) should be(List())
+        controller.getPossibleMoves(-1, 0) should be(List())
+        controller.getPossibleMoves(0, -1) should be(List())
+        controller.getPossibleMoves(9, 0) should be(List())
+        controller.getPossibleMoves(0, 9) should be(List())
+        controller.getPossibleMoves(-1, 9) should be(List())
+        controller.getPossibleMoves(9, -1) should be(List())
       }
     }
   }
