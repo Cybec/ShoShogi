@@ -1,14 +1,12 @@
 package de.htwg.se.ShoShogi.model
 
 import de.htwg.se.ShoShogi.ShoShogi.boardSize
-import de.htwg.se.ShoShogi.controller.Controller
+import de.htwg.se.ShoShogi.controller.controllerComponent.controllerBaseImpl.Controller
+import org.junit.runner.RunWith
+import org.scalatest.junit.JUnitRunner
+import org.scalatest.{Matchers, WordSpec}
 
 import scala.language.reflectiveCalls
-import org.junit.runner.RunWith
-import org.scalatest.{ Matchers, WordSpec }
-import org.scalatest.junit.JUnitRunner
-
-import scala.collection.mutable.ListBuffer
 
 //noinspection ScalaStyle
 @RunWith(classOf[JUnitRunner])

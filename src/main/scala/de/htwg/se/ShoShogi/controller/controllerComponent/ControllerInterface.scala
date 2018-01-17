@@ -1,6 +1,7 @@
-package de.htwg.se.ShoShogi.controller
+package de.htwg.se.ShoShogi.controller.controllerComponent
 
-import de.htwg.se.ShoShogi.model.{ Board, Piece, Player }
+import de.htwg.se.ShoShogi.controller.controllerComponent.controllerBaseImpl.Controller
+import de.htwg.se.ShoShogi.model.{Board, Piece, Player}
 
 object MoveResult extends Enumeration {
   type EnumType = Value
@@ -12,6 +13,12 @@ trait ControllerInterface extends scala.swing.Publisher {
   def createController(board: Board, player1: Player, player2: Player): ControllerInterface = new Controller(board, player1, player2)
 
   val boardSize = 9
+
+  def saveState: Unit
+
+  def undoCommand: Unit
+
+  def redoCommand: Unit
 
   def changeNamePlayer1(newName: String): Unit
 

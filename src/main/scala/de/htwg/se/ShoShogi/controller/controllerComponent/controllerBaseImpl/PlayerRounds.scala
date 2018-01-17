@@ -1,7 +1,7 @@
-package de.htwg.se.ShoShogi.controller
+package de.htwg.se.ShoShogi.controller.controllerComponent.controllerBaseImpl
 
+import de.htwg.se.ShoShogi.controller.controllerComponent.MoveResult
 import de.htwg.se.ShoShogi.model._
-import scala.swing.Publisher
 
 //noinspection ScalaStyle
 trait RoundState {
@@ -58,22 +58,14 @@ case class playerOneRound(controller: Controller) extends RoundState {
   override def moveConqueredPiece(pieceAbbreviation: String, destination: (Int, Int)): Boolean = {
     if (getPossibleMvConPlayer(pieceAbbreviation).contains(destination)) {
 
-      var tempPiece: Piece = pieceFactory.apply("EmptyPiece", controller.player_1)
-
-      val success = controller.board.getFromPlayerContainer(controller.player_1) {
+      controller.board.getFromPlayerContainer(controller.player_1) {
         _.typeEquals(pieceAbbreviation)
       } match {
         case Some((newBoard: Board, piece: Piece)) =>
           controller.board = newBoard
-          tempPiece = piece
+          controller.board = controller.board.replaceCell(destination._1, destination._2, piece)
           true
         case None => false
-      }
-      if (success) {
-        controller.board = controller.board.replaceCell(destination._1, destination._2, tempPiece)
-        true
-      } else {
-        false
       }
     } else {
       false
@@ -162,22 +154,14 @@ case class playerTwoRound(controller: Controller) extends RoundState {
   override def moveConqueredPiece(pieceAbbreviation: String, destination: (Int, Int)): Boolean = {
     if (getPossibleMvConPlayer(pieceAbbreviation).contains(destination)) {
 
-      var tempPiece: Piece = pieceFactory.apply("EmptyPiece", controller.player_2)
-
-      val success = controller.board.getFromPlayerContainer(controller.player_2) {
+      controller.board.getFromPlayerContainer(controller.player_2) {
         _.typeEquals(pieceAbbreviation)
       } match {
         case Some((newBoard: Board, piece: Piece)) =>
           controller.board = newBoard
-          tempPiece = piece
+          controller.board = controller.board.replaceCell(destination._1, destination._2, piece)
           true
         case None => false
-      }
-      if (success) {
-        controller.board = controller.board.replaceCell(destination._1, destination._2, tempPiece)
-        true
-      } else {
-        false
       }
     } else {
       false
