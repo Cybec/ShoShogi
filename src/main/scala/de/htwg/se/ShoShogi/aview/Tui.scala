@@ -119,7 +119,7 @@ class Tui(controller: ControllerInterface) extends Reactor with State {
       event match {
         case e if e.command == "pmv" =>
           parseArguments(e.input) match {
-            case Some(value) => printPossibleMoves(controller.possibleMoves(value(0)._1, value(0)._2))
+            case Some(value) => printPossibleMoves(controller.getPossibleMoves(value(0)._1, value(0)._2))
             case _ => printString("Could not read input: ".concat(e.input.mkString(" ")))
           }
         case e => {
@@ -155,7 +155,7 @@ class Tui(controller: ControllerInterface) extends Reactor with State {
       event match {
         case e if e.command == "pmvcp" =>
           parseArgumentsFromConquered(e.input) match {
-            case Some((pieceAbbreviation, _)) => printPossibleMoves(controller.possibleMovesConqueredPiece(pieceAbbreviation))
+            case Some((pieceAbbreviation, _)) => printPossibleMoves(controller.getPossibleMovesConqueredPiece(pieceAbbreviation))
             case _ => printString("Could not read input: ".concat(e.input.mkString(" ")))
           }
         case e => {

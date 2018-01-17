@@ -23,21 +23,21 @@ class Controller(var board: Board, var player_1: Player, var player_2: Player) e
   def setContainer(container: (List[Piece], List[Piece])): Unit = board = board.setContainer(container)
 
   def solve: Unit = {
-    undoManager.doStep(new SolveCommand(this))
-    currentState.changeState()
-    publish(new UpdateAll)
+    //    undoManager.doStep(new SolveCommand(this))
+    //    currentState.changeState()
+    //    publish(new UpdateAll)
   }
 
   def undo: Unit = {
-    undoManager.undoStep
-    currentState.changeState()
-    publish(new UpdateAll)
+    //    undoManager.undoStep
+    //    currentState.changeState()
+    //    publish(new UpdateAll)
   }
 
   def redo: Unit = {
-    undoManager.redoStep
-    currentState.changeState()
-    publish(new UpdateAll)
+    //    undoManager.redoStep
+    //    currentState.changeState()
+    //    publish(new UpdateAll)
   }
 
   def getBoardClone: Board = board.clone()
@@ -46,6 +46,7 @@ class Controller(var board: Board, var player_1: Player, var player_2: Player) e
 
   override def createEmptyBoard(): Unit = {
     board = new Board(boardSize, pieceFactory.apply("EmptyPiece", player_1))
+    currentState = playerOnesTurn
     publish(new UpdateAll)
   }
 
@@ -92,19 +93,23 @@ class Controller(var board: Board, var player_1: Player, var player_2: Player) e
 
   override def boardToArray(): Array[Array[Piece]] = board.toArray
 
-  override def possibleMoves(pos: (Int, Int)): List[(Int, Int)] = {
-    currentState.possibleMoves(pos)
+  override def getPossibleMoves(pos: (Int, Int)): List[(Int, Int)] = {
+    currentState.getPossibleMoves(pos)
   }
 
   override def movePiece(currentPos: (Int, Int), destination: (Int, Int)): MoveResult.Value = {
     val result: MoveResult.Value = currentState.movePiece(currentPos, destination)
     publish(new UpdateAll)
-    currentState.changeState()
+    if (result == MoveResult.validMove ||
+      result == MoveResult.kingSlain ||
+      result == MoveResult.validMoveContainer) {
+      currentState.changeState()
+    }
     result
   }
 
-  override def possibleMovesConqueredPiece(piece: String): List[(Int, Int)] = {
-    currentState.possibleMovesConqueredPiece(piece)
+  override def getPossibleMovesConqueredPiece(piece: String): List[(Int, Int)] = {
+    currentState.getPossibleMvConPlayer(piece)
   }
 
   override def moveConqueredPiece(pieceAbbreviation: String, destination: (Int, Int)): Boolean = {
