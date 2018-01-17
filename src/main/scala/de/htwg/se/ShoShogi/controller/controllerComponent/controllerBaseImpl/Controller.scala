@@ -1,11 +1,14 @@
-package de.htwg.se.ShoShogi.controller
+package de.htwg.se.ShoShogi.controller.controllerComponent.controllerBaseImpl
 
+import de.htwg.se.ShoShogi.controller.controllerComponent._
 import de.htwg.se.ShoShogi.model._
+import de.htwg.se.ShoShogi.util.UndoManager
 
 // TODO 1: schauen ob vals und vars aus dem Klassen parameter entfernt werden koennen
 
 //noinspection ScalaStyle
-class Controller(private var board: Board, var player_1: Player, var player_2: Player) extends RoundState with ControllerInterface {
+class Controller(var board: Board, var player_1: Player, var player_2: Player) extends RoundState with ControllerInterface {
+  private val undoManager = new UndoManager
 
   val playerOnesTurn: RoundState = new playerOneRound(this)
   val playerTwosTurn: RoundState = new playerTwoRound(this)
@@ -18,8 +21,17 @@ class Controller(private var board: Board, var player_1: Player, var player_2: P
 
   override def getContainer: (List[Piece], List[Piece]) = board.getContainer()
 
-  override def createEmptyBoard(): Unit = {
-    board = new Board(boardSize, pieceFactory.apply("EmptyPiece", player_1))
+  def setContainer(container: (List[Piece], List[Piece])): Unit = {
+    board = board.setContainer(container)
+  }
+
+  override def undoCommand: Unit = {
+    undoManager.undoStep
+    publish(new UpdateAll)
+  }
+
+  override def redoCommand: Unit = {
+    undoManager.redoStep
     publish(new UpdateAll)
   }
 
@@ -59,33 +71,56 @@ class Controller(private var board: Board, var player_1: Player, var player_2: P
     }
 
     publish(new StartNewGame)
-    currentState.changeState()
+    currentState = playerOnesTurn
+    saveState
+  }
+
+  def getBoardClone: Board = board.clone()
+
+  def replaceBoard(newBoard: Board): Unit = board = newBoard
+
+  override def createEmptyBoard(): Unit = {
+    board = new Board(boardSize, pieceFactory.apply("EmptyPiece", player_1))
+    currentState = playerOnesTurn
+    publish(new UpdateAll)
+  }
+
+  override def movePiece(currentPos: (Int, Int), destination: (Int, Int)): MoveResult.Value = {
+    val result: MoveResult.Value = currentState.movePiece(currentPos, destination)
+    publish(new UpdateAll)
+    if (result == MoveResult.validMove ||
+      result == MoveResult.kingSlain ||
+      result == MoveResult.validMoveContainer) {
+      currentState.changeState()
+      saveState
+    }
+    result
   }
 
   override def boardToString(): String = board.toString
 
   override def boardToArray(): Array[Array[Piece]] = board.toArray
 
-  override def possibleMoves(pos: (Int, Int)): List[(Int, Int)] = {
-    currentState.possibleMoves(pos)
-  }
-
-  override def movePiece(currentPos: (Int, Int), destination: (Int, Int)): MoveResult.Value = {
-    val result: MoveResult.Value = currentState.movePiece(currentPos, destination)
-    publish(new UpdateAll)
-    currentState.changeState()
-    result
-  }
-
-  override def possibleMovesConqueredPiece(piece: String): List[(Int, Int)] = {
-    currentState.possibleMovesConqueredPiece(piece)
+  override def getPossibleMoves(pos: (Int, Int)): List[(Int, Int)] = {
+    currentState.getPossibleMoves(pos)
   }
 
   override def moveConqueredPiece(pieceAbbreviation: String, destination: (Int, Int)): Boolean = {
     val result: Boolean = currentState.moveConqueredPiece(pieceAbbreviation, destination)
-    publish(new UpdateAll)
-    currentState.changeState()
+    if (result) {
+      publish(new UpdateAll)
+      currentState.changeState()
+      saveState
+    }
     result
+  }
+
+  override def getPossibleMovesConqueredPiece(piece: String): List[(Int, Int)] = {
+    currentState.getPossibleMvConPlayer(piece)
+  }
+
+  override def saveState: Unit = {
+    undoManager.saveStep(new SolveCommand(this))
   }
 
   override def getPossibleMvConPlayer(piece: String): List[(Int, Int)] = {
@@ -102,6 +137,7 @@ class Controller(private var board: Board, var player_1: Player, var player_2: P
     piece = piece.promotePiece.getOrElse(return false)
     board = board.replaceCell(piecePosition._1, piecePosition._2, piece)
     publish(new UpdateAll)
+    saveState
     true
   }
 

@@ -1,11 +1,10 @@
 package de.htwg.se.ShoShogi.model
 
-import de.htwg.se.ShoShogi.ShoShogi.boardSize
-import org.scalatest.{ Matchers, WordSpec }
 import de.htwg.se.ShoShogi.aview.Tui
-import de.htwg.se.ShoShogi.controller.Controller
+import de.htwg.se.ShoShogi.controller.controllerComponent.controllerBaseImpl.Controller
 import org.junit.runner.RunWith
 import org.scalatest.junit.JUnitRunner
+import org.scalatest.{Matchers, WordSpec}
 
 @RunWith(classOf[JUnitRunner])
 class TuiSpec extends WordSpec with Matchers {
