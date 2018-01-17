@@ -1,6 +1,4 @@
-import scala.swing.Dimension
+val list = List(1, 2, 3, 4, 5)
+list.slice(1, list.size)
 
-new Dimension(
-  (java.awt.Toolkit.getDefaultToolkit.getScreenSize.width * (2.0 / 3.0)).toInt,
-  java.awt.Toolkit.getDefaultToolkit.getScreenSize.height
-)
+list.slice(1, list.size)

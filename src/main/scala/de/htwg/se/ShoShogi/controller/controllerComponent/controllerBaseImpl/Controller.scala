@@ -1,5 +1,6 @@
-package de.htwg.se.ShoShogi.controller
+package de.htwg.se.ShoShogi.controller.controllerComponent.controllerBaseImpl
 
+import de.htwg.se.ShoShogi.controller.controllerComponent._
 import de.htwg.se.ShoShogi.model._
 import de.htwg.se.ShoShogi.util.UndoManager
 
@@ -20,33 +21,17 @@ class Controller(var board: Board, var player_1: Player, var player_2: Player) e
 
   override def getContainer: (List[Piece], List[Piece]) = board.getContainer()
 
-  def setContainer(container: (List[Piece], List[Piece])): Unit = board = board.setContainer(container)
-
-  def solve: Unit = {
-    //    undoManager.doStep(new SolveCommand(this))
-    //    currentState.changeState()
-    //    publish(new UpdateAll)
+  def setContainer(container: (List[Piece], List[Piece])): Unit = {
+    board = board.setContainer(container)
   }
 
-  def undo: Unit = {
-    //    undoManager.undoStep
-    //    currentState.changeState()
-    //    publish(new UpdateAll)
+  override def undoCommand: Unit = {
+    undoManager.undoStep
+    publish(new UpdateAll)
   }
 
-  def redo: Unit = {
-    //    undoManager.redoStep
-    //    currentState.changeState()
-    //    publish(new UpdateAll)
-  }
-
-  def getBoardClone: Board = board.clone()
-
-  def replaceBoard(newBoard: Board): Unit = board = newBoard
-
-  override def createEmptyBoard(): Unit = {
-    board = new Board(boardSize, pieceFactory.apply("EmptyPiece", player_1))
-    currentState = playerOnesTurn
+  override def redoCommand: Unit = {
+    undoManager.redoStep
     publish(new UpdateAll)
   }
 
@@ -87,6 +72,29 @@ class Controller(var board: Board, var player_1: Player, var player_2: Player) e
 
     publish(new StartNewGame)
     currentState = playerOnesTurn
+    saveState
+  }
+
+  def getBoardClone: Board = board.clone()
+
+  def replaceBoard(newBoard: Board): Unit = board = newBoard
+
+  override def createEmptyBoard(): Unit = {
+    board = new Board(boardSize, pieceFactory.apply("EmptyPiece", player_1))
+    currentState = playerOnesTurn
+    publish(new UpdateAll)
+  }
+
+  override def movePiece(currentPos: (Int, Int), destination: (Int, Int)): MoveResult.Value = {
+    val result: MoveResult.Value = currentState.movePiece(currentPos, destination)
+    publish(new UpdateAll)
+    if (result == MoveResult.validMove ||
+      result == MoveResult.kingSlain ||
+      result == MoveResult.validMoveContainer) {
+      currentState.changeState()
+      saveState
+    }
+    result
   }
 
   override def boardToString(): String = board.toString
@@ -97,13 +105,12 @@ class Controller(var board: Board, var player_1: Player, var player_2: Player) e
     currentState.getPossibleMoves(pos)
   }
 
-  override def movePiece(currentPos: (Int, Int), destination: (Int, Int)): MoveResult.Value = {
-    val result: MoveResult.Value = currentState.movePiece(currentPos, destination)
-    publish(new UpdateAll)
-    if (result == MoveResult.validMove ||
-      result == MoveResult.kingSlain ||
-      result == MoveResult.validMoveContainer) {
+  override def moveConqueredPiece(pieceAbbreviation: String, destination: (Int, Int)): Boolean = {
+    val result: Boolean = currentState.moveConqueredPiece(pieceAbbreviation, destination)
+    if (result) {
+      publish(new UpdateAll)
       currentState.changeState()
+      saveState
     }
     result
   }
@@ -112,11 +119,8 @@ class Controller(var board: Board, var player_1: Player, var player_2: Player) e
     currentState.getPossibleMvConPlayer(piece)
   }
 
-  override def moveConqueredPiece(pieceAbbreviation: String, destination: (Int, Int)): Boolean = {
-    val result: Boolean = currentState.moveConqueredPiece(pieceAbbreviation, destination)
-    publish(new UpdateAll)
-    currentState.changeState()
-    result
+  override def saveState: Unit = {
+    undoManager.saveStep(new SolveCommand(this))
   }
 
   override def getPossibleMvConPlayer(piece: String): List[(Int, Int)] = {
@@ -133,6 +137,7 @@ class Controller(var board: Board, var player_1: Player, var player_2: Player) e
     piece = piece.promotePiece.getOrElse(return false)
     board = board.replaceCell(piecePosition._1, piecePosition._2, piece)
     publish(new UpdateAll)
+    saveState
     true
   }
 

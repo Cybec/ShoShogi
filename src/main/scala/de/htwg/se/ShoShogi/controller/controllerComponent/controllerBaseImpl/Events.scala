@@ -1,4 +1,4 @@
-package de.htwg.se.ShoShogi.controller
+package de.htwg.se.ShoShogi.controller.controllerComponent.controllerBaseImpl
 
 import scala.swing.event.Event
 

@@ -1,7 +1,7 @@
 package de.htwg.se.ShoShogi.aview
 
-import de.htwg.se.ShoShogi.controller._
-import de.htwg.se.ShoShogi.util.Observer
+import de.htwg.se.ShoShogi.controller.controllerComponent.controllerBaseImpl.{StartNewGame, UpdateAll}
+import de.htwg.se.ShoShogi.controller.controllerComponent.{ControllerInterface, MoveResult}
 
 import scala.swing.Reactor
 
