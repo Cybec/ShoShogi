@@ -58,7 +58,7 @@ class SwingGui(controller: ControllerInterface) extends Frame {
           val p1Name: String = if (dialog.getNames()._1.size == 0) dialog.p1DefaultName else dialog.getNames()._1
           val p2Name: String = if (dialog.getNames()._2.size == 0) dialog.p2DefaultName else dialog.getNames()._2
           controller.changeNamePlayer1(p1Name)
-          controller.changeNamePlayer1(p2Name)
+          controller.changeNamePlayer2(p2Name)
         }
 
       })

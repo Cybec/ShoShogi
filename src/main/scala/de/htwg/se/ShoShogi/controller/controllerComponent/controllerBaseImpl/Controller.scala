@@ -20,7 +20,6 @@ class Controller(var board: BoardInterface, var player_1: Player, var player_2: 
 
   override def changeNamePlayer1(newName: String): Unit = player_1 = new Player(newName, player_1.first)
 
-  //TODO: Never used intended?
   override def changeNamePlayer2(newName: String): Unit = player_2 = new Player(newName, player_2.first)
 
   override def getContainer: (List[Piece], List[Piece]) = board.getContainer()
