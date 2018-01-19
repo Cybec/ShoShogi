@@ -2,7 +2,7 @@ package de.htwg.se.ShoShogi.controller.controllerComponent
 
 import de.htwg.se.ShoShogi.controller.controllerComponent.controllerBaseImpl.Controller
 import de.htwg.se.ShoShogi.model.boardComponent.boardBaseImpl.Board
-import de.htwg.se.ShoShogi.model.pieceComponent.Piece
+import de.htwg.se.ShoShogi.model.pieceComponent.pieceBaseImpl.Piece
 import de.htwg.se.ShoShogi.model.playerComponent.Player
 
 object MoveResult extends Enumeration {

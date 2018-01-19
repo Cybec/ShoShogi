@@ -1,7 +1,7 @@
 package de.htwg.se.ShoShogi.aview.gui
 
-import de.htwg.se.ShoShogi.controller.controllerComponent.{ ControllerInterface, MoveResult }
-import de.htwg.se.ShoShogi.model.pieceComponent.{ EmptyPiece, Piece }
+import de.htwg.se.ShoShogi.controller.controllerComponent.{ControllerInterface, MoveResult}
+import de.htwg.se.ShoShogi.model.pieceComponent.pieceBaseImpl.{Piece, PieceFactory}
 
 import scala.swing.Button
 
@@ -48,11 +48,11 @@ trait PieceClickedInterface {
   case class CustomButton(currentPiece: Piece, pos: (Int, Int) = (-1, -1), isInContainer: Boolean) extends Button
 
   var piecePosOnBoard: (Int, Int) = (-1, -1)
-  var pieceContainer: Piece = new EmptyPiece
+  var pieceContainer: Piece = PieceFactory.getEmptyPiece
 
   def resetPiecePosOnBoard: Unit = piecePosOnBoard = (-1, -1)
 
-  def resetPieceContainer: Unit = pieceContainer = new EmptyPiece
+  def resetPieceContainer: Unit = pieceContainer = PieceFactory.getEmptyPiece
 
 }
 

@@ -40,7 +40,7 @@ case class Board[Piece](board: Vector[Vector[Piece]]) {
   }
 }
 
-import de.htwg.se.ShoShogi.model.pieceComponent._
+import de.htwg.se.ShoShogi.model.pieceComponent.pieceBaseImpl._
 import de.htwg.se.ShoShogi.model.playerComponent.Player
 
 import scala.collection.mutable.ListBuffer

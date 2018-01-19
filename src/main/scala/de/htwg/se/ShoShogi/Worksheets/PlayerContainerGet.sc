@@ -1,5 +1,5 @@
 import de.htwg.se.ShoShogi.model.boardComponent.boardBaseImpl.Board
-import de.htwg.se.ShoShogi.model.pieceComponent._
+import de.htwg.se.ShoShogi.model.pieceComponent.pieceBaseImpl._
 import de.htwg.se.ShoShogi.model.playerComponent.Player
 
 
