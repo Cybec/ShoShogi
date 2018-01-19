@@ -12,6 +12,8 @@ trait BoardInterface {
 
   def getContainer(): (List[Piece], List[Piece])
 
+  def createNewBoard(): BoardInterface
+
   def setContainer(container: (List[Piece], List[Piece])): BoardInterface
 
   def addToPlayerContainer(player: Player, piece: Piece): BoardInterface
