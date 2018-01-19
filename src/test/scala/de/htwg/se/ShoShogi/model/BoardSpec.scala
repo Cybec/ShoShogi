@@ -1,7 +1,7 @@
 package de.htwg.se.ShoShogi.model
 
 import de.htwg.se.ShoShogi.model.boardComponent.boardBaseImpl.Board
-import de.htwg.se.ShoShogi.model.pieceComponent._
+import de.htwg.se.ShoShogi.model.pieceComponent.pieceBaseImpl._
 import de.htwg.se.ShoShogi.model.playerComponent.Player
 import org.junit.runner.RunWith
 import org.scalatest._
@@ -15,9 +15,9 @@ class BoardSpec extends WordSpec with Matchers {
   "A Board is the playing field of Shogi. A Board" when {
     "to be constructed" should {
       val player_1 = Player("Nick", true)
-      val smallBoard = new Board(1, pieceFactory.apply("EmptyPiece", player_1))
-      val biggerBoard = new Board(2, pieceFactory.apply("EmptyPiece", player_1))
-      val board = new Board(9, pieceFactory.apply("EmptyPiece", player_1))
+      val smallBoard = new Board(1, PieceFactory.apply(PiecesEnum.EmptyPiece, player_1))
+      val biggerBoard = new Board(2, PieceFactory.apply(PiecesEnum.EmptyPiece, player_1))
+      val board = new Board(9, PieceFactory.apply(PiecesEnum.EmptyPiece, player_1))
       "be created with the length of its edges as size. Testing size 1, 2 and 9" in {
         smallBoard.size should be(1)
         biggerBoard.size should be(2)
@@ -39,36 +39,36 @@ class BoardSpec extends WordSpec with Matchers {
     }
     "using an actual Board" should {
       val player_1 = Player("Nick", true)
-      var board = new Board(9, pieceFactory.apply("EmptyPiece", player_1))
+      var board = new Board(9, PieceFactory.apply(PiecesEnum.EmptyPiece, player_1))
 
-      board = board.replaceCell(0, 0, pieceFactory.apply("Lancer", player_1))
-      board = board.replaceCell(1, 0, pieceFactory.apply("Knight", player_1))
-      board = board.replaceCell(2, 0, pieceFactory.apply("SilverGeneral", player_1))
-      board = board.replaceCell(3, 0, pieceFactory.apply("GoldenGeneral", player_1))
-      board = board.replaceCell(4, 0, pieceFactory.apply("King", player_1))
-      board = board.replaceCell(5, 0, pieceFactory.apply("GoldenGeneral", player_1))
-      board = board.replaceCell(6, 0, pieceFactory.apply("SilverGeneral", player_1))
-      board = board.replaceCell(7, 0, pieceFactory.apply("Knight", player_1))
-      board = board.replaceCell(8, 0, pieceFactory.apply("Lancer", player_1))
-      board = board.replaceCell(7, 1, pieceFactory.apply("Bishop", player_1))
-      board = board.replaceCell(1, 1, pieceFactory.apply("Rook", player_1))
+      board = board.replaceCell(0, 0, PieceFactory.apply(PiecesEnum.Lancer, player_1))
+      board = board.replaceCell(1, 0, PieceFactory.apply(PiecesEnum.Knight, player_1))
+      board = board.replaceCell(2, 0, PieceFactory.apply(PiecesEnum.SilverGeneral, player_1))
+      board = board.replaceCell(3, 0, PieceFactory.apply(PiecesEnum.GoldenGeneral, player_1))
+      board = board.replaceCell(4, 0, PieceFactory.apply(PiecesEnum.King, player_1))
+      board = board.replaceCell(5, 0, PieceFactory.apply(PiecesEnum.GoldenGeneral, player_1))
+      board = board.replaceCell(6, 0, PieceFactory.apply(PiecesEnum.SilverGeneral, player_1))
+      board = board.replaceCell(7, 0, PieceFactory.apply(PiecesEnum.Knight, player_1))
+      board = board.replaceCell(8, 0, PieceFactory.apply(PiecesEnum.Lancer, player_1))
+      board = board.replaceCell(7, 1, PieceFactory.apply(PiecesEnum.Bishop, player_1))
+      board = board.replaceCell(1, 1, PieceFactory.apply(PiecesEnum.Rook, player_1))
       for (i <- 0 to 8) {
-        board = board.replaceCell(i, 2, pieceFactory.apply("Pawn", player_1))
+        board = board.replaceCell(i, 2, PieceFactory.apply(PiecesEnum.Pawn, player_1))
       }
       "replace cells with Pieces" in {
-        board.board(0)(0) should be(pieceFactory.apply("Lancer", player_1))
-        board.board(1)(0) should be(pieceFactory.apply("Knight", player_1))
-        board.board(2)(0) should be(pieceFactory.apply("SilverGeneral", player_1))
-        board.board(3)(0) should be(pieceFactory.apply("GoldenGeneral", player_1))
-        board.board(4)(0) should be(pieceFactory.apply("King", player_1))
-        board.board(5)(0) should be(pieceFactory.apply("GoldenGeneral", player_1))
-        board.board(6)(0) should be(pieceFactory.apply("SilverGeneral", player_1))
-        board.board(7)(0) should be(pieceFactory.apply("Knight", player_1))
-        board.board(8)(0) should be(pieceFactory.apply("Lancer", player_1))
-        board.board(7)(1) should be(pieceFactory.apply("Bishop", player_1))
-        board.board(1)(1) should be(pieceFactory.apply("Rook", player_1))
-        board.board(0)(2) should be(pieceFactory.apply("Pawn", player_1))
-        board.board(8)(2) should be(pieceFactory.apply("Pawn", player_1))
+        board.board(0)(0) should be(PieceFactory.apply(PiecesEnum.Lancer, player_1))
+        board.board(1)(0) should be(PieceFactory.apply(PiecesEnum.Knight, player_1))
+        board.board(2)(0) should be(PieceFactory.apply(PiecesEnum.SilverGeneral, player_1))
+        board.board(3)(0) should be(PieceFactory.apply(PiecesEnum.GoldenGeneral, player_1))
+        board.board(4)(0) should be(PieceFactory.apply(PiecesEnum.King, player_1))
+        board.board(5)(0) should be(PieceFactory.apply(PiecesEnum.GoldenGeneral, player_1))
+        board.board(6)(0) should be(PieceFactory.apply(PiecesEnum.SilverGeneral, player_1))
+        board.board(7)(0) should be(PieceFactory.apply(PiecesEnum.Knight, player_1))
+        board.board(8)(0) should be(PieceFactory.apply(PiecesEnum.Lancer, player_1))
+        board.board(7)(1) should be(PieceFactory.apply(PiecesEnum.Bishop, player_1))
+        board.board(1)(1) should be(PieceFactory.apply(PiecesEnum.Rook, player_1))
+        board.board(0)(2) should be(PieceFactory.apply(PiecesEnum.Pawn, player_1))
+        board.board(8)(2) should be(PieceFactory.apply(PiecesEnum.Pawn, player_1))
       }
     }
   }
@@ -78,16 +78,16 @@ class BoardSpec extends WordSpec with Matchers {
       "have pieces in both container" in {
         val player_1 = Player("Nick", true)
         val player_2 = Player("Mert", false)
-        var board = new Board(9, pieceFactory.apply("EmptyPiece", player_1))
+        var board = new Board(9, PieceFactory.apply(PiecesEnum.EmptyPiece, player_1))
 
-        board = board.addToPlayerContainer(player_1, pieceFactory.apply("Lancer", player_2))
-        board = board.addToPlayerContainer(player_1, pieceFactory.apply("King", player_2))
-        board = board.addToPlayerContainer(player_2, pieceFactory.apply("Lancer", player_2))
-        board = board.addToPlayerContainer(player_2, pieceFactory.apply("King", player_1))
+        board = board.addToPlayerContainer(player_1, PieceFactory.apply(PiecesEnum.Lancer, player_2))
+        board = board.addToPlayerContainer(player_1, PieceFactory.apply(PiecesEnum.King, player_2))
+        board = board.addToPlayerContainer(player_2, PieceFactory.apply(PiecesEnum.Lancer, player_2))
+        board = board.addToPlayerContainer(player_2, PieceFactory.apply(PiecesEnum.King, player_1))
 
         board.getContainer() should be((
-          ListBuffer(pieceFactory.apply("Lancer", player_1), pieceFactory.apply("King", player_1)),
-          ListBuffer(pieceFactory.apply("Lancer", player_2), pieceFactory.apply("King", player_2))
+          ListBuffer(PieceFactory.apply(PiecesEnum.Lancer, player_1), PieceFactory.apply(PiecesEnum.King, player_1)),
+          ListBuffer(PieceFactory.apply(PiecesEnum.Lancer, player_2), PieceFactory.apply(PiecesEnum.King, player_2))
         ))
       }
     }
@@ -99,26 +99,26 @@ class BoardSpec extends WordSpec with Matchers {
         val player_1 = Player("Nick", true)
         val player_2 = Player("Mert", false)
 
-        var board = new Board(9, pieceFactory.apply("EmptyPiece", player_1))
-        var wantedPiece_0: Piece = pieceFactory.apply("EmptyPiece", player_1)
-        var wantedPiece_1: Piece = pieceFactory.apply("EmptyPiece", player_1)
+        var board = new Board(9, PieceFactory.apply(PiecesEnum.EmptyPiece, player_1))
+        var wantedPiece_0: Piece = PieceFactory.apply(PiecesEnum.EmptyPiece, player_1)
+        var wantedPiece_1: Piece = PieceFactory.apply(PiecesEnum.EmptyPiece, player_1)
 
-        board = board.addToPlayerContainer(player_1, pieceFactory.apply("Lancer", player_2))
-        board = board.addToPlayerContainer(player_1, pieceFactory.apply("Lancer", player_2))
-        board = board.addToPlayerContainer(player_1, pieceFactory.apply("King", player_2))
-        board = board.addToPlayerContainer(player_1, pieceFactory.apply("King", player_2))
-        board = board.addToPlayerContainer(player_2, pieceFactory.apply("Lancer", player_1))
-        board = board.addToPlayerContainer(player_2, pieceFactory.apply("Lancer", player_1))
-        board = board.addToPlayerContainer(player_2, pieceFactory.apply("King", player_1))
-        board = board.addToPlayerContainer(player_2, pieceFactory.apply("King", player_1))
+        board = board.addToPlayerContainer(player_1, PieceFactory.apply(PiecesEnum.Lancer, player_2))
+        board = board.addToPlayerContainer(player_1, PieceFactory.apply(PiecesEnum.Lancer, player_2))
+        board = board.addToPlayerContainer(player_1, PieceFactory.apply(PiecesEnum.King, player_2))
+        board = board.addToPlayerContainer(player_1, PieceFactory.apply(PiecesEnum.King, player_2))
+        board = board.addToPlayerContainer(player_2, PieceFactory.apply(PiecesEnum.Lancer, player_1))
+        board = board.addToPlayerContainer(player_2, PieceFactory.apply(PiecesEnum.Lancer, player_1))
+        board = board.addToPlayerContainer(player_2, PieceFactory.apply(PiecesEnum.King, player_1))
+        board = board.addToPlayerContainer(player_2, PieceFactory.apply(PiecesEnum.King, player_1))
 
         board.getContainer() should be((
-          ListBuffer(pieceFactory.apply("Lancer", player_1), pieceFactory.apply("Lancer", player_1), pieceFactory.apply("King", player_1), pieceFactory.apply("King", player_1)),
-          ListBuffer(pieceFactory.apply("Lancer", player_2), pieceFactory.apply("Lancer", player_2), pieceFactory.apply("King", player_2), pieceFactory.apply("King", player_2))
+          ListBuffer(PieceFactory.apply(PiecesEnum.Lancer, player_1), PieceFactory.apply(PiecesEnum.Lancer, player_1), PieceFactory.apply(PiecesEnum.King, player_1), PieceFactory.apply(PiecesEnum.King, player_1)),
+          ListBuffer(PieceFactory.apply(PiecesEnum.Lancer, player_2), PieceFactory.apply(PiecesEnum.Lancer, player_2), PieceFactory.apply(PiecesEnum.King, player_2), PieceFactory.apply(PiecesEnum.King, player_2))
         ))
 
         board.getFromPlayerContainer(player_1) {
-          _.isInstanceOf[Lancer]
+          PieceFactory.isInstanceOfPiece(PiecesEnum.Lancer, _)
         } match {
           case Some((newBoard, piece)) =>
             board = newBoard
@@ -127,7 +127,7 @@ class BoardSpec extends WordSpec with Matchers {
         }
 
         board.getFromPlayerContainer(player_2) {
-          _.isInstanceOf[King]
+          PieceFactory.isInstanceOfPiece(PiecesEnum.King, _)
         } match {
           case Some((newBoard, piece)) =>
             board = newBoard
@@ -136,36 +136,36 @@ class BoardSpec extends WordSpec with Matchers {
         }
 
         board.getContainer() should be((
-          ListBuffer(pieceFactory.apply("Lancer", player_1), pieceFactory.apply("King", player_1), pieceFactory.apply("King", player_1)),
-          ListBuffer(pieceFactory.apply("Lancer", player_2), pieceFactory.apply("Lancer", player_2), pieceFactory.apply("King", player_2))
+          ListBuffer(PieceFactory.apply(PiecesEnum.Lancer, player_1), PieceFactory.apply(PiecesEnum.King, player_1), PieceFactory.apply(PiecesEnum.King, player_1)),
+          ListBuffer(PieceFactory.apply(PiecesEnum.Lancer, player_2), PieceFactory.apply(PiecesEnum.Lancer, player_2), PieceFactory.apply(PiecesEnum.King, player_2))
         ))
 
-        wantedPiece_0 shouldBe a[Lancer]
-        wantedPiece_1 shouldBe a[King]
+        PieceFactory.isInstanceOfPiece(PiecesEnum.Lancer, wantedPiece_0) should be(true)
+        PieceFactory.isInstanceOfPiece(PiecesEnum.King, wantedPiece_1) should be(true)
       }
       "return None if there is no such piece" in {
         val player_1 = Player("Nick", true)
         val player_2 = Player("Mert", false)
-        var board = new Board(9, pieceFactory.apply("EmptyPiece", player_1))
-        var wantedPiece_0: Piece = pieceFactory.apply("EmptyPiece", player_1)
-        var wantedPiece_1: Piece = pieceFactory.apply("EmptyPiece", player_1)
+        var board = new Board(9, PieceFactory.apply(PiecesEnum.EmptyPiece, player_1))
+        var wantedPiece_0: Piece = PieceFactory.apply(PiecesEnum.EmptyPiece, player_1)
+        var wantedPiece_1: Piece = PieceFactory.apply(PiecesEnum.EmptyPiece, player_1)
 
-        board = board.addToPlayerContainer(player_1, pieceFactory.apply("Lancer", player_2))
-        board = board.addToPlayerContainer(player_1, pieceFactory.apply("Lancer", player_2))
-        board = board.addToPlayerContainer(player_1, pieceFactory.apply("King", player_2))
-        board = board.addToPlayerContainer(player_1, pieceFactory.apply("King", player_2))
-        board = board.addToPlayerContainer(player_2, pieceFactory.apply("Lancer", player_1))
-        board = board.addToPlayerContainer(player_2, pieceFactory.apply("Lancer", player_1))
-        board = board.addToPlayerContainer(player_2, pieceFactory.apply("King", player_1))
-        board = board.addToPlayerContainer(player_2, pieceFactory.apply("King", player_1))
+        board = board.addToPlayerContainer(player_1, PieceFactory.apply(PiecesEnum.Lancer, player_2))
+        board = board.addToPlayerContainer(player_1, PieceFactory.apply(PiecesEnum.Lancer, player_2))
+        board = board.addToPlayerContainer(player_1, PieceFactory.apply(PiecesEnum.King, player_2))
+        board = board.addToPlayerContainer(player_1, PieceFactory.apply(PiecesEnum.King, player_2))
+        board = board.addToPlayerContainer(player_2, PieceFactory.apply(PiecesEnum.Lancer, player_1))
+        board = board.addToPlayerContainer(player_2, PieceFactory.apply(PiecesEnum.Lancer, player_1))
+        board = board.addToPlayerContainer(player_2, PieceFactory.apply(PiecesEnum.King, player_1))
+        board = board.addToPlayerContainer(player_2, PieceFactory.apply(PiecesEnum.King, player_1))
 
         board.getContainer() should be((
-          ListBuffer(pieceFactory.apply("Lancer", player_1), pieceFactory.apply("Lancer", player_1), pieceFactory.apply("King", player_1), pieceFactory.apply("King", player_1)),
-          ListBuffer(pieceFactory.apply("Lancer", player_2), pieceFactory.apply("Lancer", player_2), pieceFactory.apply("King", player_2), pieceFactory.apply("King", player_2))
+          ListBuffer(PieceFactory.apply(PiecesEnum.Lancer, player_1), PieceFactory.apply(PiecesEnum.Lancer, player_1), PieceFactory.apply(PiecesEnum.King, player_1), PieceFactory.apply(PiecesEnum.King, player_1)),
+          ListBuffer(PieceFactory.apply(PiecesEnum.Lancer, player_2), PieceFactory.apply(PiecesEnum.Lancer, player_2), PieceFactory.apply(PiecesEnum.King, player_2), PieceFactory.apply(PiecesEnum.King, player_2))
         ))
 
         board.getFromPlayerContainer(player_1) {
-          _.isInstanceOf[Knight]
+          PieceFactory.isInstanceOfPiece(PiecesEnum.King, _)
         } match {
           case Some((newBoard, piece)) =>
             board = newBoard
@@ -174,7 +174,7 @@ class BoardSpec extends WordSpec with Matchers {
         }
 
         board.getFromPlayerContainer(player_2) {
-          _.isInstanceOf[Pawn]
+          PieceFactory.isInstanceOfPiece(PiecesEnum.Pawn, _)
         } match {
           case Some((newBoard, piece)) =>
             board = newBoard
@@ -183,12 +183,12 @@ class BoardSpec extends WordSpec with Matchers {
         }
 
         board.getContainer() should be((
-          ListBuffer(pieceFactory.apply("Lancer", player_1), pieceFactory.apply("Lancer", player_1), pieceFactory.apply("King", player_1), pieceFactory.apply("King", player_1)),
-          ListBuffer(pieceFactory.apply("Lancer", player_2), pieceFactory.apply("Lancer", player_2), pieceFactory.apply("King", player_2), pieceFactory.apply("King", player_2))
+          ListBuffer(PieceFactory.apply(PiecesEnum.Lancer, player_1), PieceFactory.apply(PiecesEnum.Lancer, player_1), PieceFactory.apply(PiecesEnum.King, player_1), PieceFactory.apply(PiecesEnum.King, player_1)),
+          ListBuffer(PieceFactory.apply(PiecesEnum.Lancer, player_2), PieceFactory.apply(PiecesEnum.Lancer, player_2), PieceFactory.apply(PiecesEnum.King, player_2), PieceFactory.apply(PiecesEnum.King, player_2))
         ))
 
-        wantedPiece_0 shouldBe a[EmptyPiece]
-        wantedPiece_1 shouldBe a[EmptyPiece]
+        PieceFactory.isInstanceOfPiece(PiecesEnum.EmptyPiece, wantedPiece_0) should be(true)
+        PieceFactory.isInstanceOfPiece(PiecesEnum.EmptyPiece, wantedPiece_1) should be(true)
 
       }
     }
@@ -196,9 +196,9 @@ class BoardSpec extends WordSpec with Matchers {
   "Board" when {
     val player_1 = Player("Nick", true)
     val player_2 = Player("Mert", false)
-    var board = new Board(9, pieceFactory.apply("EmptyPiece", player_1))
-    val pawn = pieceFactory.apply("Pawn", player_1)
-    val lancer = pieceFactory.apply("Lancer", player_1)
+    var board = new Board(9, PieceFactory.apply(PiecesEnum.EmptyPiece, player_1))
+    val pawn = PieceFactory.apply(PiecesEnum.Pawn, player_1)
+    val lancer = PieceFactory.apply(PiecesEnum.Lancer, player_1)
     board = board.replaceCell(0, 4, pawn)
     board = board.replaceCell(0, 7, lancer)
     "checked if Piece is in Column" should {
@@ -225,9 +225,9 @@ class BoardSpec extends WordSpec with Matchers {
       "return a two dimensional Array of all Pieces" in {
         val player_1 = Player("Nick", true)
         val player_2 = Player("Mert", false)
-        var board = new Board(2, pieceFactory.apply("EmptyPiece", player_1))
-        val pawn = pieceFactory.apply("Pawn", player_2)
-        val empty = pieceFactory.apply("EmptyPiece", player_1)
+        var board = new Board(2, PieceFactory.apply(PiecesEnum.EmptyPiece, player_1))
+        val pawn = PieceFactory.apply(PiecesEnum.Pawn, player_2)
+        val empty = PieceFactory.apply(PiecesEnum.EmptyPiece, player_1)
         board = board.replaceCell(0, 0, pawn)
         board.cell(0, 0) should be(Some(pawn))
         board.toArray should be(Array[Array[Piece]](Array(pawn, empty), Array(empty, empty)))
