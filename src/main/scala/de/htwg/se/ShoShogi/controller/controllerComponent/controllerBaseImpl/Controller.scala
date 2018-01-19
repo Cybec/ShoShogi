@@ -1,16 +1,27 @@
 package de.htwg.se.ShoShogi.controller.controllerComponent.controllerBaseImpl
 
+import com.google.inject.name.Names
+import com.google.inject.{Guice, Inject}
+import de.htwg.se.ShoShogi.ShoShogiModule
 import de.htwg.se.ShoShogi.controller.controllerComponent._
 import de.htwg.se.ShoShogi.model.boardComponent.BoardInterface
-import de.htwg.se.ShoShogi.model.boardComponent.boardBaseImpl.Board
+import de.htwg.se.ShoShogi.model.fileIoComponent.FileIOInterface
 import de.htwg.se.ShoShogi.model.pieceComponent.pieceBaseImpl.{Piece, PieceFactory, PiecesEnum}
 import de.htwg.se.ShoShogi.model.playerComponent.Player
 import de.htwg.se.ShoShogi.util.UndoManager
+import net.codingwell.scalaguice.InjectorExtensions._
 
-// TODO 1: schauen ob vals und vars aus dem Klassen parameter entfernt werden koennen
+class Controller @Inject() extends RoundState with ControllerInterface {
+  val injector = Guice.createInjector(new ShoShogiModule)
+  val fileIo = injector.instance[FileIOInterface]
+  var board: BoardInterface = injector.instance[BoardInterface](Names.named("normal")).createNewBoard()
+  var player_1: Player = new Player("Player1", true)
+  var player_2: Player = new Player("Player2", false)
 
-//noinspection ScalaStyle
-class Controller(var board: BoardInterface, var player_1: Player, var player_2: Player) extends RoundState with ControllerInterface {
+  override def getPlayers: (Player, Player) = {
+    (new Player(player_1.name, player_1.first), new Player(player_2.name, player_2.first))
+  }
+
   private val undoManager = new UndoManager
 
   val playerOnesTurn: RoundState = new playerOneRound(this)
@@ -24,7 +35,7 @@ class Controller(var board: BoardInterface, var player_1: Player, var player_2: 
 
   override def getContainer: (List[Piece], List[Piece]) = board.getContainer()
 
-  def setContainer(container: (List[Piece], List[Piece])): Unit = {
+  override def setContainer(container: (List[Piece], List[Piece])): Unit = {
     board = board.setContainer(container)
   }
 
@@ -42,8 +53,41 @@ class Controller(var board: BoardInterface, var player_1: Player, var player_2: 
     publish(new UpdateAll)
   }
 
+  override def save: Unit = {
+    fileIo.save(board, currentState, player_1, player_2)
+  }
+
+  override def load: Unit = {
+    val boardOption = fileIo.load
+    boardOption match {
+      case None => {
+        createEmptyBoard()
+      }
+      case Some((_board, _currentState, _player1, _player2)) => {
+        board = _board
+        currentState = _currentState
+        player_1 = _player1
+        player_2 = _player2
+      }
+    }
+    publish(new UpdateAll)
+  }
+
+  override def createEmptyBoard(): Unit = {
+    board = injector.instance[BoardInterface](Names.named("normal")).createNewBoard()
+    //    board = new Board(boardSize, PieceFactory.apply(PiecesEnum.EmptyPiece, player_1))
+
+    currentState = playerOnesTurn
+    publish(new UpdateAll)
+  }
+
+  def getBoardClone: BoardInterface = board.copyBoard()
+
+  def replaceBoard(newBoard: BoardInterface): Unit = board = newBoard
+
   override def createNewBoard(): Unit = {
-    board = new Board(boardSize, PieceFactory.apply(PiecesEnum.EmptyPiece, player_1))
+    board = injector.instance[BoardInterface](Names.named("normal")).createNewBoard()
+    //    board = new Board(boardSize, PieceFactory.apply(PiecesEnum.EmptyPiece, player_1))
 
     //Steine fuer Spieler 1
     board = board.replaceCell(0, 0, PieceFactory.apply(PiecesEnum.Lancer, player_1))
@@ -80,16 +124,6 @@ class Controller(var board: BoardInterface, var player_1: Player, var player_2: 
     publish(new StartNewGame)
     currentState = playerOnesTurn
     saveState
-  }
-
-  def getBoardClone: BoardInterface = board.copyBoard()
-
-  def replaceBoard(newBoard: BoardInterface): Unit = board = newBoard
-
-  override def createEmptyBoard(): Unit = {
-    board = new Board(boardSize, PieceFactory.apply(PiecesEnum.EmptyPiece, player_1))
-    currentState = playerOnesTurn
-    publish(new UpdateAll)
   }
 
   override def movePiece(currentPos: (Int, Int), destination: (Int, Int)): MoveResult.Value = {
