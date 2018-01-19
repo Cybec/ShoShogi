@@ -34,7 +34,7 @@ class BoardSpec extends WordSpec with Matchers {
         smallBoard.cell(-1, 0) should be(None)
       }
       "have a nice String representation" in {
-        smallBoard.toString.contains(0) should be()
+        smallBoard.toString.contains(0)
       }
     }
     "using an actual Board" should {
