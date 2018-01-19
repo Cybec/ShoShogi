@@ -4,7 +4,7 @@ import de.htwg.se.ShoShogi.ShoShogi.boardSize
 import de.htwg.se.ShoShogi.controller.controllerComponent.MoveResult
 import de.htwg.se.ShoShogi.controller.controllerComponent.controllerBaseImpl.Controller
 import de.htwg.se.ShoShogi.model.boardComponent.boardBaseImpl.Board
-import de.htwg.se.ShoShogi.model.pieceComponent.{Piece, pieceFactory}
+import de.htwg.se.ShoShogi.model.pieceComponent.pieceBaseImpl.{Piece, PieceFactory, PiecesEnum}
 import de.htwg.se.ShoShogi.model.playerComponent.Player
 import org.junit.runner.RunWith
 import org.scalatest.junit.JUnitRunner
@@ -18,7 +18,7 @@ class ControllerSpec extends WordSpec with Matchers {
   val player_1 = Player("Player1", true)
   val player_2 = Player("Player2", false)
 
-  val controller = new Controller(new Board(boardSize, pieceFactory.apply("EmptyPiece", player_1)), player_1, player_2)
+  val controller = new Controller(new Board(boardSize, PieceFactory.apply(PiecesEnum.EmptyPiece, player_1)), player_1, player_2)
   "Controller" when {
     "called getContainer" should {
       "should return 2 Lists with the captured Piece of each player" in {
@@ -29,7 +29,7 @@ class ControllerSpec extends WordSpec with Matchers {
         controller.movePiece((0, 5), (0, 4)) should be(MoveResult.validMove) // player_2
         controller.getContainer should be((
           List(),
-          List(pieceFactory.apply("Pawn", player_2))
+          List(PieceFactory.apply(PiecesEnum.Pawn, player_2))
         ))
       }
     }
@@ -681,23 +681,23 @@ class ControllerSpec extends WordSpec with Matchers {
     "called boardToArray" should {
       "return all Pieces in a 2 dimensional Array" in {
         controller.createNewBoard()
-        val pawn1 = pieceFactory.apply("Pawn", player_1)
-        val pawn2 = pieceFactory.apply("Pawn", player_2)
-        val lancer1 = pieceFactory.apply("Lancer", player_1)
-        val lancer2 = pieceFactory.apply("Lancer", player_2)
-        val knight1 = pieceFactory.apply("Knight", player_1)
-        val knight2 = pieceFactory.apply("Knight", player_2)
-        val silverGeneral1 = pieceFactory.apply("SilverGeneral", player_1)
-        val silverGeneral2 = pieceFactory.apply("SilverGeneral", player_2)
-        val goldenGeneral1 = pieceFactory.apply("GoldenGeneral", player_1)
-        val goldenGeneral2 = pieceFactory.apply("GoldenGeneral", player_2)
-        val king1 = pieceFactory.apply("King", player_1)
-        val king2 = pieceFactory.apply("King", player_2)
-        val rook1 = pieceFactory.apply("Rook", player_1)
-        val rook2 = pieceFactory.apply("Rook", player_2)
-        val bishop1 = pieceFactory.apply("Bishop", player_1)
-        val bishop2 = pieceFactory.apply("Bishop", player_2)
-        val empty = pieceFactory.apply("EmptyPiece", player_1)
+        val pawn1 = PieceFactory.apply(PiecesEnum.Pawn, player_1)
+        val pawn2 = PieceFactory.apply(PiecesEnum.Pawn, player_2)
+        val lancer1 = PieceFactory.apply(PiecesEnum.Lancer, player_1)
+        val lancer2 = PieceFactory.apply(PiecesEnum.Lancer, player_2)
+        val knight1 = PieceFactory.apply(PiecesEnum.Knight, player_1)
+        val knight2 = PieceFactory.apply(PiecesEnum.Knight, player_2)
+        val silverGeneral1 = PieceFactory.apply(PiecesEnum.SilverGeneral, player_1)
+        val silverGeneral2 = PieceFactory.apply(PiecesEnum.SilverGeneral, player_2)
+        val goldenGeneral1 = PieceFactory.apply(PiecesEnum.GoldenGeneral, player_1)
+        val goldenGeneral2 = PieceFactory.apply(PiecesEnum.GoldenGeneral, player_2)
+        val king1 = PieceFactory.apply(PiecesEnum.King, player_1)
+        val king2 = PieceFactory.apply(PiecesEnum.King, player_2)
+        val rook1 = PieceFactory.apply(PiecesEnum.Rook, player_1)
+        val rook2 = PieceFactory.apply(PiecesEnum.Rook, player_2)
+        val bishop1 = PieceFactory.apply(PiecesEnum.Bishop, player_1)
+        val bishop2 = PieceFactory.apply(PiecesEnum.Bishop, player_2)
+        val empty = PieceFactory.apply(PiecesEnum.EmptyPiece, player_1)
         controller.boardToArray() should be(Array[Array[Piece]](
           Array(lancer1, empty, pawn1, empty, empty, empty, pawn2, empty, lancer2),
           Array(knight1, rook1, pawn1, empty, empty, empty, pawn2, bishop2, knight2), Array(silverGeneral1, empty, pawn1, empty, empty, empty, pawn2, empty, silverGeneral2),

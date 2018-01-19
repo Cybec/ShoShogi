@@ -183,11 +183,11 @@ class BoardSpec extends WordSpec with Matchers {
         }
 
         board.getContainer() should be((
-          ListBuffer(PieceFactory.apply(PiecesEnum.Lancer, player_1), PieceFactory.apply(PiecesEnum.Lancer, player_1), PieceFactory.apply(PiecesEnum.King, player_1), PieceFactory.apply(PiecesEnum.King, player_1)),
+          ListBuffer(PieceFactory.apply(PiecesEnum.Lancer, player_1), PieceFactory.apply(PiecesEnum.Lancer, player_1), PieceFactory.apply(PiecesEnum.King, player_1)),
           ListBuffer(PieceFactory.apply(PiecesEnum.Lancer, player_2), PieceFactory.apply(PiecesEnum.Lancer, player_2), PieceFactory.apply(PiecesEnum.King, player_2), PieceFactory.apply(PiecesEnum.King, player_2))
         ))
 
-        PieceFactory.isInstanceOfPiece(PiecesEnum.EmptyPiece, wantedPiece_0) should be(true)
+        PieceFactory.isInstanceOfPiece(PiecesEnum.King, wantedPiece_0) should be(true)
         PieceFactory.isInstanceOfPiece(PiecesEnum.EmptyPiece, wantedPiece_1) should be(true)
 
       }
@@ -239,11 +239,11 @@ class BoardSpec extends WordSpec with Matchers {
       "return a Board with new Containers" in {
         val player_1 = Player("Nick", true)
         val player_2 = Player("Mert", false)
-        var board = new Board(9, pieceFactory.apply("EmptyPiece", player_1))
-        val pawn = pieceFactory.apply("Pawn", player_1)
-        val pawn2 = pieceFactory.apply("Pawn", player_2)
-        val lancer = pieceFactory.apply("Lancer", player_1)
-        val lancer2 = pieceFactory.apply("Lancer", player_2)
+        var board = new Board(9, PieceFactory.apply(PiecesEnum.EmptyPiece, player_1))
+        val pawn = PieceFactory.apply(PiecesEnum.Pawn, player_1)
+        val pawn2 = PieceFactory.apply(PiecesEnum.Pawn, player_2)
+        val lancer = PieceFactory.apply(PiecesEnum.Lancer, player_1)
+        val lancer2 = PieceFactory.apply(PiecesEnum.Lancer, player_2)
 
         board.getContainer() should be(List(), List())
         board.setContainer(List(pawn, lancer), List(pawn2, lancer2)).toString should be(

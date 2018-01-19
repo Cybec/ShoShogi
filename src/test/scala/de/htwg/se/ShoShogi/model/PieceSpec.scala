@@ -1,7 +1,7 @@
 package de.htwg.se.ShoShogi.model
 
 import de.htwg.se.ShoShogi.model.boardComponent.boardBaseImpl.Board
-import de.htwg.se.ShoShogi.model.pieceComponent._
+import de.htwg.se.ShoShogi.model.pieceComponent.pieceBaseImpl.{PieceFactory, PiecesEnum}
 import de.htwg.se.ShoShogi.model.playerComponent.Player
 import org.junit.runner.RunWith
 import org.scalatest._
@@ -13,44 +13,44 @@ class PieceSpec extends WordSpec with Matchers {
   val boardSize = 9
   val player_1 = Player("Player 1", true)
   val player_2 = Player("Player 2", false)
-  var board = new Board(boardSize, pieceFactory.apply("EmptyPiece", player_1))
+  var board = new Board(boardSize, PieceFactory.apply(PiecesEnum.EmptyPiece, player_1))
 
   //Steine fuer Spieler 1
-  board = board.replaceCell(0, 0, pieceFactory.apply("Lancer", player_1))
-  board = board.replaceCell(1, 0, pieceFactory.apply("Knight", player_1))
-  board = board.replaceCell(2, 0, pieceFactory.apply("SilverGeneral", player_1))
-  board = board.replaceCell(3, 0, pieceFactory.apply("GoldenGeneral", player_1))
-  board = board.replaceCell(4, 0, pieceFactory.apply("King", player_1))
-  board = board.replaceCell(5, 0, pieceFactory.apply("GoldenGeneral", player_1))
-  board = board.replaceCell(6, 0, pieceFactory.apply("SilverGeneral", player_1))
-  board = board.replaceCell(7, 0, pieceFactory.apply("Knight", player_1))
-  board = board.replaceCell(8, 0, pieceFactory.apply("Lancer", player_1))
-  board = board.replaceCell(7, 1, pieceFactory.apply("Bishop", player_1))
-  board = board.replaceCell(1, 1, pieceFactory.apply("Rook", player_1))
+  board = board.replaceCell(0, 0, PieceFactory.apply(PiecesEnum.Lancer, player_1))
+  board = board.replaceCell(1, 0, PieceFactory.apply(PiecesEnum.Knight, player_1))
+  board = board.replaceCell(2, 0, PieceFactory.apply(PiecesEnum.SilverGeneral, player_1))
+  board = board.replaceCell(3, 0, PieceFactory.apply(PiecesEnum.GoldenGeneral, player_1))
+  board = board.replaceCell(4, 0, PieceFactory.apply(PiecesEnum.King, player_1))
+  board = board.replaceCell(5, 0, PieceFactory.apply(PiecesEnum.GoldenGeneral, player_1))
+  board = board.replaceCell(6, 0, PieceFactory.apply(PiecesEnum.SilverGeneral, player_1))
+  board = board.replaceCell(7, 0, PieceFactory.apply(PiecesEnum.Knight, player_1))
+  board = board.replaceCell(8, 0, PieceFactory.apply(PiecesEnum.Lancer, player_1))
+  board = board.replaceCell(7, 1, PieceFactory.apply(PiecesEnum.Bishop, player_1))
+  board = board.replaceCell(1, 1, PieceFactory.apply(PiecesEnum.Rook, player_1))
   for (i <- 0 to 8) {
-    board = board.replaceCell(i, 2, pieceFactory.apply("Pawn", player_1))
+    board = board.replaceCell(i, 2, PieceFactory.apply(PiecesEnum.Pawn, player_1))
   }
 
   //Steine fuer Spieler 2
-  board = board.replaceCell(0, 8, pieceFactory.apply("Lancer", player_2))
-  board = board.replaceCell(1, 8, pieceFactory.apply("Knight", player_2))
-  board = board.replaceCell(2, 8, pieceFactory.apply("SilverGeneral", player_2))
-  board = board.replaceCell(3, 8, pieceFactory.apply("GoldenGeneral", player_2))
-  board = board.replaceCell(4, 8, pieceFactory.apply("King", player_2))
-  board = board.replaceCell(5, 8, pieceFactory.apply("GoldenGeneral", player_2))
-  board = board.replaceCell(6, 8, pieceFactory.apply("SilverGeneral", player_2))
-  board = board.replaceCell(7, 8, pieceFactory.apply("Knight", player_2))
-  board = board.replaceCell(8, 8, pieceFactory.apply("Lancer", player_2))
-  board = board.replaceCell(1, 7, pieceFactory.apply("Bishop", player_2))
-  board = board.replaceCell(7, 7, pieceFactory.apply("Rook", player_2))
+  board = board.replaceCell(0, 8, PieceFactory.apply(PiecesEnum.Lancer, player_2))
+  board = board.replaceCell(1, 8, PieceFactory.apply(PiecesEnum.Knight, player_2))
+  board = board.replaceCell(2, 8, PieceFactory.apply(PiecesEnum.SilverGeneral, player_2))
+  board = board.replaceCell(3, 8, PieceFactory.apply(PiecesEnum.GoldenGeneral, player_2))
+  board = board.replaceCell(4, 8, PieceFactory.apply(PiecesEnum.King, player_2))
+  board = board.replaceCell(5, 8, PieceFactory.apply(PiecesEnum.GoldenGeneral, player_2))
+  board = board.replaceCell(6, 8, PieceFactory.apply(PiecesEnum.SilverGeneral, player_2))
+  board = board.replaceCell(7, 8, PieceFactory.apply(PiecesEnum.Knight, player_2))
+  board = board.replaceCell(8, 8, PieceFactory.apply(PiecesEnum.Lancer, player_2))
+  board = board.replaceCell(1, 7, PieceFactory.apply(PiecesEnum.Bishop, player_2))
+  board = board.replaceCell(7, 7, PieceFactory.apply(PiecesEnum.Rook, player_2))
   for (i <- 0 to 8) {
-    board = board.replaceCell(i, 6, pieceFactory.apply("Pawn", player_2))
+    board = board.replaceCell(i, 6, PieceFactory.apply(PiecesEnum.Pawn, player_2))
   }
 
   "A King" when {
     "new" should {
-      val piece = pieceFactory.apply("King", player_1)
-      val piece2 = pieceFactory.apply("King", player_2)
+      val piece = PieceFactory.apply(PiecesEnum.King, player_1)
+      val piece2 = PieceFactory.apply(PiecesEnum.King, player_2)
       "have a Player" in {
         piece.player should be(Player("Player 1", true))
       }
@@ -77,8 +77,8 @@ class PieceSpec extends WordSpec with Matchers {
 
   "A GoldenGeneral" when {
     "new" should {
-      val piece = pieceFactory.apply("GoldenGeneral", player_1)
-      val piece2 = pieceFactory.apply("GoldenGeneral", player_2)
+      val piece = PieceFactory.apply(PiecesEnum.GoldenGeneral, player_1)
+      val piece2 = PieceFactory.apply(PiecesEnum.GoldenGeneral, player_2)
       "have a Player" in {
         piece.player should be(Player("Player 1", true))
       }
@@ -105,16 +105,16 @@ class PieceSpec extends WordSpec with Matchers {
 
   "A SilverGeneral" when {
     "new" should {
-      val piece = pieceFactory.apply("SilverGeneral", player_1)
-      val piece2 = pieceFactory.apply("SilverGeneral", player_2)
+      val piece = PieceFactory.apply(PiecesEnum.SilverGeneral, player_1)
+      val piece2 = PieceFactory.apply(PiecesEnum.SilverGeneral, player_2)
       "have a Player" in {
         piece.player should be(Player("Player 1", true))
       }
       "should not have a promotion" in {
         piece.hasPromotion should be(true)
       }
-      "promotion should be none" in {
-        piece.promotePiece should be(Some(pieceFactory.apply("PromotedSilver", piece.player)))
+      "promotion should be PromotedSilver" in {
+        piece.promotePiece should be(Some(PieceFactory.apply(PiecesEnum.PromotedSilver, piece.player)))
       }
       "have a nice String representation" in {
         piece.toString should be("SG°")
@@ -133,8 +133,8 @@ class PieceSpec extends WordSpec with Matchers {
 
   "A PromotedSilver" when {
     "new" should {
-      val piece = pieceFactory.apply("PromotedSilver", player_1)
-      val piece2 = pieceFactory.apply("PromotedSilver", player_2)
+      val piece = PieceFactory.apply(PiecesEnum.PromotedSilver, player_1)
+      val piece2 = PieceFactory.apply(PiecesEnum.PromotedSilver, player_2)
       "have a Player" in {
         piece.player should be(Player("Player 1", true))
       }
@@ -162,16 +162,16 @@ class PieceSpec extends WordSpec with Matchers {
 
   "A Knight" when {
     "new" should {
-      val piece = pieceFactory.apply("Knight", player_1)
-      val piece2 = pieceFactory.apply("Knight", player_2)
+      val piece = PieceFactory.apply(PiecesEnum.Knight, player_1)
+      val piece2 = PieceFactory.apply(PiecesEnum.Knight, player_2)
       "have a Player" in {
         piece.player should be(Player("Player 1", true))
       }
       "should not have a promotion" in {
         piece.hasPromotion should be(true)
       }
-      "promotion should be none" in {
-        piece.promotePiece should be(Some(pieceFactory.apply("PromotedKnight", piece.player)))
+      "promotion should be PromotedKnight" in {
+        piece.promotePiece should be(Some(PieceFactory.apply(PiecesEnum.PromotedKnight, piece.player)))
       }
       "have a nice String representation" in {
         piece.toString should be("KN°")
@@ -190,8 +190,8 @@ class PieceSpec extends WordSpec with Matchers {
 
   "A PromotedKnight" when {
     "new" should {
-      val piece = pieceFactory.apply("PromotedKnight", player_1)
-      val piece2 = pieceFactory.apply("PromotedKnight", player_2)
+      val piece = PieceFactory.apply(PiecesEnum.PromotedKnight, player_1)
+      val piece2 = PieceFactory.apply(PiecesEnum.PromotedKnight, player_2)
       "have a Player" in {
         piece.player should be(Player("Player 1", true))
       }
@@ -219,16 +219,16 @@ class PieceSpec extends WordSpec with Matchers {
 
   "A Lancer" when {
     "new" should {
-      val piece = pieceFactory.apply("Lancer", player_1)
-      val piece2 = pieceFactory.apply("Lancer", player_2)
+      val piece = PieceFactory.apply(PiecesEnum.Lancer, player_1)
+      val piece2 = PieceFactory.apply(PiecesEnum.Lancer, player_2)
       "have a Player" in {
         piece.player should be(Player("Player 1", true))
       }
       "should not have a promotion" in {
         piece.hasPromotion should be(true)
       }
-      "promotion should be none" in {
-        piece.promotePiece should be(Some(pieceFactory.apply("PromotedLancer", piece.player)))
+      "promotion should be PromotedLancer" in {
+        piece.promotePiece should be(Some(PieceFactory.apply(PiecesEnum.PromotedLancer, piece.player)))
       }
       "have a nice String representation" in {
         piece.toString should be("L° ")
@@ -247,8 +247,8 @@ class PieceSpec extends WordSpec with Matchers {
 
   "A PromotedLancer" when {
     "new" should {
-      val piece = pieceFactory.apply("PromotedLancer", player_1)
-      val piece2 = pieceFactory.apply("PromotedLancer", player_2)
+      val piece = PieceFactory.apply(PiecesEnum.PromotedLancer, player_1)
+      val piece2 = PieceFactory.apply(PiecesEnum.PromotedLancer, player_2)
       "have a Player" in {
         piece.player should be(Player("Player 1", true))
       }
@@ -276,16 +276,16 @@ class PieceSpec extends WordSpec with Matchers {
 
   "A Bishop" when {
     "new" should {
-      val piece = pieceFactory.apply("Bishop", player_1)
-      val piece2 = pieceFactory.apply("Bishop", player_2)
+      val piece = PieceFactory.apply(PiecesEnum.Bishop, player_1)
+      val piece2 = PieceFactory.apply(PiecesEnum.Bishop, player_2)
       "have a Player" in {
         piece.player should be(Player("Player 1", true))
       }
       "should not have a promotion" in {
         piece.hasPromotion should be(true)
       }
-      "promotion should be none" in {
-        piece.promotePiece should be(Some(pieceFactory.apply("PromotedBishop", piece.player)))
+      "promotion should be PromotedBishop" in {
+        piece.promotePiece should be(Some(PieceFactory.apply(PiecesEnum.PromotedBishop, piece.player)))
       }
       "have a nice String representation" in {
         piece.toString should be("B° ")
@@ -304,8 +304,8 @@ class PieceSpec extends WordSpec with Matchers {
 
   "A PromotedBishop" when {
     "new" should {
-      val piece = pieceFactory.apply("PromotedBishop", player_1)
-      val piece2 = pieceFactory.apply("PromotedBishop", player_2)
+      val piece = PieceFactory.apply(PiecesEnum.PromotedBishop, player_1)
+      val piece2 = PieceFactory.apply(PiecesEnum.PromotedBishop, player_2)
       "have a Player" in {
         piece.player should be(Player("Player 1", true))
       }
@@ -333,16 +333,16 @@ class PieceSpec extends WordSpec with Matchers {
 
   "A Rook" when {
     "new" should {
-      val piece = pieceFactory.apply("Rook", player_1)
-      val piece2 = pieceFactory.apply("Rook", player_2)
+      val piece = PieceFactory.apply(PiecesEnum.Rook, player_1)
+      val piece2 = PieceFactory.apply(PiecesEnum.Rook, player_2)
       "have a Player" in {
         piece.player should be(Player("Player 1", true))
       }
       "should not have a promotion" in {
         piece.hasPromotion should be(true)
       }
-      "promotion should be none" in {
-        piece.promotePiece should be(Some(pieceFactory.apply("PromotedRook", piece.player)))
+      "promotion should be PromotedRook" in {
+        piece.promotePiece should be(Some(PieceFactory.apply(PiecesEnum.PromotedRook, piece.player)))
       }
       "have a nice String representation" in {
         piece.toString should be("R° ")
@@ -361,8 +361,8 @@ class PieceSpec extends WordSpec with Matchers {
 
   "A PromotedRook" when {
     "new" should {
-      val piece = pieceFactory.apply("PromotedRook", player_1)
-      val piece2 = pieceFactory.apply("PromotedRook", player_2)
+      val piece = PieceFactory.apply(PiecesEnum.PromotedRook, player_1)
+      val piece2 = PieceFactory.apply(PiecesEnum.PromotedRook, player_2)
       "have a Player" in {
         piece.player should be(Player("Player 1", true))
       }
@@ -390,16 +390,16 @@ class PieceSpec extends WordSpec with Matchers {
 
   "A Pawn" when {
     "new" should {
-      val piece = pieceFactory.apply("Pawn", player_1)
-      val piece2 = pieceFactory.apply("Pawn", player_2)
+      val piece = PieceFactory.apply(PiecesEnum.Pawn, player_1)
+      val piece2 = PieceFactory.apply(PiecesEnum.Pawn, player_2)
       "have a Player" in {
         piece.player should be(Player("Player 1", true))
       }
       "should not have a promotion" in {
         piece.hasPromotion should be(true)
       }
-      "promotion should be none" in {
-        piece.promotePiece should be(Some(pieceFactory.apply("PromotedPawn", piece.player)))
+      "promotion should be PromotedPawn" in {
+        piece.promotePiece should be(Some(PieceFactory.apply(PiecesEnum.PromotedPawn, piece.player)))
       }
       "have a nice String representation" in {
         piece.toString should be("P° ")
@@ -418,8 +418,8 @@ class PieceSpec extends WordSpec with Matchers {
 
   "A PromotedPawn" when {
     "new" should {
-      val piece = pieceFactory.apply("PromotedPawn", player_1)
-      val piece2 = pieceFactory.apply("PromotedPawn", player_2)
+      val piece = PieceFactory.apply(PiecesEnum.PromotedPawn, player_1)
+      val piece2 = PieceFactory.apply(PiecesEnum.PromotedPawn, player_2)
       "have a Player" in {
         piece.player should be(Player("Player 1", true))
       }
@@ -447,7 +447,7 @@ class PieceSpec extends WordSpec with Matchers {
 
   "A EmptyPiece" when {
     "new" should {
-      val piece = pieceFactory.apply("EmptyPiece", player_1)
+      val piece = PieceFactory.apply(PiecesEnum.EmptyPiece, player_1)
       "have a Player" in {
         piece.player should be(Player("", false))
       }
@@ -469,78 +469,78 @@ class PieceSpec extends WordSpec with Matchers {
   "A Piece" when {
     "called cloneToNewPlayer" should {
       "clone King(player_1) to King(player_2)" in {
-        val p: Piece = pieceFactory.apply("King", player_1).cloneToNewPlayer(player_2)
-        p shouldBe a[King]
+        val p = PieceFactory.apply(PiecesEnum.King, player_1).cloneToNewPlayer(player_2)
+        PieceFactory.isInstanceOfPiece(PiecesEnum.King, p) should be(true)
         p.player should be(player_2)
       }
       "clone GoldenGeneral(player_1) to GoldenGeneral(player_2)" in {
-        val p: Piece = pieceFactory.apply("GoldenGeneral", player_1).cloneToNewPlayer(player_2)
-        p shouldBe a[GoldenGeneral]
+        val p = PieceFactory.apply(PiecesEnum.GoldenGeneral, player_1).cloneToNewPlayer(player_2)
+        PieceFactory.isInstanceOfPiece(PiecesEnum.GoldenGeneral, p) should be(true)
         p.player should be(player_2)
       }
       "clone SilverGeneral(player_1) to SilverGeneral(player_2)" in {
-        val p: Piece = pieceFactory.apply("SilverGeneral", player_1).cloneToNewPlayer(player_2)
-        p shouldBe a[SilverGeneral]
+        val p = PieceFactory.apply(PiecesEnum.SilverGeneral, player_1).cloneToNewPlayer(player_2)
+        PieceFactory.isInstanceOfPiece(PiecesEnum.SilverGeneral, p) should be(true)
         p.player should be(player_2)
       }
       "clone PromotedSilver(player_1) to SilverGeneral(player_2)" in {
-        val p: Piece = pieceFactory.apply("PromotedSilver", player_1).cloneToNewPlayer(player_2)
-        p shouldBe a[SilverGeneral]
+        val p = PieceFactory.apply(PiecesEnum.PromotedSilver, player_1).cloneToNewPlayer(player_2)
+        PieceFactory.isInstanceOfPiece(PiecesEnum.SilverGeneral, p) should be(true)
         p.player should be(player_2)
       }
       "clone Knight(player_1) to Knight(player_2)" in {
-        val p: Piece = pieceFactory.apply("Knight", player_1).cloneToNewPlayer(player_2)
-        p shouldBe a[Knight]
+        val p = PieceFactory.apply(PiecesEnum.Knight, player_1).cloneToNewPlayer(player_2)
+        PieceFactory.isInstanceOfPiece(PiecesEnum.Knight, p) should be(true)
         p.player should be(player_2)
       }
       "clone PromotedKnight(player_1) to Knight(player_2)" in {
-        val p: Piece = pieceFactory.apply("PromotedKnight", player_1).cloneToNewPlayer(player_2)
-        p shouldBe a[Knight]
+        val p = PieceFactory.apply(PiecesEnum.PromotedKnight, player_1).cloneToNewPlayer(player_2)
+        PieceFactory.isInstanceOfPiece(PiecesEnum.Knight, p) should be(true)
         p.player should be(player_2)
       }
       "clone Lancer(player_1) to Lancer(player_2)" in {
-        val p: Piece = pieceFactory.apply("Lancer", player_1).cloneToNewPlayer(player_2)
-        p shouldBe a[Lancer]
+        val p = PieceFactory.apply(PiecesEnum.Lancer, player_1).cloneToNewPlayer(player_2)
+        PieceFactory.isInstanceOfPiece(PiecesEnum.Lancer, p) should be(true)
         p.player should be(player_2)
       }
       "clone PromotedLancer(player_1) to Lancer(player_2)" in {
-        val p: Piece = pieceFactory.apply("PromotedLancer", player_1).cloneToNewPlayer(player_2)
-        p shouldBe a[Lancer]
+        val p = PieceFactory.apply(PiecesEnum.PromotedLancer, player_1).cloneToNewPlayer(player_2)
+        PieceFactory.isInstanceOfPiece(PiecesEnum.Lancer, p) should be(true)
         p.player should be(player_2)
       }
       "clone Bishop(player_1) to Bishop(player_2)" in {
-        val p: Piece = pieceFactory.apply("Bishop", player_1).cloneToNewPlayer(player_2)
-        p shouldBe a[Bishop]
+        val p = PieceFactory.apply(PiecesEnum.Bishop, player_1).cloneToNewPlayer(player_2)
+        PieceFactory.isInstanceOfPiece(PiecesEnum.Bishop, p) should be(true)
         p.player should be(player_2)
       }
       "clone PromotedBishop(player_1) to Bishop(player_2)" in {
-        val p: Piece = pieceFactory.apply("PromotedBishop", player_1).cloneToNewPlayer(player_2)
-        p shouldBe a[Bishop]
+        val p = PieceFactory.apply(PiecesEnum.PromotedBishop, player_1).cloneToNewPlayer(player_2)
+        PieceFactory.isInstanceOfPiece(PiecesEnum.Bishop, p) should be(true)
         p.player should be(player_2)
       }
       "clone Rook(player_1) to Rook(player_2)" in {
-        val p: Piece = pieceFactory.apply("Rook", player_1).cloneToNewPlayer(player_2)
-        p shouldBe a[Rook]
+        val p = PieceFactory.apply(PiecesEnum.Rook, player_1).cloneToNewPlayer(player_2)
+        PieceFactory.isInstanceOfPiece(PiecesEnum.Rook, p) should be(true)
         p.player should be(player_2)
       }
       "clone PromotedRook(player_1) to Rook(player_2)" in {
-        val p: Piece = pieceFactory.apply("PromotedRook", player_1).cloneToNewPlayer(player_2)
-        p shouldBe a[Rook]
+        val p = PieceFactory.apply(PiecesEnum.PromotedRook, player_1).cloneToNewPlayer(player_2)
+        PieceFactory.isInstanceOfPiece(PiecesEnum.Rook, p) should be(true)
         p.player should be(player_2)
       }
       "clone Pawn(player_1) to Pawn(player_2)" in {
-        val p: Piece = pieceFactory.apply("Pawn", player_1).cloneToNewPlayer(player_2)
-        p shouldBe a[Pawn]
+        val p = PieceFactory.apply(PiecesEnum.Pawn, player_1).cloneToNewPlayer(player_2)
+        PieceFactory.isInstanceOfPiece(PiecesEnum.Pawn, p) should be(true)
         p.player should be(player_2)
       }
       "clone PromotedPawn(player_1) to Pawn(player_2)" in {
-        val p: Piece = pieceFactory.apply("PromotedPawn", player_1).cloneToNewPlayer(player_2)
-        p shouldBe a[Pawn]
+        val p = PieceFactory.apply(PiecesEnum.PromotedPawn, player_1).cloneToNewPlayer(player_2)
+        PieceFactory.isInstanceOfPiece(PiecesEnum.Pawn, p) should be(true)
         p.player should be(player_2)
       }
       "clone EmptyPiece(player_1) to EmptyPiece(player_2)" in {
-        val p: Piece = pieceFactory.apply("EmptyPiece", player_1).cloneToNewPlayer(player_2)
-        p shouldBe a[EmptyPiece]
+        val p = PieceFactory.apply(PiecesEnum.EmptyPiece, player_1).cloneToNewPlayer(player_2)
+        PieceFactory.isInstanceOfPiece(PiecesEnum.EmptyPiece, p) should be(true)
       }
     }
   }
@@ -548,11 +548,11 @@ class PieceSpec extends WordSpec with Matchers {
   "A Piece" when {
     "called isForstOwner" should {
       "be true when Piece belongs to first player" in {
-        val piecePlayer1: Piece = pieceFactory.apply("King", player_1)
+        val piecePlayer1 = PieceFactory.apply(PiecesEnum.King, player_1)
         piecePlayer1.isFirstOwner should be(true)
       }
       "be false when Piece belongs to second player" in {
-        val piecePlayer2: Piece = pieceFactory.apply("King", player_2)
+        val piecePlayer2 = PieceFactory.apply(PiecesEnum.King, player_2)
         piecePlayer2.isFirstOwner should be(false)
       }
     }
