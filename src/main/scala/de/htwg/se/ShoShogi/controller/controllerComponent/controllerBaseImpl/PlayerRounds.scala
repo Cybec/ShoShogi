@@ -2,7 +2,7 @@ package de.htwg.se.ShoShogi.controller.controllerComponent.controllerBaseImpl
 
 import de.htwg.se.ShoShogi.controller.controllerComponent.MoveResult
 import de.htwg.se.ShoShogi.model.boardComponent.BoardInterface
-import de.htwg.se.ShoShogi.model.pieceComponent.{EmptyPiece, King, Piece, pieceFactory}
+import de.htwg.se.ShoShogi.model.pieceComponent.pieceBaseImpl._
 
 //noinspection ScalaStyle
 trait RoundState {
@@ -43,11 +43,11 @@ case class playerOneRound(controller: Controller) extends RoundState {
       val tempPieceCurrent = controller.board.cell(currentPos._1, currentPos._2).getOrElse(return MoveResult.invalidMove)
 
       controller.board = controller.board.replaceCell(destination._1, destination._2, tempPieceCurrent)
-      controller.board = controller.board.replaceCell(currentPos._1, currentPos._2, pieceFactory.apply("EmptyPiece", controller.player_1))
+      controller.board = controller.board.replaceCell(currentPos._1, currentPos._2, PieceFactory.apply(PiecesEnum.EmptyPiece, controller.player_1))
 
       controller.board = controller.board.addToPlayerContainer(tempPieceCurrent.player, tempPieceDestination)
 
-      if (tempPieceDestination.isInstanceOf[King]) {
+      if (PieceFactory.isInstanceOfPiece(PiecesEnum.King, tempPieceDestination)) {
         MoveResult.kingSlain
       } else {
         MoveResult.validMove
@@ -91,9 +91,9 @@ case class playerOneRound(controller: Controller) extends RoundState {
           } else {
             for (row <- 0 to 8) {
               controller.board.cell(column, row) match {
-                case Some(piece) => if (piece.isInstanceOf[EmptyPiece]) {
+                case Some(piece) => if (PieceFactory.isInstanceOfPiece(PiecesEnum.EmptyPiece, piece)) {
                   possibleMoves = possibleMoves :+ (column, row)
-                } else if (piece.isInstanceOf[King] && !piece.player.first) {
+                } else if (PieceFactory.isInstanceOfPiece(PiecesEnum.King, piece) && !piece.player.first) {
                   possibleMoves = possibleMoves.filter(_ != (column, row - 1))
                 }
                 case None => {
@@ -142,11 +142,11 @@ case class playerTwoRound(controller: Controller) extends RoundState {
       val tempPieceCurrent = controller.board.cell(currentPos._1, currentPos._2).getOrElse(return MoveResult.invalidMove)
 
       controller.board = controller.board.replaceCell(destination._1, destination._2, tempPieceCurrent)
-      controller.board = controller.board.replaceCell(currentPos._1, currentPos._2, pieceFactory.apply("EmptyPiece", controller.player_2))
+      controller.board = controller.board.replaceCell(currentPos._1, currentPos._2, PieceFactory.apply(PiecesEnum.EmptyPiece, controller.player_2))
 
       controller.board = controller.board.addToPlayerContainer(tempPieceCurrent.player, tempPieceDestination)
 
-      if (tempPieceDestination.isInstanceOf[King]) {
+      if (PieceFactory.isInstanceOfPiece(PiecesEnum.King, tempPieceDestination)) {
         MoveResult.kingSlain
       } else {
         MoveResult.validMove
@@ -189,9 +189,9 @@ case class playerTwoRound(controller: Controller) extends RoundState {
           } else {
             for (row <- 0 to 8) {
               controller.board.cell(column, row + controller.board.size - 1 - count) match {
-                case Some(piece) => if (piece.isInstanceOf[EmptyPiece] && row != 8) {
+                case Some(piece) => if (PieceFactory.isInstanceOfPiece(PiecesEnum.EmptyPiece, piece) && row != 8) {
                   possibleMoves = possibleMoves :+ (column, row + controller.board.size - 1 - count)
-                } else if (piece.isInstanceOf[King] && piece.player.first) {
+                } else if (PieceFactory.isInstanceOfPiece(PiecesEnum.King, piece) && piece.player.first) {
                   possibleMoves = possibleMoves.filter(_ != (column, row + controller.board.size - count))
                 }
                 case None => {}

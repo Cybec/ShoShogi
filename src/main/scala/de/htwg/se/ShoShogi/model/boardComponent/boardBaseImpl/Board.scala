@@ -1,7 +1,7 @@
 package de.htwg.se.ShoShogi.model.boardComponent.boardBaseImpl
 
 import de.htwg.se.ShoShogi.model.boardComponent.BoardInterface
-import de.htwg.se.ShoShogi.model.pieceComponent.{EmptyPiece, Piece}
+import de.htwg.se.ShoShogi.model.pieceComponent.pieceBaseImpl.{Piece, PieceFactory, PiecesEnum}
 import de.htwg.se.ShoShogi.model.playerComponent.Player
 
 case class Board(board: Vector[Vector[Piece]], containerPlayer_0: List[Piece], containerPlayer_1: List[Piece]) extends BoardInterface {
@@ -16,7 +16,7 @@ case class Board(board: Vector[Vector[Piece]], containerPlayer_0: List[Piece], c
   }
 
   override def addToPlayerContainer(player: Player, piece: Piece): Board = {
-    if (!piece.isInstanceOf[EmptyPiece]) {
+    if (!PieceFactory.isInstanceOfPiece(PiecesEnum.EmptyPiece, piece)) {
       if (player.first) {
         val newCon: List[Piece] = containerPlayer_0 :+ piece.cloneToNewPlayer(player)
         copy(board, newCon, containerPlayer_1)
@@ -62,7 +62,7 @@ case class Board(board: Vector[Vector[Piece]], containerPlayer_0: List[Piece], c
     if (column <= this.size && column >= 0) {
       for (i <- 0 until this.size) {
         this.cell(column, i) match {
-          case Some(_: EmptyPiece) => {}
+          case Some(piece) if (PieceFactory.isInstanceOfPiece(PiecesEnum.EmptyPiece, piece)) => {}
           case Some(piece) => if (stateTurn == piece.player.first) {
             pieces = pieces :+ piece
           }
@@ -80,7 +80,8 @@ case class Board(board: Vector[Vector[Piece]], containerPlayer_0: List[Piece], c
     if (column <= this.size && column >= 0) {
       for (i <- range._1 to range._2) {
         this.cell(column, i) match {
-          case Some(_: EmptyPiece) => emptyCells = emptyCells :+ (column, i)
+          case Some(piece) if (PieceFactory.isInstanceOfPiece(PiecesEnum.EmptyPiece, piece)) =>
+            emptyCells = emptyCells :+ (column, i)
           case Some(_) => {}
           case None => {}
         }
@@ -99,7 +100,7 @@ case class Board(board: Vector[Vector[Piece]], containerPlayer_0: List[Piece], c
     } {
       cell(col, row) match {
         case Some(piece) => returnList(col)(row) = piece
-        case None => returnList(col)(row) = new EmptyPiece
+        case None => returnList(col)(row) = PieceFactory.getEmptyPiece
       }
     }
 

@@ -3,7 +3,7 @@ package de.htwg.se.ShoShogi.controller.controllerComponent.controllerBaseImpl
 import de.htwg.se.ShoShogi.controller.controllerComponent._
 import de.htwg.se.ShoShogi.model.boardComponent.BoardInterface
 import de.htwg.se.ShoShogi.model.boardComponent.boardBaseImpl.Board
-import de.htwg.se.ShoShogi.model.pieceComponent.{Piece, pieceFactory}
+import de.htwg.se.ShoShogi.model.pieceComponent.pieceBaseImpl.{Piece, PieceFactory, PiecesEnum}
 import de.htwg.se.ShoShogi.model.playerComponent.Player
 import de.htwg.se.ShoShogi.util.UndoManager
 
@@ -39,38 +39,38 @@ class Controller(var board: BoardInterface, var player_1: Player, var player_2: 
   }
 
   override def createNewBoard(): Unit = {
-    board = new Board(boardSize, pieceFactory.apply("EmptyPiece", player_1))
+    board = new Board(boardSize, PieceFactory.apply(PiecesEnum.EmptyPiece, player_1))
 
     //Steine fuer Spieler 1
-    board = board.replaceCell(0, 0, pieceFactory.apply("Lancer", player_1))
-    board = board.replaceCell(1, 0, pieceFactory.apply("Knight", player_1))
-    board = board.replaceCell(2, 0, pieceFactory.apply("SilverGeneral", player_1))
-    board = board.replaceCell(3, 0, pieceFactory.apply("GoldenGeneral", player_1))
-    board = board.replaceCell(4, 0, pieceFactory.apply("King", player_1))
-    board = board.replaceCell(5, 0, pieceFactory.apply("GoldenGeneral", player_1))
-    board = board.replaceCell(6, 0, pieceFactory.apply("SilverGeneral", player_1))
-    board = board.replaceCell(7, 0, pieceFactory.apply("Knight", player_1))
-    board = board.replaceCell(8, 0, pieceFactory.apply("Lancer", player_1))
-    board = board.replaceCell(7, 1, pieceFactory.apply("Bishop", player_1))
-    board = board.replaceCell(1, 1, pieceFactory.apply("Rook", player_1))
+    board = board.replaceCell(0, 0, PieceFactory.apply(PiecesEnum.Lancer, player_1))
+    board = board.replaceCell(1, 0, PieceFactory.apply(PiecesEnum.Knight, player_1))
+    board = board.replaceCell(2, 0, PieceFactory.apply(PiecesEnum.SilverGeneral, player_1))
+    board = board.replaceCell(3, 0, PieceFactory.apply(PiecesEnum.GoldenGeneral, player_1))
+    board = board.replaceCell(4, 0, PieceFactory.apply(PiecesEnum.King, player_1))
+    board = board.replaceCell(5, 0, PieceFactory.apply(PiecesEnum.GoldenGeneral, player_1))
+    board = board.replaceCell(6, 0, PieceFactory.apply(PiecesEnum.SilverGeneral, player_1))
+    board = board.replaceCell(7, 0, PieceFactory.apply(PiecesEnum.Knight, player_1))
+    board = board.replaceCell(8, 0, PieceFactory.apply(PiecesEnum.Lancer, player_1))
+    board = board.replaceCell(7, 1, PieceFactory.apply(PiecesEnum.Bishop, player_1))
+    board = board.replaceCell(1, 1, PieceFactory.apply(PiecesEnum.Rook, player_1))
     for (i <- 0 to 8) {
-      board = board.replaceCell(i, 2, pieceFactory.apply("Pawn", player_1))
+      board = board.replaceCell(i, 2, PieceFactory.apply(PiecesEnum.Pawn, player_1))
     }
 
     //Steine fuer Spieler 2
-    board = board.replaceCell(0, 8, pieceFactory.apply("Lancer", player_2))
-    board = board.replaceCell(1, 8, pieceFactory.apply("Knight", player_2))
-    board = board.replaceCell(2, 8, pieceFactory.apply("SilverGeneral", player_2))
-    board = board.replaceCell(3, 8, pieceFactory.apply("GoldenGeneral", player_2))
-    board = board.replaceCell(4, 8, pieceFactory.apply("King", player_2))
-    board = board.replaceCell(5, 8, pieceFactory.apply("GoldenGeneral", player_2))
-    board = board.replaceCell(6, 8, pieceFactory.apply("SilverGeneral", player_2))
-    board = board.replaceCell(7, 8, pieceFactory.apply("Knight", player_2))
-    board = board.replaceCell(8, 8, pieceFactory.apply("Lancer", player_2))
-    board = board.replaceCell(1, 7, pieceFactory.apply("Bishop", player_2))
-    board = board.replaceCell(7, 7, pieceFactory.apply("Rook", player_2))
+    board = board.replaceCell(0, 8, PieceFactory.apply(PiecesEnum.Lancer, player_2))
+    board = board.replaceCell(1, 8, PieceFactory.apply(PiecesEnum.Knight, player_2))
+    board = board.replaceCell(2, 8, PieceFactory.apply(PiecesEnum.SilverGeneral, player_2))
+    board = board.replaceCell(3, 8, PieceFactory.apply(PiecesEnum.GoldenGeneral, player_2))
+    board = board.replaceCell(4, 8, PieceFactory.apply(PiecesEnum.King, player_2))
+    board = board.replaceCell(5, 8, PieceFactory.apply(PiecesEnum.GoldenGeneral, player_2))
+    board = board.replaceCell(6, 8, PieceFactory.apply(PiecesEnum.SilverGeneral, player_2))
+    board = board.replaceCell(7, 8, PieceFactory.apply(PiecesEnum.Knight, player_2))
+    board = board.replaceCell(8, 8, PieceFactory.apply(PiecesEnum.Lancer, player_2))
+    board = board.replaceCell(1, 7, PieceFactory.apply(PiecesEnum.Bishop, player_2))
+    board = board.replaceCell(7, 7, PieceFactory.apply(PiecesEnum.Rook, player_2))
     for (i <- 0 to 8) {
-      board = board.replaceCell(i, 6, pieceFactory.apply("Pawn", player_2))
+      board = board.replaceCell(i, 6, PieceFactory.apply(PiecesEnum.Pawn, player_2))
     }
 
     publish(new StartNewGame)
@@ -83,7 +83,7 @@ class Controller(var board: BoardInterface, var player_1: Player, var player_2: 
   def replaceBoard(newBoard: BoardInterface): Unit = board = newBoard
 
   override def createEmptyBoard(): Unit = {
-    board = new Board(boardSize, pieceFactory.apply("EmptyPiece", player_1))
+    board = new Board(boardSize, PieceFactory.apply(PiecesEnum.EmptyPiece, player_1))
     currentState = playerOnesTurn
     publish(new UpdateAll)
   }

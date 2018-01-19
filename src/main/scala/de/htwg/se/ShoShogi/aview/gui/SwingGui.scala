@@ -6,7 +6,7 @@ import javax.swing.{Icon, ImageIcon, WindowConstants}
 
 import de.htwg.se.ShoShogi.controller.controllerComponent.controllerBaseImpl.{StartNewGame, UpdateAll}
 import de.htwg.se.ShoShogi.controller.controllerComponent.{ControllerInterface, MoveResult}
-import de.htwg.se.ShoShogi.model.pieceComponent.{EmptyPiece, Piece}
+import de.htwg.se.ShoShogi.model.pieceComponent.pieceBaseImpl.{Piece, PieceFactory}
 
 import scala.swing.GridBagPanel.Anchor
 import scala.swing._
@@ -20,7 +20,7 @@ class SwingGui(controller: ControllerInterface) extends Frame {
   var containerPanel_1: BoxPanel = new BoxPanel(Orientation.Vertical) {}
   var containerPanel_2: BoxPanel = new BoxPanel(Orientation.Vertical) {}
   var highlightedPiece: (Int, Int) = (-1, -1)
-  var containerPiece: Piece = new EmptyPiece
+  var containerPiece: Piece = PieceFactory.getEmptyPiece
   val boardColor: Color = getColorFromRGB(Array[Int](255, 235, 182))
   val pieceColor: Color = getColorFromRGB(Array[Int](249, 250, 242))
   val markedColor: Color = Color.BLUE

@@ -1,7 +1,7 @@
 package de.htwg.se.ShoShogi.model.boardComponent
 
 import de.htwg.se.ShoShogi.model.boardComponent.boardBaseImpl.Board
-import de.htwg.se.ShoShogi.model.pieceComponent.Piece
+import de.htwg.se.ShoShogi.model.pieceComponent.pieceBaseImpl.Piece
 import de.htwg.se.ShoShogi.model.playerComponent.Player
 
 trait BoardInterface {
