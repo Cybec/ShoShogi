@@ -33,6 +33,17 @@ class ControllerSpec extends WordSpec with Matchers {
         ))
       }
     }
+    "called setContainer" should {
+      "change the containers of the 2 Players" in {
+        controller.createNewBoard()
+        val pawn = PieceFactory.apply(PiecesEnum.Pawn, player_1)
+        controller.setContainer(List(pawn), List(pawn))
+        controller.getContainer should be(
+          List(PieceFactory.apply(PiecesEnum.Pawn, player_1)),
+          List(PieceFactory.apply(PiecesEnum.Pawn, player_1))
+        )
+      }
+    }
 
     "called printPossibleMoves" should {
       "print for \"pmv 0c\"" in {
