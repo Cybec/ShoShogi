@@ -1,21 +1,19 @@
 package de.htwg.se.ShoShogi.model
 
+import com.google.inject.Guice
+import de.htwg.se.ShoShogi.ShoShogiModule
 import de.htwg.se.ShoShogi.aview.Tui
-import de.htwg.se.ShoShogi.controller.controllerComponent.controllerBaseImpl.Controller
-import de.htwg.se.ShoShogi.model.boardComponent.boardBaseImpl.Board
-import de.htwg.se.ShoShogi.model.pieceComponent.pieceBaseImpl.{PieceFactory, PiecesEnum}
-import de.htwg.se.ShoShogi.model.playerComponent.Player
+import de.htwg.se.ShoShogi.controller.controllerComponent.ControllerInterface
 import org.junit.runner.RunWith
 import org.scalatest.junit.JUnitRunner
 import org.scalatest.{Matchers, WordSpec}
 
 @RunWith(classOf[JUnitRunner])
 class TuiSpec extends WordSpec with Matchers {
-  val boardSize = 9
-  val player_1 = Player("Player1", true)
-  val player_2 = Player("Player2", false)
+  val injector = Guice.createInjector(new ShoShogiModule)
+  val controller = injector.getInstance(classOf[ControllerInterface])
+  controller.createNewBoard()
 
-  val controller = new Controller(new Board(boardSize, PieceFactory.apply(PiecesEnum.EmptyPiece, player_1)), player_1, player_2)
   val tui = new Tui(controller)
 
   "A Tui" when {

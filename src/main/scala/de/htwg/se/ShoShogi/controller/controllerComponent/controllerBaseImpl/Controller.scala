@@ -18,6 +18,10 @@ class Controller @Inject() extends RoundState with ControllerInterface {
   var player_1: Player = new Player("Player1", true)
   var player_2: Player = new Player("Player2", false)
 
+  override def getPlayers: (Player, Player) = {
+    (new Player(player_1.name, player_1.first), new Player(player_2.name, player_2.first))
+  }
+
   private val undoManager = new UndoManager
 
   val playerOnesTurn: RoundState = new playerOneRound(this)
@@ -31,7 +35,7 @@ class Controller @Inject() extends RoundState with ControllerInterface {
 
   override def getContainer: (List[Piece], List[Piece]) = board.getContainer()
 
-  def setContainer(container: (List[Piece], List[Piece])): Unit = {
+  override def setContainer(container: (List[Piece], List[Piece])): Unit = {
     board = board.setContainer(container)
   }
 
