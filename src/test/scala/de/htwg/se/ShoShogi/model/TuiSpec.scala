@@ -7,7 +7,7 @@ import de.htwg.se.ShoShogi.model.pieceComponent.pieceFactory
 import de.htwg.se.ShoShogi.model.playerComponent.Player
 import org.junit.runner.RunWith
 import org.scalatest.junit.JUnitRunner
-import org.scalatest.{Matchers, WordSpec}
+import org.scalatest.{ Matchers, WordSpec }
 
 @RunWith(classOf[JUnitRunner])
 class TuiSpec extends WordSpec with Matchers {

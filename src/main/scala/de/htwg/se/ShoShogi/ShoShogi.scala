@@ -3,7 +3,7 @@ package de.htwg.se.ShoShogi
 import de.htwg.se.ShoShogi.aview.Tui
 import de.htwg.se.ShoShogi.aview.gui.SwingGui
 import de.htwg.se.ShoShogi.controller.controllerComponent.ControllerInterface
-import de.htwg.se.ShoShogi.controller.controllerComponent.controllerBaseImpl.{Controller, UpdateAll}
+import de.htwg.se.ShoShogi.controller.controllerComponent.controllerBaseImpl.{ Controller, UpdateAll }
 import de.htwg.se.ShoShogi.model.boardComponent.boardBaseImpl.Board
 import de.htwg.se.ShoShogi.model.pieceComponent.EmptyPiece
 import de.htwg.se.ShoShogi.model.playerComponent.Player

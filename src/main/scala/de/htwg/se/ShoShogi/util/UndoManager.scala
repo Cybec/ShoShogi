@@ -11,6 +11,7 @@ class UndoManager {
     redoStack = Nil
   }
 
+  //Nicht testbar nur in der Gui benuzt
   def undoStep = {
     undoStack match {
       case Nil =>
@@ -22,6 +23,7 @@ class UndoManager {
     }
   }
 
+  //Nicht testbar nur in der Gui benutzt
   def redoStep = {
     redoStack match {
       case Nil =>

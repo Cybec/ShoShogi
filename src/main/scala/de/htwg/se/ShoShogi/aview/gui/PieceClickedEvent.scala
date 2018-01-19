@@ -1,7 +1,7 @@
 package de.htwg.se.ShoShogi.aview.gui
 
-import de.htwg.se.ShoShogi.controller.controllerComponent.{ControllerInterface, MoveResult}
-import de.htwg.se.ShoShogi.model.pieceComponent.{EmptyPiece, Piece}
+import de.htwg.se.ShoShogi.controller.controllerComponent.{ ControllerInterface, MoveResult }
+import de.htwg.se.ShoShogi.model.pieceComponent.{ EmptyPiece, Piece }
 
 import scala.swing.Button
 

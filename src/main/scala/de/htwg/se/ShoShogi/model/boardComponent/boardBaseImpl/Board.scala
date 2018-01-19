@@ -1,7 +1,7 @@
 package de.htwg.se.ShoShogi.model.boardComponent.boardBaseImpl
 
 import de.htwg.se.ShoShogi.model.boardComponent.BoardInterface
-import de.htwg.se.ShoShogi.model.pieceComponent.{EmptyPiece, Piece}
+import de.htwg.se.ShoShogi.model.pieceComponent.{ EmptyPiece, Piece }
 import de.htwg.se.ShoShogi.model.playerComponent.Player
 
 case class Board(board: Vector[Vector[Piece]], containerPlayer_0: List[Piece], containerPlayer_1: List[Piece]) extends BoardInterface {
@@ -70,7 +70,6 @@ case class Board(board: Vector[Vector[Piece]], containerPlayer_0: List[Piece], c
         }
       }
     }
-
     pieces
   }
 

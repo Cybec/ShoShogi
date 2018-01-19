@@ -3,7 +3,7 @@ package de.htwg.se.ShoShogi.controller.controllerComponent.controllerBaseImpl
 import de.htwg.se.ShoShogi.controller.controllerComponent._
 import de.htwg.se.ShoShogi.model.boardComponent.BoardInterface
 import de.htwg.se.ShoShogi.model.boardComponent.boardBaseImpl.Board
-import de.htwg.se.ShoShogi.model.pieceComponent.{Piece, pieceFactory}
+import de.htwg.se.ShoShogi.model.pieceComponent.{ Piece, pieceFactory }
 import de.htwg.se.ShoShogi.model.playerComponent.Player
 import de.htwg.se.ShoShogi.util.UndoManager
 
@@ -20,12 +20,17 @@ class Controller(var board: BoardInterface, var player_1: Player, var player_2: 
 
   override def changeNamePlayer1(newName: String): Unit = player_1 = new Player(newName, player_1.first)
 
+  //TODO: Never used intended?
   override def changeNamePlayer2(newName: String): Unit = player_2 = new Player(newName, player_2.first)
 
   override def getContainer: (List[Piece], List[Piece]) = board.getContainer()
 
   def setContainer(container: (List[Piece], List[Piece])): Unit = {
     board = board.setContainer(container)
+  }
+
+  override def saveState: Unit = {
+    undoManager.saveStep(new SolveCommand(this))
   }
 
   override def undoCommand: Unit = {
@@ -120,10 +125,7 @@ class Controller(var board: BoardInterface, var player_1: Player, var player_2: 
     currentState.getPossibleMvConPlayer(piece)
   }
 
-  override def saveState: Unit = {
-    undoManager.saveStep(new SolveCommand(this))
-  }
-
+  //TODO: We don't need that right? same as above?
   override def getPossibleMvConPlayer(piece: String): List[(Int, Int)] = {
     currentState.getPossibleMvConPlayer(piece)
   }
@@ -134,7 +136,6 @@ class Controller(var board: BoardInterface, var player_1: Player, var player_2: 
   }
 
   override def promotePiece(piecePosition: (Int, Int)): Boolean = {
-    saveState
     var piece = board.cell(piecePosition._1, piecePosition._2).getOrElse(return false)
     piece = piece.promotePiece.getOrElse(return false)
     board = board.replaceCell(piecePosition._1, piecePosition._2, piece)

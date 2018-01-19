@@ -2,15 +2,15 @@ package de.htwg.se.ShoShogi.aview.gui
 
 import java.awt.Color
 import java.io.File
-import javax.swing.{Icon, ImageIcon, WindowConstants}
+import javax.swing.{ Icon, ImageIcon, WindowConstants }
 
-import de.htwg.se.ShoShogi.controller.controllerComponent.controllerBaseImpl.{StartNewGame, UpdateAll}
-import de.htwg.se.ShoShogi.controller.controllerComponent.{ControllerInterface, MoveResult}
-import de.htwg.se.ShoShogi.model.pieceComponent.{EmptyPiece, Piece}
+import de.htwg.se.ShoShogi.controller.controllerComponent.controllerBaseImpl.{ StartNewGame, UpdateAll }
+import de.htwg.se.ShoShogi.controller.controllerComponent.{ ControllerInterface, MoveResult }
+import de.htwg.se.ShoShogi.model.pieceComponent.{ EmptyPiece, Piece }
 
 import scala.swing.GridBagPanel.Anchor
 import scala.swing._
-import scala.swing.event.{Key, MouseClicked, _}
+import scala.swing.event.{ Key, MouseClicked, _ }
 // scalastyle:off magic.number
 
 class SwingGui(controller: ControllerInterface) extends Frame {
