@@ -4,13 +4,12 @@ import de.htwg.se.ShoShogi.ShoShogi.boardSize
 import de.htwg.se.ShoShogi.controller.controllerComponent.MoveResult
 import de.htwg.se.ShoShogi.controller.controllerComponent.controllerBaseImpl.Controller
 import de.htwg.se.ShoShogi.model.boardComponent.boardBaseImpl.Board
-import de.htwg.se.ShoShogi.model.pieceComponent.{ Piece, pieceFactory }
+import de.htwg.se.ShoShogi.model.pieceComponent.{Piece, pieceFactory}
 import de.htwg.se.ShoShogi.model.playerComponent.Player
 import org.junit.runner.RunWith
 import org.scalatest.junit.JUnitRunner
-import org.scalatest.{ Matchers, WordSpec }
+import org.scalatest.{Matchers, WordSpec}
 
-import scala.collection.mutable.ListBuffer
 import scala.language.reflectiveCalls
 
 //noinspection ScalaStyle
@@ -715,10 +714,43 @@ class ControllerSpec extends WordSpec with Matchers {
         controller.player_1.name should be("Nick")
       }
     }
+
     "called changeNamePlayer2" should {
       "set name of player_2 to Mert" in {
         controller.changeNamePlayer2("Mert")
         controller.player_2.name should be("Mert")
+      }
+    }
+
+    "called undoCommand" should {
+      "undo the last move done and change the state of the game back" in {
+        controller.createNewBoard()
+        controller.movePiece((0, 2), (0, 3)) should be(MoveResult.validMove) // player_1
+        controller.undoCommand
+        controller.boardToString() should be(
+          "Captured: \n" +
+            "    0     1     2     3     4     5     6     7     8 \n \n" +
+            "---------------------------------------------------------\n " +
+            "| L°  | KN° | SG° | GG° | K°  | GG° | SG° | KN° | L°  | \ta\n" +
+            "---------------------------------------------------------\n " +
+            "|     | R°  |     |     |     |     |     | B°  |     | \tb\n" +
+            "---------------------------------------------------------\n " +
+            "| P°  | P°  | P°  | P°  | P°  | P°  | P°  | P°  | P°  | \tc\n" +
+            "---------------------------------------------------------\n " +
+            "|     |     |     |     |     |     |     |     |     | \td\n" +
+            "---------------------------------------------------------\n " +
+            "|     |     |     |     |     |     |     |     |     | \te\n" +
+            "---------------------------------------------------------\n " +
+            "|     |     |     |     |     |     |     |     |     | \tf\n" +
+            "---------------------------------------------------------\n " +
+            "| P   | P   | P   | P   | P   | P   | P   | P   | P   | \tg\n" +
+            "---------------------------------------------------------\n " +
+            "|     | B   |     |     |     |     |     | R   |     | \th\n" +
+            "---------------------------------------------------------\n " +
+            "| L   | KN  | SG  | GG  | K   | GG  | SG  | KN  | L   | \ti\n" +
+            "---------------------------------------------------------\n" +
+            "Captured: \n"
+        )
       }
     }
   }
