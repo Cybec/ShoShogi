@@ -1,11 +1,9 @@
 package de.htwg.se.ShoShogi.model
 
-import de.htwg.se.ShoShogi.ShoShogi.boardSize
-import de.htwg.se.ShoShogi.controller.controllerComponent.MoveResult
-import de.htwg.se.ShoShogi.controller.controllerComponent.controllerBaseImpl.Controller
-import de.htwg.se.ShoShogi.model.boardComponent.boardBaseImpl.Board
+import com.google.inject.Guice
+import de.htwg.se.ShoShogi.ShoShogiModule
+import de.htwg.se.ShoShogi.controller.controllerComponent.{ControllerInterface, MoveResult}
 import de.htwg.se.ShoShogi.model.pieceComponent.pieceBaseImpl.{Piece, PieceFactory, PiecesEnum}
-import de.htwg.se.ShoShogi.model.playerComponent.Player
 import org.junit.runner.RunWith
 import org.scalatest.junit.JUnitRunner
 import org.scalatest.{Matchers, WordSpec}
@@ -15,10 +13,15 @@ import scala.language.reflectiveCalls
 //noinspection ScalaStyle
 @RunWith(classOf[JUnitRunner])
 class ControllerSpec extends WordSpec with Matchers {
-  val player_1 = Player("Player1", true)
-  val player_2 = Player("Player2", false)
 
-  val controller = new Controller(new Board(boardSize, PieceFactory.apply(PiecesEnum.EmptyPiece, player_1)), player_1, player_2)
+  val injector = Guice.createInjector(new ShoShogiModule)
+  val controller = injector.getInstance(classOf[ControllerInterface])
+  controller.createNewBoard()
+  controller.changeNamePlayer1("Nick")
+  controller.changeNamePlayer2("Mert")
+
+  val (player_1, player_2) = controller.getPlayers
+
   "Controller" when {
     "called getContainer" should {
       "should return 2 Lists with the captured Piece of each player" in {
@@ -722,14 +725,14 @@ class ControllerSpec extends WordSpec with Matchers {
     "called changeNamePlayer1" should {
       "set name of player_1 to Nick" in {
         controller.changeNamePlayer1("Nick")
-        controller.player_1.name should be("Nick")
+        player_1.name should be("Nick")
       }
     }
 
     "called changeNamePlayer2" should {
       "set name of player_2 to Mert" in {
         controller.changeNamePlayer2("Mert")
-        controller.player_2.name should be("Mert")
+        player_2.name should be("Mert")
       }
     }
 

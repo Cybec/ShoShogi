@@ -1,6 +1,7 @@
 package de.htwg.se.ShoShogi.controller.controllerComponent
 
 import de.htwg.se.ShoShogi.model.pieceComponent.pieceBaseImpl.Piece
+import de.htwg.se.ShoShogi.model.playerComponent.Player
 
 object MoveResult extends Enumeration {
   type EnumType = Value
@@ -20,6 +21,10 @@ trait ControllerInterface extends scala.swing.Publisher {
   def save: Unit
 
   def load: Unit
+
+  def getPlayers: (Player, Player)
+
+  def setContainer(container: (List[Piece], List[Piece])): Unit
 
   def changeNamePlayer1(newName: String): Unit
 
