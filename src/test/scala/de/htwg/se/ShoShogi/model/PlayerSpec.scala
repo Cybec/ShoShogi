@@ -1,7 +1,8 @@
 package de.htwg.se.ShoShogi.model
 
-import org.scalatest._
+import de.htwg.se.ShoShogi.model.playerComponent.Player
 import org.junit.runner.RunWith
+import org.scalatest._
 import org.scalatest.junit.JUnitRunner
 
 @RunWith(classOf[JUnitRunner])

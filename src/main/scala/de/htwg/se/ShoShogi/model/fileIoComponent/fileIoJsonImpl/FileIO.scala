@@ -1,7 +1,7 @@
-package de.htwg.se.ShoShogi.util.fileIoComponent.fileIoJsonImpl
-
-import scala.io.Source
-
+//package de.htwg.se.ShoShogi.model.fileIoComponent.fileIoJsonImpl
+//
+//import scala.io.Source
+//
 //class FileIO extends FileIOInterface {
 //
 //  override def load: Option[GridInterface] = {

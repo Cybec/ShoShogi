@@ -1,4 +1,4 @@
-package de.htwg.se.ShoShogi.util.fileIoComponent
+package de.htwg.se.ShoShogi.model.fileIoComponent
 
 trait FileIOInterface {
 

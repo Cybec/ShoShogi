@@ -6,7 +6,7 @@ import javax.swing.{Icon, ImageIcon, WindowConstants}
 
 import de.htwg.se.ShoShogi.controller.controllerComponent.controllerBaseImpl.{StartNewGame, UpdateAll}
 import de.htwg.se.ShoShogi.controller.controllerComponent.{ControllerInterface, MoveResult}
-import de.htwg.se.ShoShogi.model.{EmptyPiece, Piece}
+import de.htwg.se.ShoShogi.model.pieceComponent.{EmptyPiece, Piece}
 
 import scala.swing.GridBagPanel.Anchor
 import scala.swing._
