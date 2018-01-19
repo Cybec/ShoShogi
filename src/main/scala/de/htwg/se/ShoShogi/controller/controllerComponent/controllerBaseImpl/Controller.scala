@@ -1,13 +1,16 @@
 package de.htwg.se.ShoShogi.controller.controllerComponent.controllerBaseImpl
 
 import de.htwg.se.ShoShogi.controller.controllerComponent._
-import de.htwg.se.ShoShogi.model._
+import de.htwg.se.ShoShogi.model.boardComponent.BoardInterface
+import de.htwg.se.ShoShogi.model.boardComponent.boardBaseImpl.Board
+import de.htwg.se.ShoShogi.model.pieceComponent.{Piece, pieceFactory}
+import de.htwg.se.ShoShogi.model.playerComponent.Player
 import de.htwg.se.ShoShogi.util.UndoManager
 
 // TODO 1: schauen ob vals und vars aus dem Klassen parameter entfernt werden koennen
 
 //noinspection ScalaStyle
-class Controller(var board: Board, var player_1: Player, var player_2: Player) extends RoundState with ControllerInterface {
+class Controller(var board: BoardInterface, var player_1: Player, var player_2: Player) extends RoundState with ControllerInterface {
   private val undoManager = new UndoManager
 
   val playerOnesTurn: RoundState = new playerOneRound(this)
@@ -75,9 +78,9 @@ class Controller(var board: Board, var player_1: Player, var player_2: Player) e
     saveState
   }
 
-  def getBoardClone: Board = board.clone()
+  def getBoardClone: BoardInterface = board.copyBoard()
 
-  def replaceBoard(newBoard: Board): Unit = board = newBoard
+  def replaceBoard(newBoard: BoardInterface): Unit = board = newBoard
 
   override def createEmptyBoard(): Unit = {
     board = new Board(boardSize, pieceFactory.apply("EmptyPiece", player_1))
@@ -92,7 +95,6 @@ class Controller(var board: Board, var player_1: Player, var player_2: Player) e
       result == MoveResult.kingSlain ||
       result == MoveResult.validMoveContainer) {
       currentState.changeState()
-      saveState
     }
     result
   }
@@ -110,7 +112,6 @@ class Controller(var board: Board, var player_1: Player, var player_2: Player) e
     if (result) {
       publish(new UpdateAll)
       currentState.changeState()
-      saveState
     }
     result
   }
@@ -133,11 +134,11 @@ class Controller(var board: Board, var player_1: Player, var player_2: Player) e
   }
 
   override def promotePiece(piecePosition: (Int, Int)): Boolean = {
+    saveState
     var piece = board.cell(piecePosition._1, piecePosition._2).getOrElse(return false)
     piece = piece.promotePiece.getOrElse(return false)
     board = board.replaceCell(piecePosition._1, piecePosition._2, piece)
     publish(new UpdateAll)
-    saveState
     true
   }
 

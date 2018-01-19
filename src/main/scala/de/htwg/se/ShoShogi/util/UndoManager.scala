@@ -12,9 +12,6 @@ class UndoManager {
   }
 
   def undoStep = {
-    if (redoStack.size == 0) {
-      undoStack = undoStack.slice(1, undoStack.size)
-    }
     undoStack match {
       case Nil =>
       case head :: stack => {

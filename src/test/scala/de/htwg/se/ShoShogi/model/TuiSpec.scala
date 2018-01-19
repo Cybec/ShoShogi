@@ -2,6 +2,9 @@ package de.htwg.se.ShoShogi.model
 
 import de.htwg.se.ShoShogi.aview.Tui
 import de.htwg.se.ShoShogi.controller.controllerComponent.controllerBaseImpl.Controller
+import de.htwg.se.ShoShogi.model.boardComponent.boardBaseImpl.Board
+import de.htwg.se.ShoShogi.model.pieceComponent.pieceFactory
+import de.htwg.se.ShoShogi.model.playerComponent.Player
 import org.junit.runner.RunWith
 import org.scalatest.junit.JUnitRunner
 import org.scalatest.{Matchers, WordSpec}

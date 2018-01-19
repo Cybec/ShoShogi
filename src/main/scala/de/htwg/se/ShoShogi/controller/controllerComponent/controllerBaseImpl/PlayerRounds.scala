@@ -1,7 +1,8 @@
 package de.htwg.se.ShoShogi.controller.controllerComponent.controllerBaseImpl
 
 import de.htwg.se.ShoShogi.controller.controllerComponent.MoveResult
-import de.htwg.se.ShoShogi.model._
+import de.htwg.se.ShoShogi.model.boardComponent.BoardInterface
+import de.htwg.se.ShoShogi.model.pieceComponent.{EmptyPiece, King, Piece, pieceFactory}
 
 //noinspection ScalaStyle
 trait RoundState {
@@ -36,6 +37,7 @@ case class playerOneRound(controller: Controller) extends RoundState {
 
   override def movePiece(currentPos: (Int, Int), destination: (Int, Int)): MoveResult.Value = {
     if (getPossibleMoves(currentPos).contains(destination) && controller.currentState.isInstanceOf[playerOneRound]) {
+      controller.saveState
 
       val tempPieceDestination = controller.board.cell(destination._1, destination._2).getOrElse(return MoveResult.invalidMove)
       val tempPieceCurrent = controller.board.cell(currentPos._1, currentPos._2).getOrElse(return MoveResult.invalidMove)
@@ -61,7 +63,9 @@ case class playerOneRound(controller: Controller) extends RoundState {
       controller.board.getFromPlayerContainer(controller.player_1) {
         _.typeEquals(pieceAbbreviation)
       } match {
-        case Some((newBoard: Board, piece: Piece)) =>
+        case Some((newBoard: BoardInterface, piece: Piece)) =>
+          controller.saveState
+
           controller.board = newBoard
           controller.board = controller.board.replaceCell(destination._1, destination._2, piece)
           true
@@ -132,6 +136,7 @@ case class playerTwoRound(controller: Controller) extends RoundState {
 
   override def movePiece(currentPos: (Int, Int), destination: (Int, Int)): MoveResult.Value = {
     if (getPossibleMoves(currentPos).contains(destination) && controller.currentState.isInstanceOf[playerTwoRound]) {
+      controller.saveState
 
       val tempPieceDestination = controller.board.cell(destination._1, destination._2).getOrElse(return MoveResult.invalidMove)
       val tempPieceCurrent = controller.board.cell(currentPos._1, currentPos._2).getOrElse(return MoveResult.invalidMove)
@@ -157,7 +162,7 @@ case class playerTwoRound(controller: Controller) extends RoundState {
       controller.board.getFromPlayerContainer(controller.player_2) {
         _.typeEquals(pieceAbbreviation)
       } match {
-        case Some((newBoard: Board, piece: Piece)) =>
+        case Some((newBoard: BoardInterface, piece: Piece)) =>
           controller.board = newBoard
           controller.board = controller.board.replaceCell(destination._1, destination._2, piece)
           true

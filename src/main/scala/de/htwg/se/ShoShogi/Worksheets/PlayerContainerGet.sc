@@ -1,4 +1,6 @@
-import de.htwg.se.ShoShogi.model._
+import de.htwg.se.ShoShogi.model.boardComponent.boardBaseImpl.Board
+import de.htwg.se.ShoShogi.model.pieceComponent._
+import de.htwg.se.ShoShogi.model.playerComponent.Player
 
 
 val board = new Board(9, new EmptyPiece)
