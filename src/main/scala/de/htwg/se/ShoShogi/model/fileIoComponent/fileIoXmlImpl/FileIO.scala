@@ -1,7 +1,7 @@
-package de.htwg.se.ShoShogi.util.fileIoComponent.fileIoXmlImpl
-
-import scala.xml.PrettyPrinter
-
+//package de.htwg.se.ShoShogi.model.fileIoComponent.fileIoXmlImpl
+//
+//import scala.xml.PrettyPrinter
+//
 //class FileIO extends FileIOInterface {
 //
 //  override def load: Option[GridInterface] = {

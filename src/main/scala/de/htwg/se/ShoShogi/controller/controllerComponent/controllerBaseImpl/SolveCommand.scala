@@ -1,10 +1,10 @@
 package de.htwg.se.ShoShogi.controller.controllerComponent.controllerBaseImpl
 
-import de.htwg.se.ShoShogi.model.Board
+import de.htwg.se.ShoShogi.model.boardComponent.BoardInterface
 import de.htwg.se.ShoShogi.util.Command
 
 class SolveCommand(controller: Controller) extends Command {
-  var mementoBoard: Board = controller.getBoardClone
+  var mementoBoard: BoardInterface = controller.getBoardClone
   var (mementoContainer1, mementoContainer2) = controller.getContainer
   var mementoState = controller.currentState
 
