@@ -80,7 +80,6 @@ case class Board(board: Vector[Vector[Piece]], containerPlayer_0: List[Piece], c
         }
       }
     }
-
     pieces
   }
 

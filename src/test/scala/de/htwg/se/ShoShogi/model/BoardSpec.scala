@@ -183,11 +183,11 @@ class BoardSpec extends WordSpec with Matchers {
         }
 
         board.getContainer() should be((
-          ListBuffer(PieceFactory.apply(PiecesEnum.Lancer, player_1), PieceFactory.apply(PiecesEnum.Lancer, player_1), PieceFactory.apply(PiecesEnum.King, player_1), PieceFactory.apply(PiecesEnum.King, player_1)),
+          ListBuffer(PieceFactory.apply(PiecesEnum.Lancer, player_1), PieceFactory.apply(PiecesEnum.Lancer, player_1), PieceFactory.apply(PiecesEnum.King, player_1)),
           ListBuffer(PieceFactory.apply(PiecesEnum.Lancer, player_2), PieceFactory.apply(PiecesEnum.Lancer, player_2), PieceFactory.apply(PiecesEnum.King, player_2), PieceFactory.apply(PiecesEnum.King, player_2))
         ))
 
-        PieceFactory.isInstanceOfPiece(PiecesEnum.EmptyPiece, wantedPiece_0) should be(true)
+        PieceFactory.isInstanceOfPiece(PiecesEnum.King, wantedPiece_0) should be(true)
         PieceFactory.isInstanceOfPiece(PiecesEnum.EmptyPiece, wantedPiece_1) should be(true)
 
       }
@@ -231,7 +231,45 @@ class BoardSpec extends WordSpec with Matchers {
         board = board.replaceCell(0, 0, pawn)
         board.cell(0, 0) should be(Some(pawn))
         board.toArray should be(Array[Array[Piece]](Array(pawn, empty), Array(empty, empty)))
+      }
+    }
+  }
+  "A Board" when {
+    "called setContainer" should {
+      "return a Board with new Containers" in {
+        val player_1 = Player("Nick", true)
+        val player_2 = Player("Mert", false)
+        var board = new Board(9, PieceFactory.apply(PiecesEnum.EmptyPiece, player_1))
+        val pawn = PieceFactory.apply(PiecesEnum.Pawn, player_1)
+        val pawn2 = PieceFactory.apply(PiecesEnum.Pawn, player_2)
+        val lancer = PieceFactory.apply(PiecesEnum.Lancer, player_1)
+        val lancer2 = PieceFactory.apply(PiecesEnum.Lancer, player_2)
 
+        board.getContainer() should be(List(), List())
+        board.setContainer(List(pawn, lancer), List(pawn2, lancer2)).toString should be(
+          "Captured: P°    L°    \n" +
+            "    0     1     2     3     4     5     6     7     8 \n \n" +
+            "---------------------------------------------------------\n " +
+            "|     |     |     |     |     |     |     |     |     | \ta\n" +
+            "---------------------------------------------------------\n " +
+            "|     |     |     |     |     |     |     |     |     | \tb\n" +
+            "---------------------------------------------------------\n " +
+            "|     |     |     |     |     |     |     |     |     | \tc\n" +
+            "---------------------------------------------------------\n " +
+            "|     |     |     |     |     |     |     |     |     | \td\n" +
+            "---------------------------------------------------------\n " +
+            "|     |     |     |     |     |     |     |     |     | \te\n" +
+            "---------------------------------------------------------\n " +
+            "|     |     |     |     |     |     |     |     |     | \tf\n" +
+            "---------------------------------------------------------\n " +
+            "|     |     |     |     |     |     |     |     |     | \tg\n" +
+            "---------------------------------------------------------\n " +
+            "|     |     |     |     |     |     |     |     |     | \th\n" +
+            "---------------------------------------------------------\n " +
+            "|     |     |     |     |     |     |     |     |     | \ti\n" +
+            "---------------------------------------------------------\n" +
+            "Captured: P     L     \n"
+        )
       }
     }
   }

@@ -35,6 +35,10 @@ class Controller @Inject() extends RoundState with ControllerInterface {
     board = board.setContainer(container)
   }
 
+  override def saveState: Unit = {
+    undoManager.saveStep(new SolveCommand(this))
+  }
+
   override def undoCommand: Unit = {
     undoManager.undoStep
     publish(new UpdateAll)
@@ -150,10 +154,6 @@ class Controller @Inject() extends RoundState with ControllerInterface {
     currentState.getPossibleMvConPlayer(piece)
   }
 
-  override def saveState: Unit = {
-    undoManager.saveStep(new SolveCommand(this))
-  }
-
   override def getPossibleMvConPlayer(piece: String): List[(Int, Int)] = {
     currentState.getPossibleMvConPlayer(piece)
   }
@@ -164,7 +164,6 @@ class Controller @Inject() extends RoundState with ControllerInterface {
   }
 
   override def promotePiece(piecePosition: (Int, Int)): Boolean = {
-    saveState
     var piece = board.cell(piecePosition._1, piecePosition._2).getOrElse(return false)
     piece = piece.promotePiece.getOrElse(return false)
     board = board.replaceCell(piecePosition._1, piecePosition._2, piece)
