@@ -63,6 +63,9 @@ class PieceSpec extends WordSpec with Matchers {
       "have a nice String representation" in {
         piece.toString should be("K° ")
       }
+      "have a nice Long String representation" in {
+        piece.toStringLong should be("King")
+      }
       "have a List of Moves (4, 0)" in {
         piece.getMoveSet((4, 0), board) should be(List[(Int, Int)]((3, 1), (4, 1), (5, 1)))
       }
@@ -71,6 +74,12 @@ class PieceSpec extends WordSpec with Matchers {
       }
       "have a List of Moves (4,4) " in {
         piece2.getMoveSet((4, 4), board) should be(List[(Int, Int)]((3, 3), (3, 4), (3, 5), (4, 3), (4, 5), (5, 3), (5, 4), (5, 5)))
+      }
+      "be true when typEquals is King" in {
+        piece.typeEquals("K°") should be(true)
+      }
+      "be false when typEquals is not King" in {
+        piece.typeEquals("Pwn") should be(false)
       }
     }
   }
@@ -91,6 +100,9 @@ class PieceSpec extends WordSpec with Matchers {
       "have a nice String representation" in {
         piece.toString should be("GG°")
       }
+      "have a nice Long String representation" in {
+        piece.toStringLong should be("GoldenGeneral")
+      }
       "have a List of Moves (3, 0)" in {
         piece.getMoveSet((3, 0), board) should be(List[(Int, Int)]((2, 1), (3, 1), (4, 1)))
       }
@@ -99,6 +111,12 @@ class PieceSpec extends WordSpec with Matchers {
       }
       "have a List of Moves (4,4) " in {
         piece2.getMoveSet((4, 4), board) should be(List[(Int, Int)]((3, 4), (3, 3), (4, 3), (5, 3), (5, 4), (4, 5)))
+      }
+      "be true when typEquals is GoldenGeneral" in {
+        piece.typeEquals("GG°") should be(true)
+      }
+      "be false when typEquals is not GoldenGeneral" in {
+        piece.typeEquals("Pawn") should be(false)
       }
     }
   }
@@ -119,6 +137,9 @@ class PieceSpec extends WordSpec with Matchers {
       "have a nice String representation" in {
         piece.toString should be("SG°")
       }
+      "have a nice Long String representation" in {
+        piece.toStringLong should be("SilverGeneral")
+      }
       "have a List of Moves (2, 0)" in {
         piece.getMoveSet((2, 0), board) should be(List[(Int, Int)]((3, 1), (2, 1)))
       }
@@ -127,6 +148,12 @@ class PieceSpec extends WordSpec with Matchers {
       }
       "have a List of Moves (4,4) " in {
         piece2.getMoveSet((4, 4), board) should be(List[(Int, Int)]((3, 3), (3, 5), (5, 5), (5, 3), (4, 3)))
+      }
+      "be true when typEquals is SilverGeneral" in {
+        piece.typeEquals("SG°") should be(true)
+      }
+      "be false when typEquals is not SilverGeneral" in {
+        piece.typeEquals("Pawn") should be(false)
       }
     }
   }
@@ -148,6 +175,9 @@ class PieceSpec extends WordSpec with Matchers {
         piece.toString should be("PS°")
         piece2.toString should be("PS ")
       }
+      "have a nice Long String representation" in {
+        piece.toStringLong should be("PromotedSilver")
+      }
       "have a List of Moves (3, 0)" in {
         piece.getMoveSet((3, 0), board) should be(List[(Int, Int)]((2, 1), (3, 1), (4, 1)))
       }
@@ -156,6 +186,12 @@ class PieceSpec extends WordSpec with Matchers {
       }
       "have a List of Moves (4,4) " in {
         piece2.getMoveSet((4, 4), board) should be(List[(Int, Int)]((3, 4), (3, 3), (4, 3), (5, 3), (5, 4), (4, 5)))
+      }
+      "be true when typEquals is PromotedSilver" in {
+        piece.typeEquals("PS°") should be(true)
+      }
+      "be false when typEquals is not PromotedSilver" in {
+        piece.typeEquals("Pawn") should be(false)
       }
     }
   }
@@ -176,6 +212,9 @@ class PieceSpec extends WordSpec with Matchers {
       "have a nice String representation" in {
         piece.toString should be("KN°")
       }
+      "have a nice Long String representation" in {
+        piece.toStringLong should be("Knight")
+      }
       "have a List of Moves (1, 0)" in {
         piece.getMoveSet((1, 0), board) should be(List[(Int, Int)]())
       }
@@ -184,6 +223,12 @@ class PieceSpec extends WordSpec with Matchers {
       }
       "have a List of Moves (4, 5) " in {
         piece2.getMoveSet((4, 5), board) should be(List[(Int, Int)]((3, 3), (5, 3)))
+      }
+      "be true when typEquals is Knight" in {
+        piece.typeEquals("KN°") should be(true)
+      }
+      "be false when typEquals is not Knight" in {
+        piece.typeEquals("Pawn") should be(false)
       }
     }
   }
@@ -205,6 +250,9 @@ class PieceSpec extends WordSpec with Matchers {
         piece.toString should be("PK°")
         piece2.toString should be("PK ")
       }
+      "have a nice Long String representation" in {
+        piece.toStringLong should be("PromotedKnight")
+      }
       "have a List of Moves (3, 0)" in {
         piece.getMoveSet((3, 0), board) should be(List[(Int, Int)]((2, 1), (3, 1), (4, 1)))
       }
@@ -213,6 +261,12 @@ class PieceSpec extends WordSpec with Matchers {
       }
       "have a List of Moves (4,4) " in {
         piece2.getMoveSet((4, 4), board) should be(List[(Int, Int)]((3, 4), (3, 3), (4, 3), (5, 3), (5, 4), (4, 5)))
+      }
+      "be true when typEquals is PromotedKnight" in {
+        piece.typeEquals("PK°") should be(true)
+      }
+      "be false when typEquals is not PromotedKnight" in {
+        piece.typeEquals("Pawn") should be(false)
       }
     }
   }
@@ -233,6 +287,9 @@ class PieceSpec extends WordSpec with Matchers {
       "have a nice String representation" in {
         piece.toString should be("L° ")
       }
+      "have a nice Long String representation" in {
+        piece.toStringLong should be("Lancer")
+      }
       "have a List of Moves (0, 0)" in {
         piece.getMoveSet((0, 0), board) should be(List[(Int, Int)]((0, 1)))
       }
@@ -241,6 +298,12 @@ class PieceSpec extends WordSpec with Matchers {
       }
       "have a List of Moves (0, 5) " in {
         piece2.getMoveSet((0, 5), board) should be(List[(Int, Int)]((0, 4), (0, 3), (0, 2)))
+      }
+      "be true when typEquals is Lancer" in {
+        piece.typeEquals("L°") should be(true)
+      }
+      "be false when typEquals is not Lancer" in {
+        piece.typeEquals("Pawn") should be(false)
       }
     }
   }
@@ -262,6 +325,9 @@ class PieceSpec extends WordSpec with Matchers {
         piece.toString should be("PL°")
         piece2.toString should be("PL ")
       }
+      "have a nice Long String representation" in {
+        piece.toStringLong should be("PromotedLancer")
+      }
       "have a List of Moves (3, 0)" in {
         piece.getMoveSet((3, 0), board) should be(List[(Int, Int)]((2, 1), (3, 1), (4, 1)))
       }
@@ -270,6 +336,12 @@ class PieceSpec extends WordSpec with Matchers {
       }
       "have a List of Moves (4,4) " in {
         piece2.getMoveSet((4, 4), board) should be(List[(Int, Int)]((3, 4), (3, 3), (4, 3), (5, 3), (5, 4), (4, 5)))
+      }
+      "be true when typEquals is PromotedLancer" in {
+        piece.typeEquals("PL°") should be(true)
+      }
+      "be false when typEquals is not PromotedLancer" in {
+        piece.typeEquals("Pawn") should be(false)
       }
     }
   }
@@ -290,6 +362,9 @@ class PieceSpec extends WordSpec with Matchers {
       "have a nice String representation" in {
         piece.toString should be("B° ")
       }
+      "have a nice Long String representation" in {
+        piece.toStringLong should be("Bishop")
+      }
       "have a List of Moves (7, 0)" in {
         piece.getMoveSet((7, 1), board) should be(List[(Int, Int)]())
       }
@@ -298,6 +373,12 @@ class PieceSpec extends WordSpec with Matchers {
       }
       "have a List of Moves (4,4) " in {
         piece2.getMoveSet((4, 4), board) should be(List[(Int, Int)]((3, 3), (2, 2), (3, 5), (5, 5), (5, 3), (6, 2)))
+      }
+      "be true when typEquals is Bishop" in {
+        piece.typeEquals("B°") should be(true)
+      }
+      "be false when typEquals is not Bishop" in {
+        piece.typeEquals("Pawn") should be(false)
       }
     }
   }
@@ -319,6 +400,9 @@ class PieceSpec extends WordSpec with Matchers {
         piece.toString should be("PB°")
         piece2.toString should be("PB ")
       }
+      "have a nice Long String representation" in {
+        piece.toStringLong should be("PromotedBishop")
+      }
       "have a List of Moves (7, 0)" in {
         piece.getMoveSet((7, 1), board) should be(List[(Int, Int)]((8, 1), (6, 1)))
       }
@@ -327,6 +411,12 @@ class PieceSpec extends WordSpec with Matchers {
       }
       "have a List of Moves (4,4) " in {
         piece2.getMoveSet((4, 4), board) should be(List[(Int, Int)]((3, 3), (2, 2), (3, 5), (5, 5), (5, 3), (6, 2), (4, 5), (5, 4), (4, 3), (3, 4)))
+      }
+      "be true when typEquals is PromotedBishop" in {
+        piece.typeEquals("PB°") should be(true)
+      }
+      "be false when typEquals is not PromotedBishop" in {
+        piece.typeEquals("Pawn") should be(false)
       }
     }
   }
@@ -347,6 +437,9 @@ class PieceSpec extends WordSpec with Matchers {
       "have a nice String representation" in {
         piece.toString should be("R° ")
       }
+      "have a nice Long String representation" in {
+        piece.toStringLong should be("Rook")
+      }
       "have a List of Moves (1, 1)" in {
         piece.getMoveSet((1, 1), board) should be(List[(Int, Int)]((2, 1), (3, 1), (4, 1), (5, 1), (6, 1), (0, 1)))
       }
@@ -355,6 +448,12 @@ class PieceSpec extends WordSpec with Matchers {
       }
       "have a List of Moves (4,4) " in {
         piece2.getMoveSet((4, 4), board) should be(List[(Int, Int)]((4, 5), (5, 4), (6, 4), (7, 4), (8, 4), (4, 3), (4, 2), (3, 4), (2, 4), (1, 4), (0, 4)))
+      }
+      "be true when typEquals is Rook" in {
+        piece.typeEquals("R°") should be(true)
+      }
+      "be false when typEquals is not Rook" in {
+        piece.typeEquals("Pawn") should be(false)
       }
     }
   }
@@ -376,6 +475,9 @@ class PieceSpec extends WordSpec with Matchers {
         piece.toString should be("PR°")
         piece2.toString should be("PR ")
       }
+      "have a nice Long String representation" in {
+        piece.toStringLong should be("PromotedRook")
+      }
       "have a List of Moves (1, 1)" in {
         piece.getMoveSet((1, 1), board) should be(List[(Int, Int)]((2, 1), (3, 1), (4, 1), (5, 1), (6, 1), (0, 1)))
       }
@@ -384,6 +486,12 @@ class PieceSpec extends WordSpec with Matchers {
       }
       "have a List of Moves (4,4) " in {
         piece2.getMoveSet((4, 4), board) should be(List[(Int, Int)]((4, 5), (5, 4), (6, 4), (7, 4), (8, 4), (4, 3), (4, 2), (3, 4), (2, 4), (1, 4), (0, 4), (3, 3), (3, 5), (5, 5), (5, 3)))
+      }
+      "be true when typEquals is PromotedRook" in {
+        piece.typeEquals("PR°") should be(true)
+      }
+      "be false when typEquals is not PromotedRook" in {
+        piece.typeEquals("Pawn") should be(false)
       }
     }
   }
@@ -403,6 +511,10 @@ class PieceSpec extends WordSpec with Matchers {
       }
       "have a nice String representation" in {
         piece.toString should be("P° ")
+        piece2.toString should be("P  ")
+      }
+      "have a nice Long String representation" in {
+        piece.toStringLong should be("Pawn")
       }
       "have a List of Moves (1, 1)" in {
         piece.getMoveSet((1, 2), board) should be(List[(Int, Int)]((1, 3)))
@@ -412,6 +524,12 @@ class PieceSpec extends WordSpec with Matchers {
       }
       "have a List of Moves (4,4) " in {
         piece2.getMoveSet((4, 4), board) should be(List[(Int, Int)]((4, 3)))
+      }
+      "be true when typEquals is Pawn" in {
+        piece.typeEquals("P°") should be(true)
+      }
+      "be false when typEquals is not Pawn" in {
+        piece.typeEquals("King") should be(false)
       }
     }
   }
@@ -433,6 +551,9 @@ class PieceSpec extends WordSpec with Matchers {
         piece.toString should be("PP°")
         piece2.toString should be("PP ")
       }
+      "have a nice Long String representation" in {
+        piece.toStringLong should be("PromotedPawn")
+      }
       "have a List of Moves (3, 0)" in {
         piece.getMoveSet((3, 0), board) should be(List[(Int, Int)]((2, 1), (3, 1), (4, 1)))
       }
@@ -441,6 +562,12 @@ class PieceSpec extends WordSpec with Matchers {
       }
       "have a List of Moves (4,4) " in {
         piece2.getMoveSet((4, 4), board) should be(List[(Int, Int)]((3, 4), (3, 3), (4, 3), (5, 3), (5, 4), (4, 5)))
+      }
+      "be true when typEquals is PromotedPawn" in {
+        piece.typeEquals("PP°") should be(true)
+      }
+      "be false when typEquals is not PromotedPawn" in {
+        piece.typeEquals("King") should be(false)
       }
     }
   }
@@ -460,8 +587,17 @@ class PieceSpec extends WordSpec with Matchers {
       "have a nice String representation" in {
         piece.toString should be("   ")
       }
+      "have a nice Long String representation" in {
+        piece.toStringLong should be("   ")
+      }
       "have a List of Moves (3, 0)" in {
         piece.getMoveSet((3, 0), board) should be(List[(Int, Int)]())
+      }
+      "be true when typEquals is EmptyPiece" in {
+        piece.typeEquals("") should be(true)
+      }
+      "be false when typEquals is not EmptyPiece" in {
+        piece.typeEquals("King") should be(false)
       }
     }
   }
