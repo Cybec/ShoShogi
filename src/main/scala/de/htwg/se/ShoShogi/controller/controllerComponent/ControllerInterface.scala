@@ -1,5 +1,6 @@
 package de.htwg.se.ShoShogi.controller.controllerComponent
 
+import de.htwg.se.ShoShogi.model.boardComponent.BoardInterface
 import de.htwg.se.ShoShogi.model.pieceComponent.PieceInterface
 import de.htwg.se.ShoShogi.model.playerComponent.Player
 
@@ -34,6 +35,8 @@ trait ControllerInterface extends scala.swing.Publisher {
 
   def createEmptyBoard(): Unit
 
+  def replaceBoard(newBoard: BoardInterface): Unit
+
   def createNewBoard(): Unit
 
   def boardToString(): String
@@ -45,8 +48,6 @@ trait ControllerInterface extends scala.swing.Publisher {
   def movePiece(currentPos: (Int, Int), destination: (Int, Int)): MoveResult.Value
 
   def getPossibleMovesConqueredPiece(piece: String): List[(Int, Int)]
-
-  def getPossibleMvConPlayer(piece: String): List[(Int, Int)]
 
   def moveConqueredPiece(pieceAbbreviation: String, destination: (Int, Int)): Boolean
 

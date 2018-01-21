@@ -157,11 +157,7 @@ class Controller @Inject() extends RoundState with ControllerInterface {
   }
 
   override def getPossibleMovesConqueredPiece(piece: String): List[(Int, Int)] = {
-    currentState.getPossibleMvConPlayer(piece)
-  }
-
-  override def getPossibleMvConPlayer(piece: String): List[(Int, Int)] = {
-    currentState.getPossibleMvConPlayer(piece)
+    currentState.getPossibleMovesConqueredPiece(piece)
   }
 
   override def promotable(position: (Int, Int)): Boolean = {
@@ -180,6 +176,4 @@ class Controller @Inject() extends RoundState with ControllerInterface {
   override def changeState(): Unit = {
     currentState.changeState()
   }
-
-  def getBoard = board
 }
