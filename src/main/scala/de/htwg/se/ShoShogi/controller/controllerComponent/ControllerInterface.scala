@@ -1,7 +1,5 @@
 package de.htwg.se.ShoShogi.controller.controllerComponent
 
-import de.htwg.se.ShoShogi.controller.controllerComponent.controllerBaseImpl.Controller
-import de.htwg.se.ShoShogi.model.boardComponent.boardBaseImpl.Board
 import de.htwg.se.ShoShogi.model.pieceComponent.pieceBaseImpl.Piece
 import de.htwg.se.ShoShogi.model.playerComponent.Player
 
@@ -12,8 +10,6 @@ object MoveResult extends Enumeration {
 
 trait ControllerInterface extends scala.swing.Publisher {
 
-  def createController(board: Board, player1: Player, player2: Player): ControllerInterface = new Controller(board, player1, player2)
-
   val boardSize = 9
 
   def saveState: Unit
@@ -21,6 +17,14 @@ trait ControllerInterface extends scala.swing.Publisher {
   def undoCommand: Unit
 
   def redoCommand: Unit
+
+  def save: Unit
+
+  def load: Unit
+
+  def getPlayers: (Player, Player)
+
+  def setContainer(container: (List[Piece], List[Piece])): Unit
 
   def changeNamePlayer1(newName: String): Unit
 

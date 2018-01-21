@@ -1,5 +1,7 @@
 package de.htwg.se.ShoShogi.model.playerComponent
 
-case class Player(name: String, first: Boolean) {
+import com.google.inject.Inject
+
+case class Player @Inject()(name: String, first: Boolean) {
   override def toString: String = name
 }

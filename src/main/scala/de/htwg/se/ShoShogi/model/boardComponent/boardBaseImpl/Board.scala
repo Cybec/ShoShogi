@@ -1,11 +1,21 @@
 package de.htwg.se.ShoShogi.model.boardComponent.boardBaseImpl
 
+import com.google.inject.Inject
+import com.google.inject.name.Named
 import de.htwg.se.ShoShogi.model.boardComponent.BoardInterface
 import de.htwg.se.ShoShogi.model.pieceComponent.pieceBaseImpl.{Piece, PieceFactory, PiecesEnum}
 import de.htwg.se.ShoShogi.model.playerComponent.Player
 
+class BoardInj @Inject()(@Named("DefaultSize") boardSize: Int) extends Board(boardSize, PieceFactory.getEmptyPiece) {
+
+  override def createNewBoard: BoardInterface = new Board(boardSize, PieceFactory.getEmptyPiece)
+
+}
+
 case class Board(board: Vector[Vector[Piece]], containerPlayer_0: List[Piece], containerPlayer_1: List[Piece]) extends BoardInterface {
   def this(size: Int, filling: Piece) = this(Vector.tabulate(size, size) { (row, col) => filling }, List.empty[Piece], List.empty[Piece])
+
+  override def createNewBoard: BoardInterface = new Board(size, PieceFactory.getEmptyPiece)
 
   override def getContainer(): (List[Piece], List[Piece]) = {
     (containerPlayer_0, containerPlayer_1)
