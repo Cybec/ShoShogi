@@ -1,12 +1,15 @@
 package de.htwg.se.ShoShogi.model
 
 import com.google.inject.Guice
+import com.google.inject.name.Names
 import de.htwg.se.ShoShogi.ShoShogiModule
-import de.htwg.se.ShoShogi.controller.controllerComponent.{ ControllerInterface, MoveResult }
-import de.htwg.se.ShoShogi.model.pieceComponent.pieceBaseImpl.{ Piece, PieceFactory, PiecesEnum }
+import de.htwg.se.ShoShogi.controller.controllerComponent.{ControllerInterface, MoveResult}
+import de.htwg.se.ShoShogi.model.boardComponent.BoardInterface
+import de.htwg.se.ShoShogi.model.pieceComponent.pieceBaseImpl.{Piece, PieceFactory, PiecesEnum}
+import net.codingwell.scalaguice.InjectorExtensions._
 import org.junit.runner.RunWith
 import org.scalatest.junit.JUnitRunner
-import org.scalatest.{ Matchers, WordSpec }
+import org.scalatest.{Matchers, WordSpec}
 
 import scala.language.reflectiveCalls
 
@@ -48,21 +51,27 @@ class ControllerSpec extends WordSpec with Matchers {
       }
     }
 
-    "called printPossibleMoves" should {
-      "print for \"pmv 0c\"" in {
+    "called getPossibleMoves" should {
+      "be field (0,3) for Pawn at place (0,2)" in {
         controller.createNewBoard()
         controller.getPossibleMoves(0, 2) should be(List[(Int, Int)]((0, 3)))
+        controller.movePiece((0, 2), (0, 3)) should be(MoveResult.validMove)
+        controller.getPossibleMoves(0, 6) should be(List[(Int, Int)]((0, 5)))
+
       }
     }
 
-    "called printPossibleMoves" should {
-      "print wrong cell numbers" in {
+    "called getPossibleMoves" should {
+      "give empty List for a wrong column and row" in {
+        controller.createNewBoard()
         controller.getPossibleMoves(-1, 0) should be(List())
         controller.getPossibleMoves(0, -1) should be(List())
         controller.getPossibleMoves(9, 0) should be(List())
         controller.getPossibleMoves(0, 9) should be(List())
         controller.getPossibleMoves(-1, 9) should be(List())
         controller.getPossibleMoves(9, -1) should be(List())
+        controller.movePiece((0, 2), (0, 3)) should be(MoveResult.validMove)
+        controller.getPossibleMoves(-1, 0) should be(List())
       }
     }
 
@@ -196,7 +205,8 @@ class ControllerSpec extends WordSpec with Matchers {
     }
 
     "called movePiece" should {
-      "return invalidMove if the Player tries to move enemy piece" in {
+      "return invalidMove if the Player 1 tries to move enemy piece" in {
+        controller.createNewBoard()
         controller.movePiece((0, 8), (0, 7)) should be(MoveResult.invalidMove)
         controller.movePiece((1, 8), (1, 7)) should be(MoveResult.invalidMove)
         controller.movePiece((2, 8), (2, 7)) should be(MoveResult.invalidMove)
@@ -208,9 +218,12 @@ class ControllerSpec extends WordSpec with Matchers {
         controller.movePiece((8, 8), (8, 7)) should be(MoveResult.invalidMove)
         controller.movePiece((0, 6), (0, 5)) should be(MoveResult.invalidMove)
       }
-    }
+      "return invalidMove if the Player 2 tries to move enemy piece" in {
+        controller.createNewBoard()
 
-    "called movePiece" should {
+        controller.movePiece((0, 2), (0, 3)) should be(MoveResult.validMove)
+        controller.movePiece((1, 2), (1, 3)) should be(MoveResult.invalidMove)
+      }
       "return invalidMove, if the destination is invalide" in {
         controller.createNewBoard()
         controller.movePiece((1, 7), (0, 0)) should be(MoveResult.invalidMove)
@@ -306,11 +319,8 @@ class ControllerSpec extends WordSpec with Matchers {
         controller.movePiece((-3, 2), (0, 3)) should be(MoveResult.invalidMove)
         controller.movePiece((0, 6), (0, 5)) should be(MoveResult.invalidMove)
       }
-    }
-
-    "called movePiece" should {
-      controller.createNewBoard()
-      "return kingSlain, if the destination is the enemy King Piece" in {
+      "return kingSlain, if the destination is the enemy King Piece (Player 2)" in {
+        controller.createNewBoard()
         controller.movePiece((4, 2), (4, 3)) should be(MoveResult.validMove)
         controller.movePiece((4, 6), (4, 5)) should be(MoveResult.validMove)
         controller.movePiece((4, 3), (4, 4)) should be(MoveResult.validMove)
@@ -323,6 +333,20 @@ class ControllerSpec extends WordSpec with Matchers {
         controller.movePiece((4, 2), (4, 1)) should be(MoveResult.validMove)
         controller.movePiece((1, 5), (1, 6)) should be(MoveResult.validMove)
         controller.movePiece((4, 1), (4, 0)) should be(MoveResult.kingSlain)
+      }
+      "return kingSlain, if the destination is the enemy King Piece (Player 1)" in {
+        controller.createNewBoard()
+        controller.movePiece((4, 2), (4, 3)) should be(MoveResult.validMove)
+        controller.movePiece((4, 6), (4, 5)) should be(MoveResult.validMove)
+        controller.movePiece((4, 3), (4, 4)) should be(MoveResult.validMove)
+        controller.movePiece((2, 6), (2, 5)) should be(MoveResult.validMove)
+        controller.movePiece((4, 4), (4, 5)) should be(MoveResult.validMove)
+        controller.movePiece((2, 5), (2, 4)) should be(MoveResult.validMove)
+        controller.movePiece((4, 5), (4, 6)) should be(MoveResult.validMove)
+        controller.movePiece((2, 4), (2, 3)) should be(MoveResult.validMove)
+        controller.movePiece((4, 6), (4, 7)) should be(MoveResult.validMove)
+        controller.movePiece((2, 3), (2, 2)) should be(MoveResult.validMove)
+        controller.movePiece((4, 7), (4, 8)) should be(MoveResult.kingSlain)
       }
     }
 
@@ -767,5 +791,75 @@ class ControllerSpec extends WordSpec with Matchers {
         )
       }
     }
+    "called redoCommand" should {
+      "redo the last undone Command and change the state back to the state before undo was applied" in {
+        controller.createNewBoard()
+        controller.movePiece((0, 2), (0, 3)) should be(MoveResult.validMove) // player_1
+        controller.undoCommand
+        controller.redoCommand
+        controller.boardToString() should be(
+          "Captured: \n" +
+            "    0     1     2     3     4     5     6     7     8 \n \n" +
+            "---------------------------------------------------------\n " +
+            "| L°  | KN° | SG° | GG° | K°  | GG° | SG° | KN° | L°  | \ta\n" +
+            "---------------------------------------------------------\n " +
+            "|     | R°  |     |     |     |     |     | B°  |     | \tb\n" +
+            "---------------------------------------------------------\n " +
+            "|     | P°  | P°  | P°  | P°  | P°  | P°  | P°  | P°  | \tc\n" +
+            "---------------------------------------------------------\n " +
+            "| P°  |     |     |     |     |     |     |     |     | \td\n" +
+            "---------------------------------------------------------\n " +
+            "|     |     |     |     |     |     |     |     |     | \te\n" +
+            "---------------------------------------------------------\n " +
+            "|     |     |     |     |     |     |     |     |     | \tf\n" +
+            "---------------------------------------------------------\n " +
+            "| P   | P   | P   | P   | P   | P   | P   | P   | P   | \tg\n" +
+            "---------------------------------------------------------\n " +
+            "|     | B   |     |     |     |     |     | R   |     | \th\n" +
+            "---------------------------------------------------------\n " +
+            "| L   | KN  | SG  | GG  | K   | GG  | SG  | KN  | L   | \ti\n" +
+            "---------------------------------------------------------\n" +
+            "Captured: \n"
+        )
+      }
+    }
+    "called replaceBoard" should {
+      "set the current Playboard to the board given" in {
+        controller.createNewBoard()
+        controller.movePiece((0, 2), (0, 3)) should be(MoveResult.validMove) // player_1
+        val board1: BoardInterface = injector.instance[BoardInterface](Names.named("normal")).createNewBoard()
+        controller.replaceBoard(board1)
+        controller.boardToString() should be(
+          "Captured: \n" +
+            "    0     1     2     3     4     5     6     7     8 \n \n" +
+            "---------------------------------------------------------\n " +
+            "|     |     |     |     |     |     |     |     |     | \ta\n" +
+            "---------------------------------------------------------\n " +
+            "|     |     |     |     |     |     |     |     |     | \tb\n" +
+            "---------------------------------------------------------\n " +
+            "|     |     |     |     |     |     |     |     |     | \tc\n" +
+            "---------------------------------------------------------\n " +
+            "|     |     |     |     |     |     |     |     |     | \td\n" +
+            "---------------------------------------------------------\n " +
+            "|     |     |     |     |     |     |     |     |     | \te\n" +
+            "---------------------------------------------------------\n " +
+            "|     |     |     |     |     |     |     |     |     | \tf\n" +
+            "---------------------------------------------------------\n " +
+            "|     |     |     |     |     |     |     |     |     | \tg\n" +
+            "---------------------------------------------------------\n " +
+            "|     |     |     |     |     |     |     |     |     | \th\n" +
+            "---------------------------------------------------------\n " +
+            "|     |     |     |     |     |     |     |     |     | \ti\n" +
+            "---------------------------------------------------------\n" +
+            "Captured: \n"
+        )
+      }
+    }
+
+    //TODO: how to test changeState
+    //    "called changeState" should {
+    //      "change the state from PlayerOnesTurn to PlayerTwosTurn and the other way around" in {
+    //      }
+    //    }
   }
 }

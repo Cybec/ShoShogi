@@ -1,8 +1,13 @@
 package de.htwg.se.ShoShogi.model
 
+import com.google.inject.Guice
+import com.google.inject.name.Names
+import de.htwg.se.ShoShogi.ShoShogiModule
+import de.htwg.se.ShoShogi.model.boardComponent.BoardInterface
 import de.htwg.se.ShoShogi.model.boardComponent.boardBaseImpl.Board
 import de.htwg.se.ShoShogi.model.pieceComponent.pieceBaseImpl._
 import de.htwg.se.ShoShogi.model.playerComponent.Player
+import net.codingwell.scalaguice.InjectorExtensions._
 import org.junit.runner.RunWith
 import org.scalatest._
 import org.scalatest.junit.JUnitRunner
@@ -15,9 +20,11 @@ class BoardSpec extends WordSpec with Matchers {
   "A Board is the playing field of Shogi. A Board" when {
     "to be constructed" should {
       val player_1 = Player("Nick", true)
+      val injector = Guice.createInjector(new ShoShogiModule)
+      val board: BoardInterface = injector.instance[BoardInterface](Names.named("normal")).createNewBoard()
       val smallBoard = new Board(1, PieceFactory.apply(PiecesEnum.EmptyPiece, player_1))
       val biggerBoard = new Board(2, PieceFactory.apply(PiecesEnum.EmptyPiece, player_1))
-      val board = new Board(9, PieceFactory.apply(PiecesEnum.EmptyPiece, player_1))
+
       "be created with the length of its edges as size. Testing size 1, 2 and 9" in {
         smallBoard.size should be(1)
         biggerBoard.size should be(2)
@@ -158,6 +165,7 @@ class BoardSpec extends WordSpec with Matchers {
         board = board.addToPlayerContainer(player_2, PieceFactory.apply(PiecesEnum.Lancer, player_1))
         board = board.addToPlayerContainer(player_2, PieceFactory.apply(PiecesEnum.King, player_1))
         board = board.addToPlayerContainer(player_2, PieceFactory.apply(PiecesEnum.King, player_1))
+        board.addToPlayerContainer(player_2, PieceFactory.apply(PiecesEnum.EmptyPiece, player_1))
 
         board.getContainer() should be((
           ListBuffer(PieceFactory.apply(PiecesEnum.Lancer, player_1), PieceFactory.apply(PiecesEnum.Lancer, player_1), PieceFactory.apply(PiecesEnum.King, player_1), PieceFactory.apply(PiecesEnum.King, player_1)),
@@ -193,6 +201,7 @@ class BoardSpec extends WordSpec with Matchers {
       }
     }
   }
+
   "Board" when {
     val player_1 = Player("Nick", true)
     val player_2 = Player("Mert", false)

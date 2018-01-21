@@ -176,10 +176,6 @@ case class playerTwoRound(controller: Controller) extends RoundState {
   override def getPossibleMvConPlayer(piece: String): List[(Int, Int)] = {
     var possibleMoves = List[(Int, Int)]()
 
-    if (piece.endsWith("°")) {
-      return possibleMoves
-    }
-
     var count = 0
     if (piece == "P") {
       for (column: Int <- 0 until controller.board.size) {

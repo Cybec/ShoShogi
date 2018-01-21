@@ -1,5 +1,6 @@
 package de.htwg.se.ShoShogi.controller.controllerComponent
 
+import de.htwg.se.ShoShogi.model.boardComponent.BoardInterface
 import de.htwg.se.ShoShogi.model.pieceComponent.pieceBaseImpl.Piece
 import de.htwg.se.ShoShogi.model.playerComponent.Player
 
@@ -33,6 +34,8 @@ trait ControllerInterface extends scala.swing.Publisher {
   def getContainer: (List[Piece], List[Piece])
 
   def createEmptyBoard(): Unit
+
+  def replaceBoard(newBoard: BoardInterface): Unit
 
   def createNewBoard(): Unit
 

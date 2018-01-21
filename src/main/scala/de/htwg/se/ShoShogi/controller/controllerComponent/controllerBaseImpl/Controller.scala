@@ -1,12 +1,12 @@
 package de.htwg.se.ShoShogi.controller.controllerComponent.controllerBaseImpl
 
 import com.google.inject.name.Names
-import com.google.inject.{ Guice, Inject }
+import com.google.inject.{Guice, Inject}
 import de.htwg.se.ShoShogi.ShoShogiModule
 import de.htwg.se.ShoShogi.controller.controllerComponent._
 import de.htwg.se.ShoShogi.model.boardComponent.BoardInterface
 import de.htwg.se.ShoShogi.model.fileIoComponent.FileIOInterface
-import de.htwg.se.ShoShogi.model.pieceComponent.pieceBaseImpl.{ Piece, PieceFactory, PiecesEnum }
+import de.htwg.se.ShoShogi.model.pieceComponent.pieceBaseImpl.{Piece, PieceFactory, PiecesEnum}
 import de.htwg.se.ShoShogi.model.playerComponent.Player
 import de.htwg.se.ShoShogi.util.UndoManager
 import net.codingwell.scalaguice.InjectorExtensions._
@@ -178,6 +178,4 @@ class Controller @Inject() extends RoundState with ControllerInterface {
   override def changeState(): Unit = {
     currentState.changeState()
   }
-
-  def getBoard = board
 }
