@@ -1,7 +1,7 @@
 package de.htwg.se.ShoShogi.model
 
 import de.htwg.se.ShoShogi.model.boardComponent.boardBaseImpl.Board
-import de.htwg.se.ShoShogi.model.pieceComponent.pieceBaseImpl.{ PieceFactory, PiecesEnum }
+import de.htwg.se.ShoShogi.model.pieceComponent.pieceBaseImpl.{PieceFactory, PiecesEnum}
 import de.htwg.se.ShoShogi.model.playerComponent.Player
 import org.junit.runner.RunWith
 import org.scalatest._
@@ -588,7 +588,7 @@ class PieceSpec extends WordSpec with Matchers {
         piece.toString should be("   ")
       }
       "have a nice Long String representation" in {
-        piece.toStringLong should be("   ")
+        piece.toStringLong should be("EmptyPiece")
       }
       "have a List of Moves (3, 0)" in {
         piece.getMoveSet((3, 0), board) should be(List[(Int, Int)]())
