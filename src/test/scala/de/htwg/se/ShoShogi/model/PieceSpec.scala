@@ -576,7 +576,7 @@ class PieceSpec extends WordSpec with Matchers {
     "new" should {
       val piece = PieceFactory.apply(PiecesEnum.EmptyPiece, player_1.first)
       "have a Player" in {
-        piece.isFirstOwner should be(Player("", false))
+        piece.isFirstOwner should be(false)
       }
       "should not have a promotion" in {
         piece.hasPromotion should be(false)
