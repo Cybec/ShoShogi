@@ -1,6 +1,6 @@
 package de.htwg.se.ShoShogi.controller.controllerComponent
 
-import de.htwg.se.ShoShogi.model.pieceComponent.pieceBaseImpl.Piece
+import de.htwg.se.ShoShogi.model.pieceComponent.PieceInterface
 import de.htwg.se.ShoShogi.model.playerComponent.Player
 
 object MoveResult extends Enumeration {
@@ -24,13 +24,13 @@ trait ControllerInterface extends scala.swing.Publisher {
 
   def getPlayers: (Player, Player)
 
-  def setContainer(container: (List[Piece], List[Piece])): Unit
+  def setContainer(container: (List[PieceInterface], List[PieceInterface])): Unit
 
   def changeNamePlayer1(newName: String): Unit
 
   def changeNamePlayer2(newName: String): Unit
 
-  def getContainer: (List[Piece], List[Piece])
+  def getContainer: (List[PieceInterface], List[PieceInterface])
 
   def createEmptyBoard(): Unit
 
@@ -38,7 +38,7 @@ trait ControllerInterface extends scala.swing.Publisher {
 
   def boardToString(): String
 
-  def boardToArray(): Array[Array[Piece]]
+  def boardToArray(): Array[Array[PieceInterface]]
 
   def getPossibleMoves(pos: (Int, Int)): List[(Int, Int)]
 

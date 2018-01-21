@@ -73,7 +73,7 @@ class FileIO extends FileIOInterface {
   //    </cell>
   //  }
 
-  override def load: Option[(BoardInterface, RoundState, Player, Player)] = None
+  override def load: Option[(BoardInterface, Boolean, Player, Player)] = None
 
-  override def save(board: BoardInterface, currentState: RoundState, player_1: Player, player_2: Player): Unit = {}
+  override def save(board: BoardInterface, state: Boolean, player_1: Player, player_2: Player): Unit = {}
 }
