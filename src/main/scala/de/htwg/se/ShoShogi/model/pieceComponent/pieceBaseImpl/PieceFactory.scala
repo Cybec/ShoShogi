@@ -1,14 +1,18 @@
 package de.htwg.se.ShoShogi.model.pieceComponent.pieceBaseImpl
 
+import de.htwg.se.ShoShogi.model.pieceComponent.PieceInterface
 import de.htwg.se.ShoShogi.model.playerComponent.Player
 
 object PiecesEnum extends Enumeration {
   type EnumType = Value
   val King, GoldenGeneral, SilverGeneral, PromotedSilver, Knight, PromotedKnight, Lancer, PromotedLancer, Bishop, PromotedBishop, Rook, PromotedRook, Pawn, PromotedPawn, EmptyPiece = Value
+
+  def withNameOpt(s: String): Option[Value] = values.find(_.toString == s)
 }
 
+//noinspection ScalaStyle
 object PieceFactory {
-  def apply(pieceType: PiecesEnum.Value, player: Player): Piece = pieceType match {
+  def apply(pieceType: PiecesEnum.Value, player: Player): PieceInterface = pieceType match {
     case PiecesEnum.King => new King(player)
     case PiecesEnum.GoldenGeneral => new GoldenGeneral(player)
     case PiecesEnum.SilverGeneral => new SilverGeneral(player)
@@ -28,7 +32,7 @@ object PieceFactory {
 
   def getEmptyPiece = new EmptyPiece
 
-  def isInstanceOfPiece(pieceType: PiecesEnum.Value, piece: Piece): Boolean = pieceType match {
+  def isInstanceOfPiece(pieceType: PiecesEnum.Value, piece: PieceInterface): Boolean = pieceType match {
     case PiecesEnum.King => piece.isInstanceOf[King]
     case PiecesEnum.GoldenGeneral => piece.isInstanceOf[GoldenGeneral]
     case PiecesEnum.SilverGeneral => piece.isInstanceOf[SilverGeneral]

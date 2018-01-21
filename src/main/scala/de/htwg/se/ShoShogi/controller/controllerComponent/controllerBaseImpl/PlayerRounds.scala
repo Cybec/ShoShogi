@@ -2,6 +2,7 @@ package de.htwg.se.ShoShogi.controller.controllerComponent.controllerBaseImpl
 
 import de.htwg.se.ShoShogi.controller.controllerComponent.MoveResult
 import de.htwg.se.ShoShogi.model.boardComponent.BoardInterface
+import de.htwg.se.ShoShogi.model.pieceComponent.PieceInterface
 import de.htwg.se.ShoShogi.model.pieceComponent.pieceBaseImpl._
 
 //noinspection ScalaStyle
@@ -85,8 +86,8 @@ case class playerOneRound(controller: Controller) extends RoundState {
 
     if (piece == "P°") {
       for (column: Int <- 0 until controller.board.size) {
-        if (!controller.board.getPiecesInColumn(column, stateTurn = true).exists((x: Piece) => x.typeEquals("P°"))) {
-          if (!controller.board.getPiecesInColumn(column, stateTurn = true).exists((x: Piece) => x.typeEquals("K°"))) {
+        if (!controller.board.getPiecesInColumn(column, stateTurn = true).exists((x: PieceInterface) => x.typeEquals("P°"))) {
+          if (!controller.board.getPiecesInColumn(column, stateTurn = true).exists((x: PieceInterface) => x.typeEquals("K°"))) {
             possibleMoves = possibleMoves ::: controller.board.getEmptyCellsInColumn(column, (0, 7))
           } else {
             for (row <- 0 to 8) {
@@ -183,8 +184,8 @@ case class playerTwoRound(controller: Controller) extends RoundState {
     var count = 0
     if (piece == "P") {
       for (column: Int <- 0 until controller.board.size) {
-        if (!controller.board.getPiecesInColumn(column, stateTurn = false).exists((x: Piece) => x.typeEquals("P"))) {
-          if (!controller.board.getPiecesInColumn(column, stateTurn = false).exists((x: Piece) => x.typeEquals("K"))) {
+        if (!controller.board.getPiecesInColumn(column, stateTurn = false).exists((x: PieceInterface) => x.typeEquals("P"))) {
+          if (!controller.board.getPiecesInColumn(column, stateTurn = false).exists((x: PieceInterface) => x.typeEquals("K"))) {
             possibleMoves = possibleMoves ::: controller.board.getEmptyCellsInColumn(column, (1, 8))
           } else {
             for (row <- 0 to 8) {

@@ -2,15 +2,16 @@ package de.htwg.se.ShoShogi.aview.gui
 
 import java.awt.Color
 import java.io.File
-import javax.swing.{Icon, ImageIcon, WindowConstants}
+import javax.swing.{ Icon, ImageIcon, WindowConstants }
 
-import de.htwg.se.ShoShogi.controller.controllerComponent.controllerBaseImpl.{StartNewGame, UpdateAll}
-import de.htwg.se.ShoShogi.controller.controllerComponent.{ControllerInterface, MoveResult}
-import de.htwg.se.ShoShogi.model.pieceComponent.pieceBaseImpl.{Piece, PieceFactory}
+import de.htwg.se.ShoShogi.controller.controllerComponent.controllerBaseImpl.{ StartNewGame, UpdateAll }
+import de.htwg.se.ShoShogi.controller.controllerComponent.{ ControllerInterface, MoveResult }
+import de.htwg.se.ShoShogi.model.pieceComponent.PieceInterface
+import de.htwg.se.ShoShogi.model.pieceComponent.pieceBaseImpl.{ PieceFactory }
 
 import scala.swing.GridBagPanel.Anchor
 import scala.swing._
-import scala.swing.event.{Key, MouseClicked, _}
+import scala.swing.event.{ Key, MouseClicked, _ }
 // scalastyle:off magic.number
 
 class SwingGui(controller: ControllerInterface) extends Frame {
@@ -20,7 +21,7 @@ class SwingGui(controller: ControllerInterface) extends Frame {
   var containerPanel_1: BoxPanel = new BoxPanel(Orientation.Vertical) {}
   var containerPanel_2: BoxPanel = new BoxPanel(Orientation.Vertical) {}
   var highlightedPiece: (Int, Int) = (-1, -1)
-  var containerPiece: Piece = PieceFactory.getEmptyPiece
+  var containerPiece: PieceInterface = PieceFactory.getEmptyPiece
   val boardColor: Color = getColorFromRGB(Array[Int](255, 235, 182))
   val pieceColor: Color = getColorFromRGB(Array[Int](249, 250, 242))
   val markedColor: Color = Color.BLUE
@@ -29,7 +30,7 @@ class SwingGui(controller: ControllerInterface) extends Frame {
   val resourcesPath: String = new File(".").getCanonicalPath() + "/src/main/scala/de/htwg/se/ShoShogi/zresources"
   val backgroundPath = resourcesPath + "/images/background.jpg"
 
-  def getBoardArray: Array[Array[Piece]] = controller.boardToArray()
+  def getBoardArray: Array[Array[PieceInterface]] = controller.boardToArray()
 
   def getColorFromRGB(xyz: Array[Int]): Color = {
     val ret: Array[Float] = Array.ofDim[Float](3)
@@ -48,7 +49,7 @@ class SwingGui(controller: ControllerInterface) extends Frame {
 
   menuBar = new MenuBar {
     contents += new Menu("Game") {
-      mnemonic = Key.N
+      mnemonic = Key.G
       contents += new MenuItem(Action("New") {
         val dialog = new ChangeNameDialog()
         val res = dialog.showDialog()
@@ -60,12 +61,21 @@ class SwingGui(controller: ControllerInterface) extends Frame {
           controller.changeNamePlayer1(p1Name)
           controller.changeNamePlayer2(p2Name)
         }
-
       })
+      contents += new Separator
+      contents += new MenuItem(Action("Save") {
+        controller.save
+      })
+      contents += new MenuItem(Action("Load") {
+        controller.load
+      })
+      contents += new Separator
       contents += new MenuItem(Action("Quit") {
         closeOperation()
       })
-      contents += new Separator
+    }
+    contents += new Menu("Edit") {
+      mnemonic = Key.E
       contents += new MenuItem(Action("undo") {
         controller.undoCommand
       })
@@ -213,7 +223,7 @@ class SwingGui(controller: ControllerInterface) extends Frame {
     }
   }
 
-  def newPieceButton(piece: Piece, container: Boolean, pos: (Int, Int) = (-1, -1), scale: String): Button = {
+  def newPieceButton(piece: PieceInterface, container: Boolean, pos: (Int, Int) = (-1, -1), scale: String): Button = {
     new PieceClickedReaction.CustomButton(piece, pos, container) {
       icon = getPieceIcon(piece, scale)
       background = boardColor
@@ -235,7 +245,7 @@ class SwingGui(controller: ControllerInterface) extends Frame {
     }
   }
 
-  def getPieceIcon(piece: Piece, scale: String): Icon = {
+  def getPieceIcon(piece: PieceInterface, scale: String): Icon = {
     if (piece.toString.trim.size > 0) {
       val player = if (piece.isFirstOwner) "1" else "2"
       new ImageIcon(resourcesPath + "/images/player" +

@@ -4,7 +4,11 @@ import de.htwg.se.ShoShogi.model.boardComponent.BoardInterface
 import de.htwg.se.ShoShogi.model.pieceComponent.PieceInterface
 import de.htwg.se.ShoShogi.model.playerComponent.Player
 
-abstract class Piece(name: String, val player: Player) extends PieceInterface {
+abstract class Piece(_name: String, val _player: Player) extends PieceInterface {
+
+  override val name: String = _name
+
+  override val player: Player = _player
 
   override def isFirstOwner: Boolean = player.first
 
@@ -38,7 +42,7 @@ protected case class King(override val player: Player)
   /*Author:   Mert, Nick
   * Role:     Stuft das Piece auf
   * Return:   Gibt das Promotete Piece zurueck*/
-  override def promotePiece: Option[Piece] = {
+  override def promotePiece: Option[PieceInterface] = {
     None
   }
 
@@ -84,7 +88,7 @@ protected case class GoldenGeneral(override val player: Player)
   /*Author:   Mert, Nick
   * Role:     Stuft das Piece auf
   * Return:   Gibt das Promotete Piece zurueck*/
-  override def promotePiece: Option[Piece] = {
+  override def promotePiece: Option[PieceInterface] = {
     None
   }
 
@@ -137,7 +141,7 @@ protected case class SilverGeneral(override val player: Player)
   /*Author:   Mert, Nick
   * Role:     Stuft das Piece auf
   * Return:   Gibt das Promotete Piece zurueck*/
-  override def promotePiece: Option[Piece] = {
+  override def promotePiece: Option[PieceInterface] = {
     Some(PromotedSilver(player))
   }
 
@@ -177,7 +181,7 @@ protected case class PromotedSilver(override val player: Player)
     extends Piece("PromotedSilver", player: Player) {
   override val hasPromotion: Boolean = false
 
-  override def promotePiece: Option[Piece] = {
+  override def promotePiece: Option[PieceInterface] = {
     None
   }
 
@@ -228,7 +232,7 @@ protected case class Knight(override val player: Player)
   /*Author:   Mert, Nick
   * Role:     Stuft das Piece auf
   * Return:   Gibt das Promotete Piece zurueck*/
-  override def promotePiece: Option[Piece] = {
+  override def promotePiece: Option[PieceInterface] = {
     Some(PieceFactory.apply(PiecesEnum.PromotedKnight, player))
   }
 
@@ -263,7 +267,7 @@ protected case class PromotedKnight(override val player: Player)
     extends Piece("PromotedKnight", player: Player) {
   override val hasPromotion: Boolean = false
 
-  override def promotePiece: Option[Piece] = {
+  override def promotePiece: Option[PieceInterface] = {
     None
   }
 
@@ -312,7 +316,7 @@ protected case class Lancer(override val player: Player)
   /*Author:   Mert, Nick
   * Role:     Stuft das Piece auf
   * Return:   Gibt das Promotete Piece zurueck*/
-  override def promotePiece: Option[Piece] = {
+  override def promotePiece: Option[PieceInterface] = {
     Some(PromotedLancer(player))
   }
 
@@ -344,7 +348,7 @@ protected case class PromotedLancer(override val player: Player)
     extends Piece("PromotedLancer", player: Player) {
   override val hasPromotion: Boolean = false
 
-  override def promotePiece: Option[Piece] = {
+  override def promotePiece: Option[PieceInterface] = {
     None
   }
 
@@ -393,7 +397,7 @@ protected case class Bishop(override val player: Player)
   /*Author:   Mert, Nick
   * Role:     Stuft das Piece auf
   * Return:   Gibt das Promotete Piece zurueck*/
-  override def promotePiece: Option[Piece] = {
+  override def promotePiece: Option[PieceInterface] = {
     Some(PromotedBishop(player))
   }
 
@@ -424,7 +428,7 @@ protected case class PromotedBishop(override val player: Player)
     extends Piece("PromotedBishop", player: Player) {
   override val hasPromotion: Boolean = false
 
-  override def promotePiece: Option[Piece] = {
+  override def promotePiece: Option[PieceInterface] = {
     None
   }
 
@@ -465,7 +469,7 @@ protected case class Rook(override val player: Player)
   /*Author:   Mert, Nick
   * Role:     Stuft das Piece auf
   * Return:   Gibt das Promotete Piece zurueck*/
-  override def promotePiece: Option[Piece] = {
+  override def promotePiece: Option[PieceInterface] = {
     Some(PromotedRook(player))
   }
 
@@ -496,7 +500,7 @@ protected case class PromotedRook(override val player: Player)
     extends Piece("PromotedRook", player: Player) {
   override val hasPromotion: Boolean = false
 
-  override def promotePiece: Option[Piece] = {
+  override def promotePiece: Option[PieceInterface] = {
     None
   }
 
@@ -537,7 +541,7 @@ protected case class Pawn(override val player: Player)
   /*Author:   Mert, Nick
   * Role:     Stuft das Piece auf
   * Return:   Gibt das Promotete Piece zurueck*/
-  override def promotePiece: Option[Piece] = {
+  override def promotePiece: Option[PieceInterface] = {
     Some(PromotedPawn(player))
   }
 
@@ -569,7 +573,7 @@ protected case class PromotedPawn(override val player: Player)
     extends Piece("PromotedPawn", player: Player) {
   override val hasPromotion: Boolean = false
 
-  override def promotePiece: Option[Piece] = {
+  override def promotePiece: Option[PieceInterface] = {
     None
   }
 
@@ -615,13 +619,13 @@ protected case class EmptyPiece()
   /*Author:   Mert, Nick
   * Role:     Stuft das Piece auf
   * Return:   Gibt das Promotete Piece zurueck*/
-  override def promotePiece: Option[Piece] = {
+  override def promotePiece: Option[PieceInterface] = {
     None
   }
 
   override def toString: String = "   "
 
-  override def toStringLong: String = "   "
+  override def toStringLong: String = "EmptyPiece"
 
   /*Author:   Mert, Nick
   * Role:     Gibt die moeglichen Bewegungsfelder zurueck
