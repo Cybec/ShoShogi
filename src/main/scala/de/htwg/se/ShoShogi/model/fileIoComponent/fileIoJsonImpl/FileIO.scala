@@ -75,15 +75,15 @@ class FileIO extends FileIOInterface {
         "state" -> JsBoolean(state),
         "playerFirstName" -> JsString(player_1.name),
         "playerSecondName" -> JsString(player_2.name),
-        "piece" -> Json.toJson(
+        "cell" -> Json.toJson(
           for {
-            row <- 0 until board.size;
-            col <- 0 until board.size
+            col <- 0 until board.size;
+            row <- 0 until board.size
           } yield {
             Json.obj(
               "row" -> row,
               "col" -> col,
-              "piece" -> Json.toJson(board.cell(row, col))
+              "piece" -> Json.toJson(board.cell(col, row))
             )
           }
         )
