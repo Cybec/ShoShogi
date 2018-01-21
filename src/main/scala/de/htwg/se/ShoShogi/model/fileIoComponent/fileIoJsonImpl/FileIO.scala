@@ -19,7 +19,6 @@ class FileIO extends FileIOInterface {
 
   override def load: Option[(BoardInterface, Boolean, Player, Player)] =
     if (!Files.exists(Paths.get("board.json"))) None else {
-
       var loadReturnOption: Option[(BoardInterface, Boolean, Player, Player)] = None
       val source: String = Source.fromFile("board.json").getLines.mkString
       val json: JsValue = Json.parse(source)
@@ -27,18 +26,24 @@ class FileIO extends FileIOInterface {
       val injector: Injector = Guice.createInjector(new ShoShogiModule)
 
       loadReturnOption = getBoardBySize(size, injector) match {
-        case Some(board) => Some(
-          (
-            board,
-            (json \ "board" \ "state").get.toString.toBoolean, {
-            val name = (json \ "board" \ "playerFirstName").get.toString
-            new Player(name, true)
-          }, {
-            val name = (json \ "board" \ "playerSecondName").get.toString
-            new Player(name, false)
-          }
+        case Some(board) => {
+          val newBoard = board.setContainer(
+            getConqueredPieces((json \\ "playerFirstConquered").toArray),
+            getConqueredPieces((json \\ "playerSecondConquered").toArray)
           )
-        )
+          Some(
+            (
+              newBoard,
+              (json \ "board" \ "state").get.toString.toBoolean, {
+              val name = (json \ "board" \ "playerFirstName").get.toString
+              new Player(name, true)
+            }, {
+              val name = (json \ "board" \ "playerSecondName").get.toString
+              new Player(name, false)
+            }
+            )
+          )
+        }
         case _ => None
       }
 
@@ -51,10 +56,9 @@ class FileIO extends FileIOInterface {
             val piece = (json \\ "piece") (index)
             val pieceName = (piece \ "pieceName").as[String]
             val firstPlayer = (piece \ "firstPlayer").as[Boolean]
-            val player = if (firstPlayer) player_1 else player_2
             PiecesEnum.withNameOpt(pieceName) match {
               case Some(pieceEnum) =>
-                _board = _board.replaceCell(col, row, PieceFactory.apply(pieceEnum, player))
+                _board = _board.replaceCell(col, row, PieceFactory.apply(pieceEnum, firstPlayer))
               case None =>
             }
           }
@@ -79,6 +83,8 @@ class FileIO extends FileIOInterface {
         "state" -> JsBoolean(state),
         "playerFirstName" -> JsString(player_1.name),
         "playerSecondName" -> JsString(player_2.name),
+        "playerFirstConquered" -> Json.toJson(board.getContainer()._1.distinct),
+        "playerSecondConquered" -> Json.toJson(board.getContainer()._2.distinct),
         "cell" -> Json.toJson(
           for {
             col <- 0 until board.size;
@@ -112,5 +118,20 @@ class FileIO extends FileIOInterface {
         Some(injector.instance[BoardInterface](Names.named(ShoShogiModuleConf.tinyBoard)).createNewBoard())
       case _ => None
     }
+  }
+
+  def getConqueredPieces(jsArray: Array[JsValue]): List[PieceInterface] = {
+    var stringList: List[String] = List[String]()
+    var pieceList: List[PieceInterface] = List[PieceInterface]()
+
+    for (x <- jsArray) yield (x \\ "pieceName").foreach(i => stringList = stringList :+ i.as[String])
+
+    for (x: String <- stringList) {
+      PiecesEnum.withNameOpt(x) match {
+        case Some(pieceEnum) => pieceList = pieceList :+ PieceFactory.apply(pieceEnum, false)
+        case None =>
+      }
+    }
+    pieceList
   }
 }

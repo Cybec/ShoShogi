@@ -1,7 +1,6 @@
 package de.htwg.se.ShoShogi.model.pieceComponent.pieceBaseImpl
 
 import de.htwg.se.ShoShogi.model.pieceComponent.PieceInterface
-import de.htwg.se.ShoShogi.model.playerComponent.Player
 
 object PiecesEnum extends Enumeration {
   type EnumType = Value
@@ -12,21 +11,21 @@ object PiecesEnum extends Enumeration {
 
 //noinspection ScalaStyle
 object PieceFactory {
-  def apply(pieceType: PiecesEnum.Value, player: Player): PieceInterface = pieceType match {
-    case PiecesEnum.King => new King(player)
-    case PiecesEnum.GoldenGeneral => new GoldenGeneral(player)
-    case PiecesEnum.SilverGeneral => new SilverGeneral(player)
-    case PiecesEnum.PromotedSilver => new PromotedSilver(player)
-    case PiecesEnum.Knight => new Knight(player)
-    case PiecesEnum.PromotedKnight => new PromotedKnight(player)
-    case PiecesEnum.Lancer => new Lancer(player)
-    case PiecesEnum.PromotedLancer => new PromotedLancer(player)
-    case PiecesEnum.Bishop => new Bishop(player)
-    case PiecesEnum.PromotedBishop => new PromotedBishop(player)
-    case PiecesEnum.Rook => new Rook(player)
-    case PiecesEnum.PromotedRook => new PromotedRook(player)
-    case PiecesEnum.Pawn => new Pawn(player)
-    case PiecesEnum.PromotedPawn => new PromotedPawn(player)
+  def apply(pieceType: PiecesEnum.Value, isFirstOwner: Boolean): PieceInterface = pieceType match {
+    case PiecesEnum.King => new King(isFirstOwner)
+    case PiecesEnum.GoldenGeneral => new GoldenGeneral(isFirstOwner)
+    case PiecesEnum.SilverGeneral => new SilverGeneral(isFirstOwner)
+    case PiecesEnum.PromotedSilver => new PromotedSilver(isFirstOwner)
+    case PiecesEnum.Knight => new Knight(isFirstOwner)
+    case PiecesEnum.PromotedKnight => new PromotedKnight(isFirstOwner)
+    case PiecesEnum.Lancer => new Lancer(isFirstOwner)
+    case PiecesEnum.PromotedLancer => new PromotedLancer(isFirstOwner)
+    case PiecesEnum.Bishop => new Bishop(isFirstOwner)
+    case PiecesEnum.PromotedBishop => new PromotedBishop(isFirstOwner)
+    case PiecesEnum.Rook => new Rook(isFirstOwner)
+    case PiecesEnum.PromotedRook => new PromotedRook(isFirstOwner)
+    case PiecesEnum.Pawn => new Pawn(isFirstOwner)
+    case PiecesEnum.PromotedPawn => new PromotedPawn(isFirstOwner)
     case PiecesEnum.EmptyPiece => getEmptyPiece
   }
 

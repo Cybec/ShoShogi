@@ -4,7 +4,7 @@ import com.google.inject.Inject
 import com.google.inject.name.Named
 import de.htwg.se.ShoShogi.model.boardComponent.BoardInterface
 import de.htwg.se.ShoShogi.model.pieceComponent.PieceInterface
-import de.htwg.se.ShoShogi.model.pieceComponent.pieceBaseImpl.{ PieceFactory, PiecesEnum }
+import de.htwg.se.ShoShogi.model.pieceComponent.pieceBaseImpl.{PieceFactory, PiecesEnum}
 import de.htwg.se.ShoShogi.model.playerComponent.Player
 
 class BoardInj @Inject() (@Named("DefaultSize") boardSize: Int) extends Board(boardSize, PieceFactory.getEmptyPiece) {
@@ -26,13 +26,13 @@ case class Board(board: Vector[Vector[PieceInterface]], containerPlayer_0: List[
     copy(board, container._1, container._2)
   }
 
-  override def addToPlayerContainer(player: Player, piece: PieceInterface): Board = {
+  override def addToPlayerContainer(first: Boolean, piece: PieceInterface): Board = {
     if (!PieceFactory.isInstanceOfPiece(PiecesEnum.EmptyPiece, piece)) {
-      if (player.first) {
-        val newCon: List[PieceInterface] = containerPlayer_0 :+ piece.cloneToNewPlayer(player)
+      if (first) {
+        val newCon: List[PieceInterface] = containerPlayer_0 :+ piece.cloneToNewPlayer(first)
         copy(board, newCon, containerPlayer_1)
       } else {
-        val newCon: List[PieceInterface] = containerPlayer_1 :+ piece.cloneToNewPlayer(player)
+        val newCon: List[PieceInterface] = containerPlayer_1 :+ piece.cloneToNewPlayer(first)
         copy(board, containerPlayer_0, newCon)
       }
     } else {
@@ -46,7 +46,7 @@ case class Board(board: Vector[Vector[PieceInterface]], containerPlayer_0: List[
       if (atAndAfter.nonEmpty) {
         val getPiece: PieceInterface = atAndAfter.head
         val newCon: List[PieceInterface] = before ::: atAndAfter.drop(1)
-        Some((copy(board, newCon, containerPlayer_1), getPiece.cloneToNewPlayer(player)))
+        Some((copy(board, newCon, containerPlayer_1), getPiece.cloneToNewPlayer(player.first)))
       } else {
         None
       }
@@ -55,7 +55,7 @@ case class Board(board: Vector[Vector[PieceInterface]], containerPlayer_0: List[
       if (atAndAfter.nonEmpty) {
         val getPiece: PieceInterface = atAndAfter.head
         val newCon: List[PieceInterface] = before ::: atAndAfter.drop(1)
-        Some((copy(board, containerPlayer_0, newCon), getPiece.cloneToNewPlayer(player)))
+        Some((copy(board, containerPlayer_0, newCon), getPiece.cloneToNewPlayer(player.first)))
       } else {
         None
       }
@@ -74,7 +74,7 @@ case class Board(board: Vector[Vector[PieceInterface]], containerPlayer_0: List[
       for (i <- 0 until this.size) {
         this.cell(column, i) match {
           case Some(piece) if (PieceFactory.isInstanceOfPiece(PiecesEnum.EmptyPiece, piece)) => {}
-          case Some(piece) => if (stateTurn == piece.player.first) {
+          case Some(piece) => if (stateTurn == piece.isFirstOwner) {
             pieces = pieces :+ piece
           }
           case None => {}

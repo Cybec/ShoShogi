@@ -1,13 +1,9 @@
 package de.htwg.se.ShoShogi.model.pieceComponent
 
 import de.htwg.se.ShoShogi.model.boardComponent.BoardInterface
-import de.htwg.se.ShoShogi.model.pieceComponent.pieceBaseImpl.Piece
-import de.htwg.se.ShoShogi.model.playerComponent.Player
 
 trait PieceInterface {
   val name: String
-
-  val player: Player
 
   val hasPromotion: Boolean
 
@@ -23,7 +19,7 @@ trait PieceInterface {
 
   def rekMoveSet(board: BoardInterface, newPos: (Int, Int), rek: Int, value: (Int, Int)): List[(Int, Int)]
 
-  def cloneToNewPlayer(player: Player): PieceInterface
+  def cloneToNewPlayer(first: Boolean): PieceInterface
 
   def typeEquals(piecesAbbreviation: String): Boolean = this.toString().trim == piecesAbbreviation.trim
 }

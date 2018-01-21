@@ -2,26 +2,24 @@ package de.htwg.se.ShoShogi.model.pieceComponent.pieceBaseImpl
 
 import de.htwg.se.ShoShogi.model.boardComponent.BoardInterface
 import de.htwg.se.ShoShogi.model.pieceComponent.PieceInterface
-import de.htwg.se.ShoShogi.model.playerComponent.Player
 
-abstract class Piece(_name: String, val _player: Player) extends PieceInterface {
+abstract class Piece(_name: String, _isFirstOwner: Boolean) extends PieceInterface {
 
   override val name: String = _name
 
-  override val player: Player = _player
-
-  override def isFirstOwner: Boolean = player.first
+  override def isFirstOwner: Boolean = _isFirstOwner
 
   override def rekMoveSet(board: BoardInterface, newPos: (Int, Int), rek: Int, value: (Int, Int)): List[(Int, Int)] = {
     var l = List[(Int, Int)]()
 
     if (rek != 0) {
-      board.cell(newPos._1, newPos._2).foreach(i => if (i.player.name != this.player.name) {
-        l = List[(Int, Int)]((newPos._1, newPos._2))
-        if (i.isInstanceOf[EmptyPiece]) {
-          l = l ::: rekMoveSet(board, ((newPos._1 + value._1), (newPos._2 + value._2)), rek - 1, value)
-        }
-      })
+      board.cell(newPos._1, newPos._2).foreach(i =>
+        if (PieceFactory.isInstanceOfPiece(PiecesEnum.EmptyPiece, i) || i.isFirstOwner != this.isFirstOwner) {
+          l = List[(Int, Int)]((newPos._1, newPos._2))
+          if (i.isInstanceOf[EmptyPiece]) {
+            l = l ::: rekMoveSet(board, ((newPos._1 + value._1), (newPos._2 + value._2)), rek - 1, value)
+          }
+        })
       l
     } else {
       List[(Int, Int)]()
@@ -35,8 +33,8 @@ abstract class Piece(_name: String, val _player: Player) extends PieceInterface 
 
 /*Author:   Mert, Nick
 * Role:     Erstellt eine King-Figur */
-protected case class King(override val player: Player)
-    extends Piece("King", player: Player) {
+protected case class King(_isFirstOwner: Boolean)
+  extends Piece("King", _isFirstOwner) {
   override val hasPromotion: Boolean = false
 
   /*Author:   Mert, Nick
@@ -47,7 +45,7 @@ protected case class King(override val player: Player)
   }
 
   override def toString: String = {
-    "K" + (if (this.player.first) {
+    "K" + (if (this.isFirstOwner) {
       "° "
     } else {
       "  "
@@ -72,7 +70,7 @@ protected case class King(override val player: Player)
 
   }
 
-  override def cloneToNewPlayer(player: Player): King = King(player)
+  override def cloneToNewPlayer(first: Boolean): King = King(first)
 }
 
 //endregion
@@ -81,8 +79,8 @@ protected case class King(override val player: Player)
 
 /*Author:   Mert, Nick
 * Role:     Erstellt eine GoldenGeneral-Figur */
-protected case class GoldenGeneral(override val player: Player)
-    extends Piece("GoldenGeneral", player: Player) {
+protected case class GoldenGeneral(_isFirstOwner: Boolean)
+  extends Piece("GoldenGeneral", _isFirstOwner) {
   override val hasPromotion: Boolean = false
 
   /*Author:   Mert, Nick
@@ -93,7 +91,7 @@ protected case class GoldenGeneral(override val player: Player)
   }
 
   override def toString: String = {
-    "GG" + (if (this.player.first) {
+    "GG" + (if (this.isFirstOwner) {
       "°"
     } else {
       " "
@@ -107,7 +105,7 @@ protected case class GoldenGeneral(override val player: Player)
   * Return:   List[(Int, Int)] mit den Koordinaten */
   override def getMoveSet(pos: (Int, Int), board: BoardInterface): List[(Int, Int)] = {
     //    Jede Richtung ein Feld
-    if (this.player.first) {
+    if (this.isFirstOwner) {
       rekMoveSet(board, (pos._1 - 1, pos._2), 1, (-1, 0)) :::
         rekMoveSet(board, (pos._1 - 1, pos._2 + 1), 1, (-1, 1)) :::
         rekMoveSet(board, (pos._1, pos._2 + 1), 1, (0, 1)) :::
@@ -125,7 +123,7 @@ protected case class GoldenGeneral(override val player: Player)
     }
   }
 
-  override def cloneToNewPlayer(player: Player): GoldenGeneral = GoldenGeneral(player)
+  override def cloneToNewPlayer(first: Boolean): GoldenGeneral = GoldenGeneral(first)
 }
 
 //endregion
@@ -134,19 +132,19 @@ protected case class GoldenGeneral(override val player: Player)
 
 /*Author:   Mert, Nick
 * Role:     Erstellt eine SilverGeneral-Figur */
-protected case class SilverGeneral(override val player: Player)
-    extends Piece("SilverGeneral", player: Player) {
+protected case class SilverGeneral(_isFirstOwner: Boolean)
+  extends Piece("SilverGeneral", _isFirstOwner) {
   override val hasPromotion: Boolean = true
 
   /*Author:   Mert, Nick
   * Role:     Stuft das Piece auf
   * Return:   Gibt das Promotete Piece zurueck*/
   override def promotePiece: Option[PieceInterface] = {
-    Some(PromotedSilver(player))
+    Some(PromotedSilver(_isFirstOwner))
   }
 
   override def toString: String = {
-    "SG" + (if (this.player.first) {
+    "SG" + (if (this.isFirstOwner) {
       "°"
     } else {
       " "
@@ -159,7 +157,7 @@ protected case class SilverGeneral(override val player: Player)
   * Role:     Gibt die moeglichen Bewegungsfelder zurueck
   * Return:   List[(Int, Int)] mit den Koordinaten */
   override def getMoveSet(pos: (Int, Int), board: BoardInterface): List[(Int, Int)] = {
-    if (this.player.first) {
+    if (this.isFirstOwner) {
       rekMoveSet(board, (pos._1 - 1, pos._2 + 1), 1, (-1, 1)) ::: //Vorne Links
         rekMoveSet(board, (pos._1 - 1, pos._2 - 1), 1, (-1, -1)) ::: //Hinten Links
         rekMoveSet(board, (pos._1 + 1, pos._2 - 1), 1, (1, -1)) ::: //Hinten Rechts
@@ -174,11 +172,11 @@ protected case class SilverGeneral(override val player: Player)
     }
   }
 
-  override def cloneToNewPlayer(player: Player): SilverGeneral = SilverGeneral(player)
+  override def cloneToNewPlayer(first: Boolean): SilverGeneral = SilverGeneral(first)
 }
 
-protected case class PromotedSilver(override val player: Player)
-    extends Piece("PromotedSilver", player: Player) {
+protected case class PromotedSilver(_isFirstOwner: Boolean)
+  extends Piece("PromotedSilver", _isFirstOwner) {
   override val hasPromotion: Boolean = false
 
   override def promotePiece: Option[PieceInterface] = {
@@ -186,7 +184,7 @@ protected case class PromotedSilver(override val player: Player)
   }
 
   override def toString: String = {
-    "PS" + (if (this.player.first) {
+    "PS" + (if (this.isFirstOwner) {
       "°"
     } else {
       " "
@@ -197,7 +195,7 @@ protected case class PromotedSilver(override val player: Player)
 
   override def getMoveSet(pos: (Int, Int), board: BoardInterface): List[(Int, Int)] = {
     //    Jede Richtung ein Feld
-    if (this.player.first) {
+    if (this.isFirstOwner) {
       rekMoveSet(board, (pos._1 - 1, pos._2), 1, (-1, 0)) :::
         rekMoveSet(board, (pos._1 - 1, pos._2 + 1), 1, (-1, 1)) :::
         rekMoveSet(board, (pos._1, pos._2 + 1), 1, (0, 1)) :::
@@ -215,7 +213,7 @@ protected case class PromotedSilver(override val player: Player)
     }
   }
 
-  override def cloneToNewPlayer(player: Player): SilverGeneral = SilverGeneral(player)
+  override def cloneToNewPlayer(first: Boolean): SilverGeneral = SilverGeneral(first)
 }
 
 //endregion
@@ -225,19 +223,19 @@ protected case class PromotedSilver(override val player: Player)
 //noinspection ScalaStyle
 /*Author:   Mert, Nick
 * Role:     Erstellt eine Knight-Figur */
-protected case class Knight(override val player: Player)
-    extends Piece("Knight", player: Player) {
+protected case class Knight(_isFirstOwner: Boolean)
+  extends Piece("Knight", _isFirstOwner) {
   override val hasPromotion: Boolean = true
 
   /*Author:   Mert, Nick
   * Role:     Stuft das Piece auf
   * Return:   Gibt das Promotete Piece zurueck*/
   override def promotePiece: Option[PieceInterface] = {
-    Some(PieceFactory.apply(PiecesEnum.PromotedKnight, player))
+    Some(PieceFactory.apply(PiecesEnum.PromotedKnight, _isFirstOwner))
   }
 
   override def toString: String = {
-    "KN" + (if (this.player.first) {
+    "KN" + (if (this.isFirstOwner) {
       "°"
     } else {
       " "
@@ -250,7 +248,7 @@ protected case class Knight(override val player: Player)
   * Role:     Gibt die moeglichen Bewegungsfelder zurueck
   * Return:   List[(Int, Int)] mit den Koordinaten */
   override def getMoveSet(pos: (Int, Int), board: BoardInterface): List[(Int, Int)] = {
-    if (this.player.first) {
+    if (this.isFirstOwner) {
       rekMoveSet(board, (pos._1 - 1, pos._2 + 2), 1, (-1, 2)) :::
         rekMoveSet(board, (pos._1 + 1, pos._2 + 2), 1, (1, 2))
     } else {
@@ -260,11 +258,11 @@ protected case class Knight(override val player: Player)
 
   }
 
-  override def cloneToNewPlayer(player: Player): Knight = Knight(player)
+  override def cloneToNewPlayer(first: Boolean): Knight = Knight(first)
 }
 
-protected case class PromotedKnight(override val player: Player)
-    extends Piece("PromotedKnight", player: Player) {
+protected case class PromotedKnight(_isFirstOwner: Boolean)
+  extends Piece("PromotedKnight", _isFirstOwner) {
   override val hasPromotion: Boolean = false
 
   override def promotePiece: Option[PieceInterface] = {
@@ -272,7 +270,7 @@ protected case class PromotedKnight(override val player: Player)
   }
 
   override def toString: String = {
-    "PK" + (if (this.player.first) {
+    "PK" + (if (this.isFirstOwner) {
       "°"
     } else {
       " "
@@ -282,7 +280,7 @@ protected case class PromotedKnight(override val player: Player)
   override def toStringLong: String = "PromotedKnight"
 
   override def getMoveSet(pos: (Int, Int), board: BoardInterface): List[(Int, Int)] = {
-    if (this.player.first) {
+    if (this.isFirstOwner) {
       rekMoveSet(board, (pos._1 - 1, pos._2), 1, (-1, 0)) :::
         rekMoveSet(board, (pos._1 - 1, pos._2 + 1), 1, (-1, 1)) :::
         rekMoveSet(board, (pos._1, pos._2 + 1), 1, (0, 1)) :::
@@ -300,7 +298,7 @@ protected case class PromotedKnight(override val player: Player)
     }
   }
 
-  override def cloneToNewPlayer(player: Player): Knight = Knight(player)
+  override def cloneToNewPlayer(first: Boolean): Knight = Knight(first)
 }
 
 //endregion
@@ -309,19 +307,19 @@ protected case class PromotedKnight(override val player: Player)
 
 /*Author:   Mert, Nick
 * Role:     Erstellt eine Lancer-Figur */
-protected case class Lancer(override val player: Player)
-    extends Piece("Lancer", player: Player) {
+protected case class Lancer(_isFirstOwner: Boolean)
+  extends Piece("Lancer", _isFirstOwner) {
   override val hasPromotion: Boolean = true
 
   /*Author:   Mert, Nick
   * Role:     Stuft das Piece auf
   * Return:   Gibt das Promotete Piece zurueck*/
   override def promotePiece: Option[PieceInterface] = {
-    Some(PromotedLancer(player))
+    Some(PromotedLancer(_isFirstOwner))
   }
 
   override def toString: String = {
-    "L" + (if (this.player.first) {
+    "L" + (if (this.isFirstOwner) {
       "° "
     } else {
       "  "
@@ -334,18 +332,18 @@ protected case class Lancer(override val player: Player)
   * Role:     Gibt die moeglichen Bewegungsfelder zurueck
   * Return:   List[(Int, Int)] mit den Koordinaten */
   override def getMoveSet(pos: (Int, Int), board: BoardInterface): List[(Int, Int)] = {
-    if (this.player.first) {
+    if (this.isFirstOwner) {
       rekMoveSet(board, (pos._1, pos._2 + 1), board.size, (0, 1))
     } else {
       rekMoveSet(board, (pos._1, pos._2 - 1), board.size, (0, -1))
     }
   }
 
-  override def cloneToNewPlayer(player: Player): Lancer = Lancer(player)
+  override def cloneToNewPlayer(first: Boolean): Lancer = Lancer(first)
 }
 
-protected case class PromotedLancer(override val player: Player)
-    extends Piece("PromotedLancer", player: Player) {
+protected case class PromotedLancer(_isFirstOwner: Boolean)
+  extends Piece("PromotedLancer", _isFirstOwner) {
   override val hasPromotion: Boolean = false
 
   override def promotePiece: Option[PieceInterface] = {
@@ -353,7 +351,7 @@ protected case class PromotedLancer(override val player: Player)
   }
 
   override def toString: String = {
-    "PL" + (if (this.player.first) {
+    "PL" + (if (this.isFirstOwner) {
       "°"
     } else {
       " "
@@ -363,7 +361,7 @@ protected case class PromotedLancer(override val player: Player)
   override def toStringLong: String = "PromotedLancer"
 
   override def getMoveSet(pos: (Int, Int), board: BoardInterface): List[(Int, Int)] = {
-    if (this.player.first) {
+    if (this.isFirstOwner) {
       rekMoveSet(board, (pos._1 - 1, pos._2), 1, (-1, 0)) :::
         rekMoveSet(board, (pos._1 - 1, pos._2 + 1), 1, (-1, 1)) :::
         rekMoveSet(board, (pos._1, pos._2 + 1), 1, (0, 1)) :::
@@ -381,7 +379,7 @@ protected case class PromotedLancer(override val player: Player)
     }
   }
 
-  override def cloneToNewPlayer(player: Player): Lancer = Lancer(player)
+  override def cloneToNewPlayer(first: Boolean): Lancer = Lancer(first)
 }
 
 //endregion
@@ -390,19 +388,19 @@ protected case class PromotedLancer(override val player: Player)
 
 /*Author:   Mert, Nick
 * Role:     Erstellt eine Bishop-Figur */
-protected case class Bishop(override val player: Player)
-    extends Piece("Bishop", player: Player) {
+protected case class Bishop(_isFirstOwner: Boolean)
+  extends Piece("Bishop", _isFirstOwner) {
   override val hasPromotion: Boolean = true
 
   /*Author:   Mert, Nick
   * Role:     Stuft das Piece auf
   * Return:   Gibt das Promotete Piece zurueck*/
   override def promotePiece: Option[PieceInterface] = {
-    Some(PromotedBishop(player))
+    Some(PromotedBishop(_isFirstOwner))
   }
 
   override def toString: String = {
-    "B" + (if (this.player.first) {
+    "B" + (if (this.isFirstOwner) {
       "° "
     } else {
       "  "
@@ -421,11 +419,11 @@ protected case class Bishop(override val player: Player)
       rekMoveSet(board, (pos._1 + 1, pos._2 - 1), board.size, (1, -1))
   }
 
-  override def cloneToNewPlayer(player: Player): Bishop = Bishop(player)
+  override def cloneToNewPlayer(first: Boolean): Bishop = Bishop(first)
 }
 
-protected case class PromotedBishop(override val player: Player)
-    extends Piece("PromotedBishop", player: Player) {
+protected case class PromotedBishop(_isFirstOwner: Boolean)
+  extends Piece("PromotedBishop", _isFirstOwner) {
   override val hasPromotion: Boolean = false
 
   override def promotePiece: Option[PieceInterface] = {
@@ -433,7 +431,7 @@ protected case class PromotedBishop(override val player: Player)
   }
 
   override def toString: String = {
-    "PB" + (if (this.player.first) {
+    "PB" + (if (this.isFirstOwner) {
       "°"
     } else {
       " "
@@ -453,7 +451,7 @@ protected case class PromotedBishop(override val player: Player)
       rekMoveSet(board, (pos._1 - 1, pos._2), 1, (-1, 0))
   }
 
-  override def cloneToNewPlayer(player: Player): Bishop = Bishop(player)
+  override def cloneToNewPlayer(first: Boolean): Bishop = Bishop(first)
 }
 
 //endregion
@@ -462,19 +460,19 @@ protected case class PromotedBishop(override val player: Player)
 
 /*Author:   Mert, Nick
 * Role:     Erstellt eine Rook-Figur */
-protected case class Rook(override val player: Player)
-    extends Piece("Rook", player: Player) {
+protected case class Rook(_isFirstOwner: Boolean)
+  extends Piece("Rook", _isFirstOwner) {
   override val hasPromotion: Boolean = true
 
   /*Author:   Mert, Nick
   * Role:     Stuft das Piece auf
   * Return:   Gibt das Promotete Piece zurueck*/
   override def promotePiece: Option[PieceInterface] = {
-    Some(PromotedRook(player))
+    Some(PromotedRook(_isFirstOwner))
   }
 
   override def toString: String = {
-    "R" + (if (this.player.first) {
+    "R" + (if (this.isFirstOwner) {
       "° "
     } else {
       "  "
@@ -493,11 +491,11 @@ protected case class Rook(override val player: Player)
       rekMoveSet(board, (pos._1 - 1, pos._2), board.size, (-1, 0))
   }
 
-  override def cloneToNewPlayer(player: Player): Rook = Rook(player)
+  override def cloneToNewPlayer(first: Boolean): Rook = Rook(first)
 }
 
-protected case class PromotedRook(override val player: Player)
-    extends Piece("PromotedRook", player: Player) {
+protected case class PromotedRook(_isFirstOwner: Boolean)
+  extends Piece("PromotedRook", _isFirstOwner) {
   override val hasPromotion: Boolean = false
 
   override def promotePiece: Option[PieceInterface] = {
@@ -505,7 +503,7 @@ protected case class PromotedRook(override val player: Player)
   }
 
   override def toString: String = {
-    "PR" + (if (this.player.first) {
+    "PR" + (if (this.isFirstOwner) {
       "°"
     } else {
       " "
@@ -525,7 +523,7 @@ protected case class PromotedRook(override val player: Player)
       rekMoveSet(board, (pos._1 + 1, pos._2 - 1), 1, (1, -1))
   }
 
-  override def cloneToNewPlayer(player: Player): Rook = Rook(player)
+  override def cloneToNewPlayer(first: Boolean): Rook = Rook(first)
 }
 
 //endregion
@@ -534,19 +532,19 @@ protected case class PromotedRook(override val player: Player)
 
 /*Author:   Mert, Nick
 * Role:     Erstellt eine Pawn-Figur */
-protected case class Pawn(override val player: Player)
-    extends Piece("Pawn", player: Player) {
+protected case class Pawn(_isFirstOwner: Boolean)
+  extends Piece("Pawn", _isFirstOwner) {
   override val hasPromotion: Boolean = true
 
   /*Author:   Mert, Nick
   * Role:     Stuft das Piece auf
   * Return:   Gibt das Promotete Piece zurueck*/
   override def promotePiece: Option[PieceInterface] = {
-    Some(PromotedPawn(player))
+    Some(PromotedPawn(_isFirstOwner))
   }
 
   override def toString: String = {
-    "P" + (if (this.player.first) {
+    "P" + (if (this.isFirstOwner) {
       "° "
     } else {
       "  "
@@ -559,18 +557,18 @@ protected case class Pawn(override val player: Player)
   * Role:     Gibt die moeglichen Bewegungsfelder zurueck
   * Return:   List[(Int, Int)] mit den Koordinaten */
   override def getMoveSet(pos: (Int, Int), board: BoardInterface): List[(Int, Int)] = {
-    if (this.player.first) {
+    if (this.isFirstOwner) {
       rekMoveSet(board, (pos._1, pos._2 + 1), 1, (0, 1))
     } else {
       rekMoveSet(board, (pos._1, pos._2 - 1), 1, (0, -1))
     }
   }
 
-  override def cloneToNewPlayer(player: Player): Pawn = Pawn(player)
+  override def cloneToNewPlayer(first: Boolean): Pawn = Pawn(first)
 }
 
-protected case class PromotedPawn(override val player: Player)
-    extends Piece("PromotedPawn", player: Player) {
+protected case class PromotedPawn(_isFirstOwner: Boolean)
+  extends Piece("PromotedPawn", _isFirstOwner) {
   override val hasPromotion: Boolean = false
 
   override def promotePiece: Option[PieceInterface] = {
@@ -578,7 +576,7 @@ protected case class PromotedPawn(override val player: Player)
   }
 
   override def toString: String = {
-    "PP" + (if (this.player.first) {
+    "PP" + (if (this.isFirstOwner) {
       "°"
     } else {
       " "
@@ -588,7 +586,7 @@ protected case class PromotedPawn(override val player: Player)
   override def toStringLong: String = "PromotedPawn"
 
   override def getMoveSet(pos: (Int, Int), board: BoardInterface): List[(Int, Int)] = {
-    if (this.player.first) {
+    if (this.isFirstOwner) {
       rekMoveSet(board, (pos._1 - 1, pos._2), 1, (-1, 0)) :::
         rekMoveSet(board, (pos._1 - 1, pos._2 + 1), 1, (-1, 1)) :::
         rekMoveSet(board, (pos._1, pos._2 + 1), 1, (0, 1)) :::
@@ -606,14 +604,14 @@ protected case class PromotedPawn(override val player: Player)
     }
   }
 
-  override def cloneToNewPlayer(player: Player): Pawn = Pawn(player)
+  override def cloneToNewPlayer(first: Boolean): Pawn = Pawn(first)
 }
 
 //endregion
 
 //region EmptyPiece
 protected case class EmptyPiece()
-    extends Piece("", Player("", false)) {
+  extends Piece("", false) {
   override val hasPromotion: Boolean = false
 
   /*Author:   Mert, Nick
@@ -634,7 +632,7 @@ protected case class EmptyPiece()
     List()
   }
 
-  override def cloneToNewPlayer(player: Player): EmptyPiece = EmptyPiece()
+  override def cloneToNewPlayer(first: Boolean): EmptyPiece = EmptyPiece()
 }
 
 //endregion

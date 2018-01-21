@@ -1,13 +1,13 @@
 package de.htwg.se.ShoShogi.controller.controllerComponent.controllerBaseImpl
 
 import com.google.inject.name.Names
-import com.google.inject.{ Guice, Inject }
+import com.google.inject.{Guice, Inject}
 import de.htwg.se.ShoShogi.ShoShogiModule
 import de.htwg.se.ShoShogi.controller.controllerComponent._
 import de.htwg.se.ShoShogi.model.boardComponent.BoardInterface
 import de.htwg.se.ShoShogi.model.fileIoComponent.FileIOInterface
 import de.htwg.se.ShoShogi.model.pieceComponent.PieceInterface
-import de.htwg.se.ShoShogi.model.pieceComponent.pieceBaseImpl.{ PieceFactory, PiecesEnum }
+import de.htwg.se.ShoShogi.model.pieceComponent.pieceBaseImpl.{PieceFactory, PiecesEnum}
 import de.htwg.se.ShoShogi.model.playerComponent.Player
 import de.htwg.se.ShoShogi.util.UndoManager
 import net.codingwell.scalaguice.InjectorExtensions._
@@ -92,35 +92,35 @@ class Controller @Inject() extends RoundState with ControllerInterface {
     //    board = new Board(boardSize, PieceFactory.apply(PiecesEnum.EmptyPiece, player_1))
 
     //Steine fuer Spieler 1
-    board = board.replaceCell(0, 0, PieceFactory.apply(PiecesEnum.Lancer, player_1))
-    board = board.replaceCell(1, 0, PieceFactory.apply(PiecesEnum.Knight, player_1))
-    board = board.replaceCell(2, 0, PieceFactory.apply(PiecesEnum.SilverGeneral, player_1))
-    board = board.replaceCell(3, 0, PieceFactory.apply(PiecesEnum.GoldenGeneral, player_1))
-    board = board.replaceCell(4, 0, PieceFactory.apply(PiecesEnum.King, player_1))
-    board = board.replaceCell(5, 0, PieceFactory.apply(PiecesEnum.GoldenGeneral, player_1))
-    board = board.replaceCell(6, 0, PieceFactory.apply(PiecesEnum.SilverGeneral, player_1))
-    board = board.replaceCell(7, 0, PieceFactory.apply(PiecesEnum.Knight, player_1))
-    board = board.replaceCell(8, 0, PieceFactory.apply(PiecesEnum.Lancer, player_1))
-    board = board.replaceCell(7, 1, PieceFactory.apply(PiecesEnum.Bishop, player_1))
-    board = board.replaceCell(1, 1, PieceFactory.apply(PiecesEnum.Rook, player_1))
+    board = board.replaceCell(0, 0, PieceFactory.apply(PiecesEnum.Lancer, player_1.first))
+    board = board.replaceCell(1, 0, PieceFactory.apply(PiecesEnum.Knight, player_1.first))
+    board = board.replaceCell(2, 0, PieceFactory.apply(PiecesEnum.SilverGeneral, player_1.first))
+    board = board.replaceCell(3, 0, PieceFactory.apply(PiecesEnum.GoldenGeneral, player_1.first))
+    board = board.replaceCell(4, 0, PieceFactory.apply(PiecesEnum.King, player_1.first))
+    board = board.replaceCell(5, 0, PieceFactory.apply(PiecesEnum.GoldenGeneral, player_1.first))
+    board = board.replaceCell(6, 0, PieceFactory.apply(PiecesEnum.SilverGeneral, player_1.first))
+    board = board.replaceCell(7, 0, PieceFactory.apply(PiecesEnum.Knight, player_1.first))
+    board = board.replaceCell(8, 0, PieceFactory.apply(PiecesEnum.Lancer, player_1.first))
+    board = board.replaceCell(7, 1, PieceFactory.apply(PiecesEnum.Bishop, player_1.first))
+    board = board.replaceCell(1, 1, PieceFactory.apply(PiecesEnum.Rook, player_1.first))
     for (i <- 0 to 8) {
-      board = board.replaceCell(i, 2, PieceFactory.apply(PiecesEnum.Pawn, player_1))
+      board = board.replaceCell(i, 2, PieceFactory.apply(PiecesEnum.Pawn, player_1.first))
     }
 
     //Steine fuer Spieler 2
-    board = board.replaceCell(0, 8, PieceFactory.apply(PiecesEnum.Lancer, player_2))
-    board = board.replaceCell(1, 8, PieceFactory.apply(PiecesEnum.Knight, player_2))
-    board = board.replaceCell(2, 8, PieceFactory.apply(PiecesEnum.SilverGeneral, player_2))
-    board = board.replaceCell(3, 8, PieceFactory.apply(PiecesEnum.GoldenGeneral, player_2))
-    board = board.replaceCell(4, 8, PieceFactory.apply(PiecesEnum.King, player_2))
-    board = board.replaceCell(5, 8, PieceFactory.apply(PiecesEnum.GoldenGeneral, player_2))
-    board = board.replaceCell(6, 8, PieceFactory.apply(PiecesEnum.SilverGeneral, player_2))
-    board = board.replaceCell(7, 8, PieceFactory.apply(PiecesEnum.Knight, player_2))
-    board = board.replaceCell(8, 8, PieceFactory.apply(PiecesEnum.Lancer, player_2))
-    board = board.replaceCell(1, 7, PieceFactory.apply(PiecesEnum.Bishop, player_2))
-    board = board.replaceCell(7, 7, PieceFactory.apply(PiecesEnum.Rook, player_2))
+    board = board.replaceCell(0, 8, PieceFactory.apply(PiecesEnum.Lancer, player_2.first))
+    board = board.replaceCell(1, 8, PieceFactory.apply(PiecesEnum.Knight, player_2.first))
+    board = board.replaceCell(2, 8, PieceFactory.apply(PiecesEnum.SilverGeneral, player_2.first))
+    board = board.replaceCell(3, 8, PieceFactory.apply(PiecesEnum.GoldenGeneral, player_2.first))
+    board = board.replaceCell(4, 8, PieceFactory.apply(PiecesEnum.King, player_2.first))
+    board = board.replaceCell(5, 8, PieceFactory.apply(PiecesEnum.GoldenGeneral, player_2.first))
+    board = board.replaceCell(6, 8, PieceFactory.apply(PiecesEnum.SilverGeneral, player_2.first))
+    board = board.replaceCell(7, 8, PieceFactory.apply(PiecesEnum.Knight, player_2.first))
+    board = board.replaceCell(8, 8, PieceFactory.apply(PiecesEnum.Lancer, player_2.first))
+    board = board.replaceCell(1, 7, PieceFactory.apply(PiecesEnum.Bishop, player_2.first))
+    board = board.replaceCell(7, 7, PieceFactory.apply(PiecesEnum.Rook, player_2.first))
     for (i <- 0 to 8) {
-      board = board.replaceCell(i, 6, PieceFactory.apply(PiecesEnum.Pawn, player_2))
+      board = board.replaceCell(i, 6, PieceFactory.apply(PiecesEnum.Pawn, player_2.first))
     }
 
     publish(new StartNewGame)
@@ -162,7 +162,8 @@ class Controller @Inject() extends RoundState with ControllerInterface {
 
   override def promotable(position: (Int, Int)): Boolean = {
     val piece = board.cell(position._1, position._2).getOrElse(return false)
-    piece.hasPromotion && ((piece.player == player_1 && position._2 > 5) || (piece.player == player_2 && position._2 < 3))
+    piece.hasPromotion && ((piece.isFirstOwner == player_1.first && position._2 > 5) ||
+      (piece.isFirstOwner == player_2.first && position._2 < 3))
   }
 
   override def promotePiece(piecePosition: (Int, Int)): Boolean = {

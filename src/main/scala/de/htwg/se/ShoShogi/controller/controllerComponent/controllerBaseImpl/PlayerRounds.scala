@@ -26,7 +26,7 @@ case class playerOneRound(controller: Controller) extends RoundState {
   override def getPossibleMoves(pos: (Int, Int)): List[(Int, Int)] = {
     controller.board.cell(pos._1, pos._2) match {
       case Some(piece) => {
-        if (piece.player.first) {
+        if (piece.isFirstOwner) {
           piece.getMoveSet((pos._1, pos._2), controller.board)
         } else {
           List()
@@ -44,9 +44,9 @@ case class playerOneRound(controller: Controller) extends RoundState {
       val tempPieceCurrent = controller.board.cell(currentPos._1, currentPos._2).getOrElse(return MoveResult.invalidMove)
 
       controller.board = controller.board.replaceCell(destination._1, destination._2, tempPieceCurrent)
-      controller.board = controller.board.replaceCell(currentPos._1, currentPos._2, PieceFactory.apply(PiecesEnum.EmptyPiece, controller.player_1))
+      controller.board = controller.board.replaceCell(currentPos._1, currentPos._2, PieceFactory.apply(PiecesEnum.EmptyPiece, controller.player_1.first))
 
-      controller.board = controller.board.addToPlayerContainer(tempPieceCurrent.player, tempPieceDestination)
+      controller.board = controller.board.addToPlayerContainer(tempPieceCurrent.isFirstOwner, tempPieceDestination)
 
       if (PieceFactory.isInstanceOfPiece(PiecesEnum.King, tempPieceDestination)) {
         MoveResult.kingSlain
@@ -94,7 +94,7 @@ case class playerOneRound(controller: Controller) extends RoundState {
               controller.board.cell(column, row) match {
                 case Some(piece) => if (PieceFactory.isInstanceOfPiece(PiecesEnum.EmptyPiece, piece)) {
                   possibleMoves = possibleMoves :+ (column, row)
-                } else if (PieceFactory.isInstanceOfPiece(PiecesEnum.King, piece) && !piece.player.first) {
+                } else if (PieceFactory.isInstanceOfPiece(PiecesEnum.King, piece) && !piece.isFirstOwner) {
                   possibleMoves = possibleMoves.filter(_ != (column, row - 1))
                 }
                 case None => {
@@ -125,7 +125,7 @@ case class playerTwoRound(controller: Controller) extends RoundState {
   override def getPossibleMoves(pos: (Int, Int)): List[(Int, Int)] = {
     controller.board.cell(pos._1, pos._2) match {
       case Some(piece: Piece) => {
-        if (!piece.player.first) {
+        if (!piece.isFirstOwner) {
           piece.getMoveSet((pos._1, pos._2), controller.board)
         } else {
           List()
@@ -143,9 +143,9 @@ case class playerTwoRound(controller: Controller) extends RoundState {
       val tempPieceCurrent = controller.board.cell(currentPos._1, currentPos._2).getOrElse(return MoveResult.invalidMove)
 
       controller.board = controller.board.replaceCell(destination._1, destination._2, tempPieceCurrent)
-      controller.board = controller.board.replaceCell(currentPos._1, currentPos._2, PieceFactory.apply(PiecesEnum.EmptyPiece, controller.player_2))
+      controller.board = controller.board.replaceCell(currentPos._1, currentPos._2, PieceFactory.apply(PiecesEnum.EmptyPiece, controller.player_2.first))
 
-      controller.board = controller.board.addToPlayerContainer(tempPieceCurrent.player, tempPieceDestination)
+      controller.board = controller.board.addToPlayerContainer(tempPieceCurrent.isFirstOwner, tempPieceDestination)
 
       if (PieceFactory.isInstanceOfPiece(PiecesEnum.King, tempPieceDestination)) {
         MoveResult.kingSlain
@@ -188,7 +188,7 @@ case class playerTwoRound(controller: Controller) extends RoundState {
               controller.board.cell(column, row + controller.board.size - 1 - count) match {
                 case Some(piece) => if (PieceFactory.isInstanceOfPiece(PiecesEnum.EmptyPiece, piece) && row != 8) {
                   possibleMoves = possibleMoves :+ (column, row + controller.board.size - 1 - count)
-                } else if (PieceFactory.isInstanceOfPiece(PiecesEnum.King, piece) && piece.player.first) {
+                } else if (PieceFactory.isInstanceOfPiece(PiecesEnum.King, piece) && piece.isFirstOwner) {
                   possibleMoves = possibleMoves.filter(_ != (column, row + controller.board.size - count))
                 }
                 case None => {}
