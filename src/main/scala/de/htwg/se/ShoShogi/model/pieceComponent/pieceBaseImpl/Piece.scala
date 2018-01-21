@@ -142,7 +142,7 @@ protected case class SilverGeneral(override val player: Player)
   * Role:     Stuft das Piece auf
   * Return:   Gibt das Promotete Piece zurueck*/
   override def promotePiece: Option[PieceInterface] = {
-    Some(PromotedSilver(player))
+    Some(PieceFactory.apply(PiecesEnum.PromotedSilver, player))
   }
 
   override def toString: String = {
@@ -317,7 +317,7 @@ protected case class Lancer(override val player: Player)
   * Role:     Stuft das Piece auf
   * Return:   Gibt das Promotete Piece zurueck*/
   override def promotePiece: Option[PieceInterface] = {
-    Some(PromotedLancer(player))
+    Some(PieceFactory.apply(PiecesEnum.PromotedLancer, player))
   }
 
   override def toString: String = {
@@ -398,7 +398,8 @@ protected case class Bishop(override val player: Player)
   * Role:     Stuft das Piece auf
   * Return:   Gibt das Promotete Piece zurueck*/
   override def promotePiece: Option[PieceInterface] = {
-    Some(PromotedBishop(player))
+    Some(PieceFactory.apply(PiecesEnum.PromotedBishop, player))
+
   }
 
   override def toString: String = {
@@ -470,7 +471,8 @@ protected case class Rook(override val player: Player)
   * Role:     Stuft das Piece auf
   * Return:   Gibt das Promotete Piece zurueck*/
   override def promotePiece: Option[PieceInterface] = {
-    Some(PromotedRook(player))
+    Some(PieceFactory.apply(PiecesEnum.PromotedRook, player))
+
   }
 
   override def toString: String = {
@@ -542,7 +544,8 @@ protected case class Pawn(override val player: Player)
   * Role:     Stuft das Piece auf
   * Return:   Gibt das Promotete Piece zurueck*/
   override def promotePiece: Option[PieceInterface] = {
-    Some(PromotedPawn(player))
+    Some(PieceFactory.apply(PiecesEnum.PromotedPawn, player))
+
   }
 
   override def toString: String = {
