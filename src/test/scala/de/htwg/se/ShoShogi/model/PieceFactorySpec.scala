@@ -79,4 +79,85 @@ class PieceFactorySpec extends WordSpec with Matchers {
       }
     }
   }
+
+  "A PiecesEnum" when {
+    "called withNameOpt" should {
+      val (player_1, _) = controller.getPlayers
+      "return an Option with PiecesEnum.King if the string given is King" in {
+        val king = PiecesEnum.withNameOpt("King").getOrElse(PiecesEnum.EmptyPiece)
+        val king2 = PieceFactory.apply(king, player_1)
+        PieceFactory.isInstanceOfPiece(PiecesEnum.King, king2) should be(true)
+      }
+      "return an Option with PiecesEnum.GoldenGeneral if the string given is GoldenGeneral" in {
+        val gg = PiecesEnum.withNameOpt("GoldenGeneral").getOrElse(PiecesEnum.EmptyPiece)
+        val gg2 = PieceFactory.apply(gg, player_1)
+        PieceFactory.isInstanceOfPiece(PiecesEnum.GoldenGeneral, gg2) should be(true)
+      }
+      "return an Option with PiecesEnum.SilverGeneral if the string given is SilverGenera" in {
+        val sg = PiecesEnum.withNameOpt("SilverGeneral").getOrElse(PiecesEnum.EmptyPiece)
+        val sg2 = PieceFactory.apply(sg, player_1)
+        PieceFactory.isInstanceOfPiece(PiecesEnum.SilverGeneral, sg2) should be(true)
+      }
+      "return an Option with PiecesEnum.PromotedSilver if the string given is PromotedSilver" in {
+        val ps = PiecesEnum.withNameOpt("PromotedSilver").getOrElse(PiecesEnum.EmptyPiece)
+        val ps2 = PieceFactory.apply(ps, player_1)
+        PieceFactory.isInstanceOfPiece(PiecesEnum.PromotedSilver, ps2) should be(true)
+      }
+      "return an Option with PiecesEnum.Lancer if the string given is Lancer" in {
+        val lancer = PiecesEnum.withNameOpt("Lancer").getOrElse(PiecesEnum.EmptyPiece)
+        val lancer2 = PieceFactory.apply(lancer, player_1)
+        PieceFactory.isInstanceOfPiece(PiecesEnum.Lancer, lancer2) should be(true)
+      }
+      "return an Option with PiecesEnum.PromotedLancer if the string given is PromotedLancer" in {
+        val promotedLancer = PiecesEnum.withNameOpt("PromotedLancer").getOrElse(PiecesEnum.EmptyPiece)
+        val promotedLancer2 = PieceFactory.apply(promotedLancer, player_1)
+        PieceFactory.isInstanceOfPiece(PiecesEnum.PromotedLancer, promotedLancer2) should be(true)
+      }
+      "return an Option with PiecesEnum.Knight if the string given is Knight" in {
+        val knight = PiecesEnum.withNameOpt("Knight").getOrElse(PiecesEnum.EmptyPiece)
+        val knight2 = PieceFactory.apply(knight, player_1)
+        PieceFactory.isInstanceOfPiece(PiecesEnum.Knight, knight2) should be(true)
+      }
+      "return an Option with PiecesEnum.PromotedKnight if the string given is PromotedKnight" in {
+        val promotedKnight = PiecesEnum.withNameOpt("PromotedKnight").getOrElse(PiecesEnum.EmptyPiece)
+        val promotedKnight2 = PieceFactory.apply(promotedKnight, player_1)
+        PieceFactory.isInstanceOfPiece(PiecesEnum.PromotedKnight, promotedKnight2) should be(true)
+      }
+      "return an Option with PiecesEnum.Bishop if the string given is Bishop" in {
+        val bishop = PiecesEnum.withNameOpt("Bishop").getOrElse(PiecesEnum.EmptyPiece)
+        val bishop2 = PieceFactory.apply(bishop, player_1)
+        PieceFactory.isInstanceOfPiece(PiecesEnum.Bishop, bishop2) should be(true)
+      }
+      "return an Option with PiecesEnum.PromotedBishop if the string given is PromotedBishop" in {
+        val promotedBishop = PiecesEnum.withNameOpt("PromotedBishop").getOrElse(PiecesEnum.EmptyPiece)
+        val promotedBishop2 = PieceFactory.apply(promotedBishop, player_1)
+        PieceFactory.isInstanceOfPiece(PiecesEnum.PromotedBishop, promotedBishop2) should be(true)
+      }
+      "return an Option with PiecesEnum.Rook if the string given is Rook" in {
+        val rook = PiecesEnum.withNameOpt("Rook").getOrElse(PiecesEnum.EmptyPiece)
+        val rook2 = PieceFactory.apply(rook, player_1)
+        PieceFactory.isInstanceOfPiece(PiecesEnum.Rook, rook2) should be(true)
+      }
+      "return an Option with PiecesEnum.PromotedRook if the string given is PromotedRook" in {
+        val promotedRook = PiecesEnum.withNameOpt("PromotedRook").getOrElse(PiecesEnum.EmptyPiece)
+        val promotedRook2 = PieceFactory.apply(promotedRook, player_1)
+        PieceFactory.isInstanceOfPiece(PiecesEnum.PromotedRook, promotedRook2) should be(true)
+      }
+      "return an Option with PiecesEnum.Pawn if the string given is Pawn" in {
+        val pawn = PiecesEnum.withNameOpt("Pawn").getOrElse(PiecesEnum.EmptyPiece)
+        val pawn2 = PieceFactory.apply(pawn, player_1)
+        PieceFactory.isInstanceOfPiece(PiecesEnum.Pawn, pawn2) should be(true)
+      }
+      "return an Option with PiecesEnum.PromotedPawn if the string given is PromotedPawn" in {
+        val promotedPawn = PiecesEnum.withNameOpt("PromotedPawn").getOrElse(PiecesEnum.EmptyPiece)
+        val promotedPawn2 = PieceFactory.apply(promotedPawn, player_1)
+        PieceFactory.isInstanceOfPiece(PiecesEnum.PromotedPawn, promotedPawn2) should be(true)
+      }
+      "return an Option with PiecesEnum.EmptyPiece if the string given is EmptyPiece" in {
+        val emptyPiece = PiecesEnum.withNameOpt("EmptyPiece").getOrElse(PiecesEnum.EmptyPiece)
+        val emptyPiece2 = PieceFactory.apply(emptyPiece, player_1)
+        PieceFactory.isInstanceOfPiece(PiecesEnum.EmptyPiece, emptyPiece2) should be(true)
+      }
+    }
+  }
 }
