@@ -1,5 +1,7 @@
 package de.htwg.se.ShoShogi.model.fileIoComponent.fileIoJsonImpl
 
+import java.nio.file.{Files, Paths}
+
 import com.google.inject.name.Names
 import com.google.inject.{Guice, Injector}
 import de.htwg.se.ShoShogi.model.boardComponent.BoardInterface
@@ -15,51 +17,53 @@ import scala.io.Source
 
 class FileIO extends FileIOInterface {
 
-  override def load: Option[(BoardInterface, Boolean, Player, Player)] = {
-    var loadReturnOption: Option[(BoardInterface, Boolean, Player, Player)] = None
-    val source: String = Source.fromFile("board.json").getLines.mkString
-    val json: JsValue = Json.parse(source)
-    val size = (json \ "board" \ "size").get.toString.toInt
-    val injector: Injector = Guice.createInjector(new ShoShogiModule)
+  override def load: Option[(BoardInterface, Boolean, Player, Player)] =
+    if (!Files.exists(Paths.get("board.json"))) None else {
 
-    loadReturnOption = getBoardBySize(size, injector) match {
-      case Some(board) => Some(
-        (
-          board,
-          (json \ "board" \ "state").get.toString.toBoolean, {
-          val name = (json \ "board" \ "playerFirstName").get.toString
-          new Player(name, true)
-        }, {
-          val name = (json \ "board" \ "playerSecondName").get.toString
-          new Player(name, false)
-        }
-        )
-      )
-      case _ => None
-    }
+      var loadReturnOption: Option[(BoardInterface, Boolean, Player, Player)] = None
+      val source: String = Source.fromFile("board.json").getLines.mkString
+      val json: JsValue = Json.parse(source)
+      val size = (json \ "board" \ "size").get.toString.toInt
+      val injector: Injector = Guice.createInjector(new ShoShogiModule)
 
-    loadReturnOption match {
-      case Some((board, state, player_1, player_2)) => {
-        var _board = board
-        for (index <- 0 until size * size) {
-          val row = (json \\ "row") (index).as[Int]
-          val col = (json \\ "col") (index).as[Int]
-          val piece = (json \\ "piece") (index)
-          val pieceName = (piece \ "pieceName").as[String]
-          val firstPlayer = (piece \ "firstPlayer").as[Boolean]
-          val player = if (firstPlayer) player_1 else player_2
-          PiecesEnum.withNameOpt(pieceName) match {
-            case Some(pieceEnum) =>
-              _board = _board.replaceCell(col, row, PieceFactory.apply(pieceEnum, player))
-            case None =>
+      loadReturnOption = getBoardBySize(size, injector) match {
+        case Some(board) => Some(
+          (
+            board,
+            (json \ "board" \ "state").get.toString.toBoolean, {
+            val name = (json \ "board" \ "playerFirstName").get.toString
+            new Player(name, true)
+          }, {
+            val name = (json \ "board" \ "playerSecondName").get.toString
+            new Player(name, false)
           }
-        }
-        loadReturnOption = Some(_board, state, player_1, player_2)
+          )
+        )
+        case _ => None
       }
-      case None =>
+
+      loadReturnOption match {
+        case Some((board, state, player_1, player_2)) => {
+          var _board = board
+          for (index <- 0 until size * size) {
+            val row = (json \\ "row") (index).as[Int]
+            val col = (json \\ "col") (index).as[Int]
+            val piece = (json \\ "piece") (index)
+            val pieceName = (piece \ "pieceName").as[String]
+            val firstPlayer = (piece \ "firstPlayer").as[Boolean]
+            val player = if (firstPlayer) player_1 else player_2
+            PiecesEnum.withNameOpt(pieceName) match {
+              case Some(pieceEnum) =>
+                _board = _board.replaceCell(col, row, PieceFactory.apply(pieceEnum, player))
+              case None =>
+            }
+          }
+          loadReturnOption = Some(_board, state, player_1, player_2)
+        }
+        case None =>
+      }
+      loadReturnOption
     }
-    loadReturnOption
-  }
 
   override def save(board: BoardInterface, state: Boolean, player_1: Player, player_2: Player): Unit = {
     import java.io._
