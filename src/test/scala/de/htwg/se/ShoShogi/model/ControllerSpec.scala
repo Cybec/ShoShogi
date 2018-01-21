@@ -863,7 +863,6 @@ class ControllerSpec extends WordSpec with Matchers {
         )
       }
     }
-
     //TODO: how to test changeState
     //    "called changeState" should {
     //      "change the state from PlayerOnesTurn to PlayerTwosTurn and the other way around" in {

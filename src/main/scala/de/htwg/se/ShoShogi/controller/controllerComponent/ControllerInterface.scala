@@ -49,8 +49,6 @@ trait ControllerInterface extends scala.swing.Publisher {
 
   def getPossibleMovesConqueredPiece(piece: String): List[(Int, Int)]
 
-  def getPossibleMvConPlayer(piece: String): List[(Int, Int)]
-
   def moveConqueredPiece(pieceAbbreviation: String, destination: (Int, Int)): Boolean
 
   def promotable(position: (Int, Int)): Boolean

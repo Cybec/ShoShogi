@@ -15,7 +15,7 @@ trait RoundState {
 
   def movePiece(currentPos: (Int, Int), destination: (Int, Int)): MoveResult.Value
 
-  def getPossibleMvConPlayer(piece: String): List[(Int, Int)]
+  def getPossibleMovesConqueredPiece(piece: String): List[(Int, Int)]
 }
 
 case class playerOneRound(controller: Controller) extends RoundState {
@@ -58,7 +58,7 @@ case class playerOneRound(controller: Controller) extends RoundState {
   }
 
   override def moveConqueredPiece(pieceAbbreviation: String, destination: (Int, Int)): Boolean = {
-    if (getPossibleMvConPlayer(pieceAbbreviation).contains(destination)) {
+    if (getPossibleMovesConqueredPiece(pieceAbbreviation).contains(destination)) {
 
       controller.board.getFromPlayerContainer(controller.player_1) {
         _.typeEquals(pieceAbbreviation)
@@ -76,7 +76,7 @@ case class playerOneRound(controller: Controller) extends RoundState {
     }
   }
 
-  override def getPossibleMvConPlayer(piece: String): List[(Int, Int)] = {
+  override def getPossibleMovesConqueredPiece(piece: String): List[(Int, Int)] = {
     var possibleMoves = List[(Int, Int)]()
 
     if (!piece.endsWith("°")) {
@@ -157,7 +157,7 @@ case class playerTwoRound(controller: Controller) extends RoundState {
   }
 
   override def moveConqueredPiece(pieceAbbreviation: String, destination: (Int, Int)): Boolean = {
-    if (getPossibleMvConPlayer(pieceAbbreviation).contains(destination)) {
+    if (getPossibleMovesConqueredPiece(pieceAbbreviation).contains(destination)) {
 
       controller.board.getFromPlayerContainer(controller.player_2) {
         _.typeEquals(pieceAbbreviation)
@@ -173,7 +173,7 @@ case class playerTwoRound(controller: Controller) extends RoundState {
     }
   }
 
-  override def getPossibleMvConPlayer(piece: String): List[(Int, Int)] = {
+  override def getPossibleMovesConqueredPiece(piece: String): List[(Int, Int)] = {
     var possibleMoves = List[(Int, Int)]()
 
     var count = 0
