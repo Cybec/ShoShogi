@@ -3,10 +3,10 @@ package de.htwg.se.ShoShogi.model.boardComponent.boardBaseImpl
 import com.google.inject.Inject
 import com.google.inject.name.Named
 import de.htwg.se.ShoShogi.model.boardComponent.BoardInterface
-import de.htwg.se.ShoShogi.model.pieceComponent.pieceBaseImpl.{Piece, PieceFactory, PiecesEnum}
+import de.htwg.se.ShoShogi.model.pieceComponent.pieceBaseImpl.{ Piece, PieceFactory, PiecesEnum }
 import de.htwg.se.ShoShogi.model.playerComponent.Player
 
-class BoardInj @Inject()(@Named("DefaultSize") boardSize: Int) extends Board(boardSize, PieceFactory.getEmptyPiece) {
+class BoardInj @Inject() (@Named("DefaultSize") boardSize: Int) extends Board(boardSize, PieceFactory.getEmptyPiece) {
 
   override def createNewBoard: BoardInterface = new Board(boardSize, PieceFactory.getEmptyPiece)
 
