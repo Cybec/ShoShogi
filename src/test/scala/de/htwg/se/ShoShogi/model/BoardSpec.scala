@@ -5,6 +5,7 @@ import com.google.inject.name.Names
 import de.htwg.se.ShoShogi.ShoShogiModule
 import de.htwg.se.ShoShogi.model.boardComponent.BoardInterface
 import de.htwg.se.ShoShogi.model.boardComponent.boardBaseImpl.Board
+import de.htwg.se.ShoShogi.model.pieceComponent.PieceInterface
 import de.htwg.se.ShoShogi.model.pieceComponent.pieceBaseImpl._
 import de.htwg.se.ShoShogi.model.playerComponent.Player
 import net.codingwell.scalaguice.InjectorExtensions._
@@ -107,8 +108,8 @@ class BoardSpec extends WordSpec with Matchers {
         val player_2 = Player("Mert", false)
 
         var board = new Board(9, PieceFactory.apply(PiecesEnum.EmptyPiece, player_1))
-        var wantedPiece_0: Piece = PieceFactory.apply(PiecesEnum.EmptyPiece, player_1)
-        var wantedPiece_1: Piece = PieceFactory.apply(PiecesEnum.EmptyPiece, player_1)
+        var wantedPiece_0: PieceInterface = PieceFactory.apply(PiecesEnum.EmptyPiece, player_1)
+        var wantedPiece_1: PieceInterface = PieceFactory.apply(PiecesEnum.EmptyPiece, player_1)
 
         board = board.addToPlayerContainer(player_1, PieceFactory.apply(PiecesEnum.Lancer, player_2))
         board = board.addToPlayerContainer(player_1, PieceFactory.apply(PiecesEnum.Lancer, player_2))
@@ -154,8 +155,8 @@ class BoardSpec extends WordSpec with Matchers {
         val player_1 = Player("Nick", true)
         val player_2 = Player("Mert", false)
         var board = new Board(9, PieceFactory.apply(PiecesEnum.EmptyPiece, player_1))
-        var wantedPiece_0: Piece = PieceFactory.apply(PiecesEnum.EmptyPiece, player_1)
-        var wantedPiece_1: Piece = PieceFactory.apply(PiecesEnum.EmptyPiece, player_1)
+        var wantedPiece_0: PieceInterface = PieceFactory.apply(PiecesEnum.EmptyPiece, player_1)
+        var wantedPiece_1: PieceInterface = PieceFactory.apply(PiecesEnum.EmptyPiece, player_1)
 
         board = board.addToPlayerContainer(player_1, PieceFactory.apply(PiecesEnum.Lancer, player_2))
         board = board.addToPlayerContainer(player_1, PieceFactory.apply(PiecesEnum.Lancer, player_2))
@@ -212,8 +213,8 @@ class BoardSpec extends WordSpec with Matchers {
     board = board.replaceCell(0, 7, lancer)
     "checked if Piece is in Column" should {
       "have Piece Pawn and Lancer" in {
-        board.getPiecesInColumn(0, true) should be(List[Piece](pawn, lancer))
-        board.getPiecesInColumn(3, true) should be(List[Piece]())
+        board.getPiecesInColumn(0, true) should be(List[PieceInterface](pawn, lancer))
+        board.getPiecesInColumn(3, true) should be(List[PieceInterface]())
       }
       "give nothing" in {
         board.getPiecesInColumn(10, true) should be(List[(Int, Int)]())
@@ -239,7 +240,7 @@ class BoardSpec extends WordSpec with Matchers {
         val empty = PieceFactory.apply(PiecesEnum.EmptyPiece, player_1)
         board = board.replaceCell(0, 0, pawn)
         board.cell(0, 0) should be(Some(pawn))
-        board.toArray should be(Array[Array[Piece]](Array(pawn, empty), Array(empty, empty)))
+        board.toArray should be(Array[Array[PieceInterface]](Array(pawn, empty), Array(empty, empty)))
       }
     }
   }

@@ -1,12 +1,13 @@
 package de.htwg.se.ShoShogi.controller.controllerComponent.controllerBaseImpl
 
 import com.google.inject.name.Names
-import com.google.inject.{Guice, Inject}
+import com.google.inject.{ Guice, Inject }
 import de.htwg.se.ShoShogi.ShoShogiModule
 import de.htwg.se.ShoShogi.controller.controllerComponent._
 import de.htwg.se.ShoShogi.model.boardComponent.BoardInterface
 import de.htwg.se.ShoShogi.model.fileIoComponent.FileIOInterface
-import de.htwg.se.ShoShogi.model.pieceComponent.pieceBaseImpl.{Piece, PieceFactory, PiecesEnum}
+import de.htwg.se.ShoShogi.model.pieceComponent.PieceInterface
+import de.htwg.se.ShoShogi.model.pieceComponent.pieceBaseImpl.{ PieceFactory, PiecesEnum }
 import de.htwg.se.ShoShogi.model.playerComponent.Player
 import de.htwg.se.ShoShogi.util.UndoManager
 import net.codingwell.scalaguice.InjectorExtensions._
@@ -33,9 +34,9 @@ class Controller @Inject() extends RoundState with ControllerInterface {
 
   override def changeNamePlayer2(newName: String): Unit = player_2 = new Player(newName, player_2.first)
 
-  override def getContainer: (List[Piece], List[Piece]) = board.getContainer()
+  override def getContainer: (List[PieceInterface], List[PieceInterface]) = board.getContainer()
 
-  override def setContainer(container: (List[Piece], List[Piece])): Unit = {
+  override def setContainer(container: (List[PieceInterface], List[PieceInterface])): Unit = {
     board = board.setContainer(container)
   }
 
@@ -54,7 +55,8 @@ class Controller @Inject() extends RoundState with ControllerInterface {
   }
 
   override def save: Unit = {
-    fileIo.save(board, currentState, player_1, player_2)
+    val state = if (currentState.isInstanceOf[playerOneRound]) true else false
+    fileIo.save(board, state, player_1, player_2)
   }
 
   override def load: Unit = {
@@ -63,9 +65,9 @@ class Controller @Inject() extends RoundState with ControllerInterface {
       case None => {
         createEmptyBoard()
       }
-      case Some((_board, _currentState, _player1, _player2)) => {
+      case Some((_board, state, _player1, _player2)) => {
         board = _board
-        currentState = _currentState
+        currentState = if (state) playerOnesTurn else playerTwosTurn
         player_1 = _player1
         player_2 = _player2
       }
@@ -139,7 +141,7 @@ class Controller @Inject() extends RoundState with ControllerInterface {
 
   override def boardToString(): String = board.toString
 
-  override def boardToArray(): Array[Array[Piece]] = board.toArray
+  override def boardToArray(): Array[Array[PieceInterface]] = board.toArray
 
   override def getPossibleMoves(pos: (Int, Int)): List[(Int, Int)] = {
     currentState.getPossibleMoves(pos)

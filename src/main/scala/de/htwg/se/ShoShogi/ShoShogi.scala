@@ -2,7 +2,6 @@ package de.htwg.se.ShoShogi
 
 import com.google.inject.Guice
 import de.htwg.se.ShoShogi.aview.Tui
-//import de.htwg.se.ShoShogi.aview.gui.SwingGui
 import de.htwg.se.ShoShogi.controller.controllerComponent.ControllerInterface
 import de.htwg.se.ShoShogi.controller.controllerComponent.controllerBaseImpl.UpdateAll
 

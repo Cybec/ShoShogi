@@ -3,35 +3,36 @@ package de.htwg.se.ShoShogi.model.boardComponent.boardBaseImpl
 import com.google.inject.Inject
 import com.google.inject.name.Named
 import de.htwg.se.ShoShogi.model.boardComponent.BoardInterface
-import de.htwg.se.ShoShogi.model.pieceComponent.pieceBaseImpl.{ Piece, PieceFactory, PiecesEnum }
+import de.htwg.se.ShoShogi.model.pieceComponent.PieceInterface
+import de.htwg.se.ShoShogi.model.pieceComponent.pieceBaseImpl.{ PieceFactory, PiecesEnum }
 import de.htwg.se.ShoShogi.model.playerComponent.Player
 
 class BoardInj @Inject() (@Named("DefaultSize") boardSize: Int) extends Board(boardSize, PieceFactory.getEmptyPiece) {
 
-  override def createNewBoard: BoardInterface = new Board(boardSize, PieceFactory.getEmptyPiece)
+  //  override def createNewBoard: BoardInterface = new Board(boardSize, PieceFactory.getEmptyPiece)
 
 }
 
-case class Board(board: Vector[Vector[Piece]], containerPlayer_0: List[Piece], containerPlayer_1: List[Piece]) extends BoardInterface {
-  def this(size: Int, filling: Piece) = this(Vector.tabulate(size, size) { (row, col) => filling }, List.empty[Piece], List.empty[Piece])
+case class Board(board: Vector[Vector[PieceInterface]], containerPlayer_0: List[PieceInterface], containerPlayer_1: List[PieceInterface]) extends BoardInterface {
+  def this(size: Int, filling: PieceInterface) = this(Vector.tabulate(size, size) { (row, col) => filling }, List.empty[PieceInterface], List.empty[PieceInterface])
 
   override def createNewBoard: BoardInterface = new Board(size, PieceFactory.getEmptyPiece)
 
-  override def getContainer(): (List[Piece], List[Piece]) = {
+  override def getContainer(): (List[PieceInterface], List[PieceInterface]) = {
     (containerPlayer_0, containerPlayer_1)
   }
 
-  override def setContainer(container: (List[Piece], List[Piece])): Board = {
+  override def setContainer(container: (List[PieceInterface], List[PieceInterface])): Board = {
     copy(board, container._1, container._2)
   }
 
-  override def addToPlayerContainer(player: Player, piece: Piece): Board = {
+  override def addToPlayerContainer(player: Player, piece: PieceInterface): Board = {
     if (!PieceFactory.isInstanceOfPiece(PiecesEnum.EmptyPiece, piece)) {
       if (player.first) {
-        val newCon: List[Piece] = containerPlayer_0 :+ piece.cloneToNewPlayer(player)
+        val newCon: List[PieceInterface] = containerPlayer_0 :+ piece.cloneToNewPlayer(player)
         copy(board, newCon, containerPlayer_1)
       } else {
-        val newCon: List[Piece] = containerPlayer_1 :+ piece.cloneToNewPlayer(player)
+        val newCon: List[PieceInterface] = containerPlayer_1 :+ piece.cloneToNewPlayer(player)
         copy(board, containerPlayer_0, newCon)
       }
     } else {
@@ -39,12 +40,12 @@ case class Board(board: Vector[Vector[Piece]], containerPlayer_0: List[Piece], c
     }
   }
 
-  override def getFromPlayerContainer(player: Player)(pred: (Piece) => Boolean): Option[(Board, Piece)] = {
+  override def getFromPlayerContainer(player: Player)(pred: (PieceInterface) => Boolean): Option[(Board, PieceInterface)] = {
     if (player.first) {
       val (before, atAndAfter) = containerPlayer_0 span (x => !pred(x))
       if (atAndAfter.nonEmpty) {
-        val getPiece: Piece = atAndAfter.head
-        val newCon: List[Piece] = before ::: atAndAfter.drop(1)
+        val getPiece: PieceInterface = atAndAfter.head
+        val newCon: List[PieceInterface] = before ::: atAndAfter.drop(1)
         Some((copy(board, newCon, containerPlayer_1), getPiece.cloneToNewPlayer(player)))
       } else {
         None
@@ -52,8 +53,8 @@ case class Board(board: Vector[Vector[Piece]], containerPlayer_0: List[Piece], c
     } else {
       val (before, atAndAfter) = containerPlayer_1 span (x => !pred(x))
       if (atAndAfter.nonEmpty) {
-        val getPiece: Piece = atAndAfter.head
-        val newCon: List[Piece] = before ::: atAndAfter.drop(1)
+        val getPiece: PieceInterface = atAndAfter.head
+        val newCon: List[PieceInterface] = before ::: atAndAfter.drop(1)
         Some((copy(board, containerPlayer_0, newCon), getPiece.cloneToNewPlayer(player)))
       } else {
         None
@@ -61,13 +62,13 @@ case class Board(board: Vector[Vector[Piece]], containerPlayer_0: List[Piece], c
     }
   }
 
-  override def replaceCell(col: Int, row: Int, cell: Piece): Board =
+  override def replaceCell(col: Int, row: Int, cell: PieceInterface): Board =
     copy(board.updated(col, board(col).updated(row, cell)), containerPlayer_0, containerPlayer_1)
 
   override def copyBoard(): Board = copy(board, containerPlayer_0, containerPlayer_1)
 
-  override def getPiecesInColumn(column: Int, stateTurn: Boolean): List[Piece] = {
-    var pieces = List[Piece]()
+  override def getPiecesInColumn(column: Int, stateTurn: Boolean): List[PieceInterface] = {
+    var pieces = List[PieceInterface]()
 
     if (column <= this.size && column >= 0) {
       for (i <- 0 until this.size) {
@@ -100,8 +101,8 @@ case class Board(board: Vector[Vector[Piece]], containerPlayer_0: List[Piece], c
     emptyCells
   }
 
-  override def toArray: Array[Array[Piece]] = {
-    val returnList: Array[Array[Piece]] = Array.ofDim[Piece](size, size)
+  override def toArray: Array[Array[PieceInterface]] = {
+    val returnList: Array[Array[PieceInterface]] = Array.ofDim[PieceInterface](size, size)
 
     for {
       col <- 0 until size
@@ -151,7 +152,7 @@ case class Board(board: Vector[Vector[Piece]], containerPlayer_0: List[Piece], c
     returnValue.toString()
   }
 
-  override def cell(col: Int, row: Int): Option[Piece] = {
+  override def cell(col: Int, row: Int): Option[PieceInterface] = {
     if (row >= size || col >= size || row < 0 || col < 0) {
       None
     } else {
