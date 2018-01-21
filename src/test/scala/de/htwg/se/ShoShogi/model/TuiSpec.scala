@@ -6,7 +6,7 @@ import de.htwg.se.ShoShogi.aview.Tui
 import de.htwg.se.ShoShogi.controller.controllerComponent.ControllerInterface
 import org.junit.runner.RunWith
 import org.scalatest.junit.JUnitRunner
-import org.scalatest.{Matchers, WordSpec}
+import org.scalatest.{ Matchers, WordSpec }
 
 @RunWith(classOf[JUnitRunner])
 class TuiSpec extends WordSpec with Matchers {

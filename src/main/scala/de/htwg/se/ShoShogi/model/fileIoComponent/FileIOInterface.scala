@@ -6,8 +6,8 @@ import de.htwg.se.ShoShogi.model.playerComponent.Player
 
 trait FileIOInterface {
 
-  def load: Option[(BoardInterface, RoundState, Player, Player)]
+  def load: Option[(BoardInterface, Boolean, Player, Player)]
 
-  def save(board: BoardInterface, currentState: RoundState, player_1: Player, player_2: Player): Unit
+  def save(board: BoardInterface, state: Boolean, player_1: Player, player_2: Player): Unit
 
 }

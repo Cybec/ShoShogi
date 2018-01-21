@@ -1,78 +1,112 @@
 package de.htwg.se.ShoShogi.model.fileIoComponent.fileIoJsonImpl
 
-import de.htwg.se.ShoShogi.controller.controllerComponent.controllerBaseImpl.RoundState
 import de.htwg.se.ShoShogi.model.boardComponent.BoardInterface
 import de.htwg.se.ShoShogi.model.fileIoComponent.FileIOInterface
 import de.htwg.se.ShoShogi.model.playerComponent.Player
 
-class FileIO extends FileIOInterface {
-  //
-  //  override def load: Option[GridInterface] = {
-  //    var gridOption: Option[GridInterface] = None
-  //    val source: String = Source.fromFile("grid.json").getLines.mkString
-  //    val json: JsValue = Json.parse(source)
-  //    val size = (json \ "grid" \ "size").get.toString.toInt
-  //    val injector = Guice.createInjector(new SudokuModule)
-  //    size match {
-  //      case 1 => gridOption = Some(injector.instance[GridInterface](Names.named("tiny")))
-  //      case 4 => gridOption = Some(injector.instance[GridInterface](Names.named("small")))
-  //      case 9 => gridOption = Some(injector.instance[GridInterface](Names.named("normal")))
-  //      case _ =>
-  //    }
-  //    gridOption match {
-  //      case Some(grid) => {
-  //        var _grid = grid
-  //        for (index <- 0 until size * size) {
-  //          val row = (json \\ "row") (index).as[Int]
-  //          val col = (json \\ "col") (index).as[Int]
-  //          val cell = (json \\ "cell") (index)
-  //          val value = (cell \ "value").as[Int]
-  //          _grid = _grid.set(row, col, value)
-  //          val given = (cell \ "given").as[Boolean]
-  //          val showCandidates = (cell \ "showCandidates").as[Boolean]
-  //          if (given) _grid = _grid.setGiven(row, col, value)
-  //          if (showCandidates) _grid = _grid.setShowCandidates(row, col)
-  //        }
-  //        gridOption=Some(_grid)
-  //      }
-  //      case None =>
-  //    }
-  //    gridOption
-  //  }
-  //
-  //  override def save(grid: GridInterface): Unit = {
-  //    import java.io._
-  //    val pw = new PrintWriter(new File("grid.json"))
-  //    pw.write(Json.prettyPrint(gridToJson(grid)))
-  //    pw.close
-  //  }
-  //
-  //  def gridToJson(grid: GridInterface) = {
-  //    Json.obj(
-  //      "grid" -> Json.obj(
-  //        "size" -> JsNumber(grid.size),
-  //        "cells" -> Json.toJson(
-  //          for {row <- 0 until grid.size;
-  //               col <- 0 until grid.size} yield {
-  //            Json.obj(
-  //              "row" -> row,
-  //              "col" -> col,
-  //              "cell" -> Json.toJson(grid.cell(row, col)))
-  //          }
-  //        )
-  //      )
-  //    )
-  //  }
-  //
-  //  implicit val cellWrites = new Writes[CellInterface] {
-  //    def writes(cell: CellInterface) = Json.obj(
-  //      "value" -> cell.value,
-  //      "given" -> cell.given,
-  //      "showCandidates" -> cell.showCandidates
-  //    )
-  //  }
-  //
-  override def load: Option[(BoardInterface, RoundState, Player, Player)] = None
+import scala.io.Source
+import play.api.libs.json._
+import com.google.inject.{ Guice, Injector }
+import net.codingwell.scalaguice.InjectorExtensions._
+import com.google.inject.name.Names
+import de.htwg.se.ShoShogi.model.pieceComponent.PieceInterface
+import de.htwg.se.ShoShogi.model.pieceComponent.pieceBaseImpl.{ Piece, PieceFactory, PiecesEnum }
+import de.htwg.se.ShoShogi.{ ShoShogiModule, ShoShogiModuleConf }
 
-  override def save(board: BoardInterface, currentState: RoundState, player_1: Player, player_2: Player): Unit = {}
+class FileIO extends FileIOInterface {
+
+  override def load: Option[(BoardInterface, Boolean, Player, Player)] = {
+    var loadReturnOption: Option[(BoardInterface, Boolean, Player, Player)] = None
+    val source: String = Source.fromFile("board.json").getLines.mkString
+    val json: JsValue = Json.parse(source)
+    val size = (json \ "board" \ "size").get.toString.toInt
+    val injector: Injector = Guice.createInjector(new ShoShogiModule)
+
+    loadReturnOption = getBoardBySize(size, injector) match {
+      case Some(board) => Some(
+        (
+          board,
+          (json \ "board" \ "state").get.toString.toBoolean, {
+            val name = (json \ "board" \ "playerFirstName").get.toString
+            new Player(name, true)
+          }, {
+            val name = (json \ "board" \ "playerSecondName").get.toString
+            new Player(name, false)
+          }
+        )
+      )
+      case _ => None
+    }
+
+    loadReturnOption match {
+      case Some((board, state, player_1, player_2)) => {
+        var _board = board
+        for (index <- 0 until size * size) {
+          val row = (json \\ "row")(index).as[Int]
+          val col = (json \\ "col")(index).as[Int]
+          val piece = (json \\ "piece")(index)
+          val pieceName = (piece \ "pieceName").as[String]
+          val firstPlayer = (piece \ "firstPlayer").as[Boolean]
+          val player = if (firstPlayer) player_1 else player_2
+          PiecesEnum.withNameOpt(pieceName) match {
+            case Some(pieceEnum) =>
+              _board = _board.replaceCell(col, row, PieceFactory.apply(pieceEnum, player))
+            case None =>
+          }
+        }
+        loadReturnOption = Some(_board, state, player_1, player_2)
+      }
+      case None =>
+    }
+    loadReturnOption
+  }
+
+  override def save(board: BoardInterface, state: Boolean, player_1: Player, player_2: Player): Unit = {
+    import java.io._
+    val pw = new PrintWriter(new File("board.json"))
+    pw.write(Json.prettyPrint(gridToJson(board, state, player_1, player_2)))
+    pw.close
+  }
+
+  def gridToJson(board: BoardInterface, state: Boolean, player_1: Player, player_2: Player): JsValue = {
+    Json.obj(
+      "board" -> Json.obj(
+        "size" -> JsNumber(board.size),
+        "state" -> JsBoolean(state),
+        "playerFirstName" -> JsString(player_1.name),
+        "playerSecondName" -> JsString(player_2.name),
+        "piece" -> Json.toJson(
+          for {
+            row <- 0 until board.size;
+            col <- 0 until board.size
+          } yield {
+            Json.obj(
+              "row" -> row,
+              "col" -> col,
+              "piece" -> Json.toJson(board.cell(row, col))
+            )
+          }
+        )
+      )
+    )
+  }
+
+  implicit val cellWrites = new Writes[PieceInterface] {
+    def writes(piece: PieceInterface) = Json.obj(
+      "pieceName" -> piece.toStringLong,
+      "firstPlayer" -> piece.isFirstOwner
+    )
+  }
+
+  def getBoardBySize(size: Int, injector: Injector): Option[BoardInterface] = {
+    size match {
+      case ShoShogiModuleConf.defaultBoardSize =>
+        Some(injector.instance[BoardInterface](Names.named(ShoShogiModuleConf.defaultBoard)).createNewBoard())
+      case ShoShogiModuleConf.smallBoardSize =>
+        Some(injector.instance[BoardInterface](Names.named(ShoShogiModuleConf.smallBoard)).createNewBoard())
+      case ShoShogiModuleConf.tinyBoardSize =>
+        Some(injector.instance[BoardInterface](Names.named(ShoShogiModuleConf.tinyBoard)).createNewBoard())
+      case _ => None
+    }
+  }
 }
