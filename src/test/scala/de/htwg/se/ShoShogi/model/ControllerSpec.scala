@@ -790,6 +790,10 @@ class ControllerSpec extends WordSpec with Matchers {
             "Captured: \n"
         )
       }
+      "give back the Nil when no move was done till now" in {
+        controller.createNewBoard()
+        controller.undoCommand should be()
+      }
     }
     "called redoCommand" should {
       "redo the last undone Command and change the state back to the state before undo was applied" in {
@@ -821,6 +825,10 @@ class ControllerSpec extends WordSpec with Matchers {
             "---------------------------------------------------------\n" +
             "Captured: \n"
         )
+      }
+      "give back Nil when no undo was done till now" in {
+        controller.createNewBoard()
+        controller.redoCommand should be()
       }
     }
     "called replaceBoard" should {

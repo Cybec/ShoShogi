@@ -38,7 +38,7 @@ object PieceFactory {
     case PiecesEnum.Lancer => piece.isInstanceOf[Lancer]
     case PiecesEnum.PromotedLancer => piece.isInstanceOf[PromotedLancer]
     case PiecesEnum.Bishop => piece.isInstanceOf[Bishop]
-    case PiecesEnum.PromotedBishop => piece.isInstanceOf[PromotedSilver]
+    case PiecesEnum.PromotedBishop => piece.isInstanceOf[PromotedBishop]
     case PiecesEnum.Rook => piece.isInstanceOf[Rook]
     case PiecesEnum.PromotedRook => piece.isInstanceOf[PromotedRook]
     case PiecesEnum.Pawn => piece.isInstanceOf[Pawn]
