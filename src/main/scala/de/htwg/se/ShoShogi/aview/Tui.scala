@@ -1,7 +1,8 @@
 package de.htwg.se.ShoShogi.aview
 
-import de.htwg.se.ShoShogi.controller.controllerComponent.controllerBaseImpl.{ StartNewGame, UpdateAll }
-import de.htwg.se.ShoShogi.controller.controllerComponent.{ ControllerInterface, MoveResult }
+import com.typesafe.scalalogging.LazyLogging
+import de.htwg.se.ShoShogi.controller.controllerComponent.controllerBaseImpl.{StartNewGame, UpdateAll}
+import de.htwg.se.ShoShogi.controller.controllerComponent.{ControllerInterface, MoveResult}
 
 import scala.swing.Reactor
 
@@ -35,12 +36,10 @@ trait State {
   )
 }
 
-class Tui(controller: ControllerInterface) extends Reactor with State {
+class Tui(controller: ControllerInterface) extends Reactor with State with LazyLogging {
   listenTo(controller)
 
   case class Event(command: String, input: Array[String])
-
-  //TODO: Chain of Responsibility Pattern in eine andere Datei?
 
   //Chain of Responsibility Pattern
   //Base handler class
@@ -54,12 +53,11 @@ class Tui(controller: ControllerInterface) extends Reactor with State {
     override def handleEvent(event: Event): Unit = {
       event match {
         case e if e.command == "q" => printString("Quit")
-        case e => {
+        case e =>
           successor match {
             case Some(h: Handler) => h.handleEvent(e)
             case None => printString("Could not find command.")
           }
-        }
       }
     }
   }
@@ -70,16 +68,14 @@ class Tui(controller: ControllerInterface) extends Reactor with State {
         case e if e.command == "n" =>
           controller.createNewBoard()
           setGameState(newGame)
-        case e => {
+        case e =>
           successor match {
-            case Some(h: Handler) => {
+            case Some(h: Handler) =>
               if (!state) {
                 h.handleEvent(e)
               }
-            }
             case None => printString("Could not find command.")
           }
-        }
       }
     }
   }
@@ -87,18 +83,16 @@ class Tui(controller: ControllerInterface) extends Reactor with State {
   class MovePiece(val successor: Option[Handler]) extends Handler {
     override def handleEvent(event: Event): Unit = {
       event match {
-        //TODO: ReadLine gewollte Lösung?
         case e if e.command == "mv" =>
           parseArguments(e.input) match {
             case Some(value) => move(e, value)
             case _ => printString("Could not read input: ".concat(e.input.mkString(" ")))
           }
-        case e => {
+        case e =>
           successor match {
             case Some(h: Handler) => h.handleEvent(e)
             case None => printString("Could not find command.")
           }
-        }
       }
     }
 
@@ -106,10 +100,9 @@ class Tui(controller: ControllerInterface) extends Reactor with State {
       controller.movePiece((value(0)._1, value(0)._2), (value(1)._1, value(1)._2)) match {
         case MoveResult.invalidMove => printString("You cant move this piece that way\n")
         case MoveResult.validMove => promoteQuery(value)
-        case MoveResult.kingSlain => {
+        case MoveResult.kingSlain =>
           setGameState(mainMenu)
           printString("You won!")
-        }
       }
     }
   }
@@ -122,12 +115,11 @@ class Tui(controller: ControllerInterface) extends Reactor with State {
             case Some(value) => printPossibleMoves(controller.getPossibleMoves(value(0)._1, value(0)._2))
             case _ => printString("Could not read input: ".concat(e.input.mkString(" ")))
           }
-        case e => {
+        case e =>
           successor match {
             case Some(h: Handler) => h.handleEvent(e)
             case None => printString("Could not find command.")
           }
-        }
       }
     }
   }
@@ -140,12 +132,11 @@ class Tui(controller: ControllerInterface) extends Reactor with State {
             case Some((pieceAbbreviation, destination)) => controller.moveConqueredPiece(pieceAbbreviation, destination)
             case _ => printString("Could not read input: ".concat(e.input.mkString(" ")))
           }
-        case e => {
+        case e =>
           successor match {
             case Some(h: Handler) => h.handleEvent(e)
             case None => printString("Could not find command.")
           }
-        }
       }
     }
   }
@@ -158,12 +149,11 @@ class Tui(controller: ControllerInterface) extends Reactor with State {
             case Some((pieceAbbreviation, _)) => printPossibleMoves(controller.getPossibleMovesConqueredPiece(pieceAbbreviation))
             case _ => printString("Could not read input: ".concat(e.input.mkString(" ")))
           }
-        case e => {
+        case e =>
           successor match {
             case Some(h: Handler) => h.handleEvent(e)
             case None => printString("Could not find command.")
           }
-        }
       }
     }
   }
@@ -197,12 +187,13 @@ class Tui(controller: ControllerInterface) extends Reactor with State {
   }
 
   def parseArguments(inputArray: Array[String]): Option[Vector[(Int, Int)]] = {
+    val lengthCorrectMoveCommand = 4
     val position = inputArray.mkString("").replace("pmv", "").replace("mvcp", "").replace("mv", "").trim.toList
     try {
-      if (position.length == 2 && "1234567890".contains(position.head)) {
+      if (position.lengthCompare(2) == 0 && "1234567890".contains(position.head)) {
         Some(Vector[(Int, Int)]((position.head.toInt - '0', yAxis.getOrElse(position(1), -1))))
 
-      } else if (position.length == 4 && "1234567890".contains(position.head) && "1234567890".contains(position(2))) {
+      } else if (position.lengthCompare(lengthCorrectMoveCommand) == 0 && "1234567890".contains(position.head) && "1234567890".contains(position(2))) {
         var tempVec = Vector.empty[(Int, Int)]
         tempVec = tempVec :+ (position.head.toInt - '0', yAxis.getOrElse(position(1), -1))
         tempVec = tempVec :+ (position(2).toInt - '0', yAxis.getOrElse(position(3), -1))
@@ -219,7 +210,7 @@ class Tui(controller: ControllerInterface) extends Reactor with State {
   def parseArgumentsFromConquered(inputArray: Array[String]): Option[(String, (Int, Int))] = {
     val input = inputArray.mkString("").replace("pmvcp", "").replace("mvcp", "").trim.toList
     try {
-      if (input.length > 2 && ('A' to 'Z').contains(input.head)) {
+      if (input.lengthCompare(2) > 0 && ('A' to 'Z').contains(input.head)) {
         var pieceAbbreviation: String = ""
         var pieceDestination: (Int, Int) = (-1, -1)
 
@@ -236,7 +227,7 @@ class Tui(controller: ControllerInterface) extends Reactor with State {
       } else if (input.nonEmpty && ('A' to 'Z').contains(input.head)) {
         var pieceAbbreviation: String = ""
 
-        if (input.length == 2) {
+        if (input.lengthCompare(2) == 0) {
           pieceAbbreviation = input.slice(0, 1).mkString("")
         } else {
           pieceAbbreviation = input.head.toString
@@ -278,12 +269,13 @@ class Tui(controller: ControllerInterface) extends Reactor with State {
   }
 
   def printString(stringToPrint: String): Boolean = {
-    println(stringToPrint)
+    //    println(stringToPrint)
+    logger.info(stringToPrint)
     true
   }
 
   reactions += {
-    case event: UpdateAll => printString(controller.boardToString())
-    case event: StartNewGame => printString(controller.boardToString())
+    case _: UpdateAll => printString(controller.boardToString())
+    case _: StartNewGame => printString(controller.boardToString())
   }
 }

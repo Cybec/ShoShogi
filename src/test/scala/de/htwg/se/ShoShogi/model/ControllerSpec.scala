@@ -1,7 +1,7 @@
 package de.htwg.se.ShoShogi.model
 
-import com.google.inject.Guice
 import com.google.inject.name.Names
+import com.google.inject.{Guice, Injector}
 import de.htwg.se.ShoShogi.ShoShogiModule
 import de.htwg.se.ShoShogi.controller.controllerComponent.{ControllerInterface, MoveResult}
 import de.htwg.se.ShoShogi.model.boardComponent.BoardInterface
@@ -18,8 +18,8 @@ import scala.language.reflectiveCalls
 @RunWith(classOf[JUnitRunner])
 class ControllerSpec extends WordSpec with Matchers {
 
-  val injector = Guice.createInjector(new ShoShogiModule)
-  val controller = injector.getInstance(classOf[ControllerInterface])
+  val injector: Injector = Guice.createInjector(new ShoShogiModule)
+  val controller: ControllerInterface = injector.getInstance(classOf[ControllerInterface])
   controller.createNewBoard()
   controller.changeNamePlayer1("Nick")
   controller.changeNamePlayer2("Mert")
@@ -36,18 +36,18 @@ class ControllerSpec extends WordSpec with Matchers {
         controller.movePiece((0, 5), (0, 4)) should be(MoveResult.validMove) // player_2
         controller.getContainer should be((
           List(),
-          List(PieceFactory.apply(PiecesEnum.Pawn, player_2))
+          List(PieceFactory.apply(PiecesEnum.Pawn, player_2.first))
         ))
       }
     }
     "called setContainer" should {
       "change the containers of the 2 Players" in {
         controller.createNewBoard()
-        val pawn = PieceFactory.apply(PiecesEnum.Pawn, player_1)
+        val pawn = PieceFactory.apply(PiecesEnum.Pawn, player_1.first)
         controller.setContainer(List(pawn), List(pawn))
         controller.getContainer should be(
-          List(PieceFactory.apply(PiecesEnum.Pawn, player_1)),
-          List(PieceFactory.apply(PiecesEnum.Pawn, player_1))
+          List(PieceFactory.apply(PiecesEnum.Pawn, player_1.first)),
+          List(PieceFactory.apply(PiecesEnum.Pawn, player_1.first))
         )
       }
     }
@@ -720,23 +720,23 @@ class ControllerSpec extends WordSpec with Matchers {
     "called boardToArray" should {
       "return all Pieces in a 2 dimensional Array" in {
         controller.createNewBoard()
-        val pawn1: PieceInterface = PieceFactory.apply(PiecesEnum.Pawn, player_1)
-        val pawn2: PieceInterface = PieceFactory.apply(PiecesEnum.Pawn, player_2)
-        val lancer1: PieceInterface = PieceFactory.apply(PiecesEnum.Lancer, player_1)
-        val lancer2: PieceInterface = PieceFactory.apply(PiecesEnum.Lancer, player_2)
-        val knight1: PieceInterface = PieceFactory.apply(PiecesEnum.Knight, player_1)
-        val knight2: PieceInterface = PieceFactory.apply(PiecesEnum.Knight, player_2)
-        val silverGeneral1: PieceInterface = PieceFactory.apply(PiecesEnum.SilverGeneral, player_1)
-        val silverGeneral2: PieceInterface = PieceFactory.apply(PiecesEnum.SilverGeneral, player_2)
-        val goldenGeneral1: PieceInterface = PieceFactory.apply(PiecesEnum.GoldenGeneral, player_1)
-        val goldenGeneral2: PieceInterface = PieceFactory.apply(PiecesEnum.GoldenGeneral, player_2)
-        val king1: PieceInterface = PieceFactory.apply(PiecesEnum.King, player_1)
-        val king2: PieceInterface = PieceFactory.apply(PiecesEnum.King, player_2)
-        val rook1: PieceInterface = PieceFactory.apply(PiecesEnum.Rook, player_1)
-        val rook2: PieceInterface = PieceFactory.apply(PiecesEnum.Rook, player_2)
-        val bishop1: PieceInterface = PieceFactory.apply(PiecesEnum.Bishop, player_1)
-        val bishop2: PieceInterface = PieceFactory.apply(PiecesEnum.Bishop, player_2)
-        val empty: PieceInterface = PieceFactory.apply(PiecesEnum.EmptyPiece, player_1)
+        val pawn1: PieceInterface = PieceFactory.apply(PiecesEnum.Pawn, player_1.first)
+        val pawn2: PieceInterface = PieceFactory.apply(PiecesEnum.Pawn, player_2.first)
+        val lancer1: PieceInterface = PieceFactory.apply(PiecesEnum.Lancer, player_1.first)
+        val lancer2: PieceInterface = PieceFactory.apply(PiecesEnum.Lancer, player_2.first)
+        val knight1: PieceInterface = PieceFactory.apply(PiecesEnum.Knight, player_1.first)
+        val knight2: PieceInterface = PieceFactory.apply(PiecesEnum.Knight, player_2.first)
+        val silverGeneral1: PieceInterface = PieceFactory.apply(PiecesEnum.SilverGeneral, player_1.first)
+        val silverGeneral2: PieceInterface = PieceFactory.apply(PiecesEnum.SilverGeneral, player_2.first)
+        val goldenGeneral1: PieceInterface = PieceFactory.apply(PiecesEnum.GoldenGeneral, player_1.first)
+        val goldenGeneral2: PieceInterface = PieceFactory.apply(PiecesEnum.GoldenGeneral, player_2.first)
+        val king1: PieceInterface = PieceFactory.apply(PiecesEnum.King, player_1.first)
+        val king2: PieceInterface = PieceFactory.apply(PiecesEnum.King, player_2.first)
+        val rook1: PieceInterface = PieceFactory.apply(PiecesEnum.Rook, player_1.first)
+        val rook2: PieceInterface = PieceFactory.apply(PiecesEnum.Rook, player_2.first)
+        val bishop1: PieceInterface = PieceFactory.apply(PiecesEnum.Bishop, player_1.first)
+        val bishop2: PieceInterface = PieceFactory.apply(PiecesEnum.Bishop, player_2.first)
+        val empty: PieceInterface = PieceFactory.apply(PiecesEnum.EmptyPiece, player_1.first)
         controller.boardToArray() should be(Array[Array[PieceInterface]](
           Array(lancer1, empty, pawn1, empty, empty, empty, pawn2, empty, lancer2),
           Array(knight1, rook1, pawn1, empty, empty, empty, pawn2, bishop2, knight2), Array(silverGeneral1, empty, pawn1, empty, empty, empty, pawn2, empty, silverGeneral2),
@@ -793,6 +793,7 @@ class ControllerSpec extends WordSpec with Matchers {
       }
       "give back the Nil when no move was done till now" in {
         controller.createNewBoard()
+        //TODO: Nick was soll das???
         controller.undoCommand should be()
       }
     }
@@ -829,6 +830,8 @@ class ControllerSpec extends WordSpec with Matchers {
       }
       "give back Nil when no undo was done till now" in {
         controller.createNewBoard()
+
+        //TODO: Nick was soll das???
         controller.redoCommand should be()
       }
     }

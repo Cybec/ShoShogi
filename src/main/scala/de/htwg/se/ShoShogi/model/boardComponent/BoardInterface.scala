@@ -20,13 +20,13 @@ trait BoardInterface {
     */
   def copyBoard(): BoardInterface
 
-  def getContainer(): (List[PieceInterface], List[PieceInterface])
+  def getContainer: (List[PieceInterface], List[PieceInterface])
 
   def createNewBoard(): BoardInterface
 
   def setContainer(container: (List[PieceInterface], List[PieceInterface])): BoardInterface
 
-  def addToPlayerContainer(player: Player, piece: PieceInterface): BoardInterface
+  def addToPlayerContainer(first: Boolean, piece: PieceInterface): BoardInterface
 
   def getFromPlayerContainer(player: Player)(pred: (PieceInterface) => Boolean): Option[(Board, PieceInterface)]
 

@@ -1,17 +1,17 @@
 package de.htwg.se.ShoShogi.model
 
-import com.google.inject.Guice
+import com.google.inject.{Guice, Injector}
 import de.htwg.se.ShoShogi.ShoShogiModule
 import de.htwg.se.ShoShogi.aview.Tui
 import de.htwg.se.ShoShogi.controller.controllerComponent.ControllerInterface
 import org.junit.runner.RunWith
 import org.scalatest.junit.JUnitRunner
-import org.scalatest.{ Matchers, WordSpec }
+import org.scalatest.{Matchers, WordSpec}
 
 @RunWith(classOf[JUnitRunner])
 class TuiSpec extends WordSpec with Matchers {
-  val injector = Guice.createInjector(new ShoShogiModule)
-  val controller = injector.getInstance(classOf[ControllerInterface])
+  val injector: Injector = Guice.createInjector(new ShoShogiModule)
+  val controller: ControllerInterface = injector.getInstance(classOf[ControllerInterface])
   controller.createNewBoard()
 
   val tui = new Tui(controller)

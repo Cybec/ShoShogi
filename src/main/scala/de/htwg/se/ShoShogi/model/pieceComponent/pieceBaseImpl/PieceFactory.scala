@@ -1,32 +1,33 @@
 package de.htwg.se.ShoShogi.model.pieceComponent.pieceBaseImpl
 
 import de.htwg.se.ShoShogi.model.pieceComponent.PieceInterface
-import de.htwg.se.ShoShogi.model.playerComponent.Player
 
 object PiecesEnum extends Enumeration {
   type EnumType = Value
-  val King, GoldenGeneral, SilverGeneral, PromotedSilver, Knight, PromotedKnight, Lancer, PromotedLancer, Bishop, PromotedBishop, Rook, PromotedRook, Pawn, PromotedPawn, EmptyPiece = Value
+  val King, GoldenGeneral, SilverGeneral, PromotedSilver, Knight = Value
+  val PromotedKnight, Lancer, PromotedLancer, Bishop, PromotedBishop = Value
+  val Rook, PromotedRook, Pawn, PromotedPawn, EmptyPiece = Value
 
   def withNameOpt(s: String): Option[Value] = values.find(_.toString == s)
 }
 
 //noinspection ScalaStyle
 object PieceFactory {
-  def apply(pieceType: PiecesEnum.Value, player: Player): PieceInterface = pieceType match {
-    case PiecesEnum.King => new King(player)
-    case PiecesEnum.GoldenGeneral => new GoldenGeneral(player)
-    case PiecesEnum.SilverGeneral => new SilverGeneral(player)
-    case PiecesEnum.PromotedSilver => new PromotedSilver(player)
-    case PiecesEnum.Knight => new Knight(player)
-    case PiecesEnum.PromotedKnight => new PromotedKnight(player)
-    case PiecesEnum.Lancer => new Lancer(player)
-    case PiecesEnum.PromotedLancer => new PromotedLancer(player)
-    case PiecesEnum.Bishop => new Bishop(player)
-    case PiecesEnum.PromotedBishop => new PromotedBishop(player)
-    case PiecesEnum.Rook => new Rook(player)
-    case PiecesEnum.PromotedRook => new PromotedRook(player)
-    case PiecesEnum.Pawn => new Pawn(player)
-    case PiecesEnum.PromotedPawn => new PromotedPawn(player)
+  def apply(pieceType: PiecesEnum.Value, isFirstOwner: Boolean): PieceInterface = pieceType match {
+    case PiecesEnum.King => King(isFirstOwner)
+    case PiecesEnum.GoldenGeneral => GoldenGeneral(isFirstOwner)
+    case PiecesEnum.SilverGeneral => SilverGeneral(isFirstOwner)
+    case PiecesEnum.PromotedSilver => PromotedSilver(isFirstOwner)
+    case PiecesEnum.Knight => Knight(isFirstOwner)
+    case PiecesEnum.PromotedKnight => PromotedKnight(isFirstOwner)
+    case PiecesEnum.Lancer => Lancer(isFirstOwner)
+    case PiecesEnum.PromotedLancer => PromotedLancer(isFirstOwner)
+    case PiecesEnum.Bishop => Bishop(isFirstOwner)
+    case PiecesEnum.PromotedBishop => PromotedBishop(isFirstOwner)
+    case PiecesEnum.Rook => Rook(isFirstOwner)
+    case PiecesEnum.PromotedRook => PromotedRook(isFirstOwner)
+    case PiecesEnum.Pawn => Pawn(isFirstOwner)
+    case PiecesEnum.PromotedPawn => PromotedPawn(isFirstOwner)
     case PiecesEnum.EmptyPiece => getEmptyPiece
   }
 
