@@ -23,6 +23,9 @@ class FileIO extends FileIOInterface {
       val source: String = Source.fromFile("board.json").getLines.mkString
       val json: JsValue = Json.parse(source)
       val size = (json \ "board" \ "size").get.toString.toInt
+      val state = (json \ "board" \ "state").get.toString.toBoolean
+      val player1 = new Player((json \ "board" \ "playerFirstName").get.toString, true)
+      val player2 = new Player((json \ "board" \ "playerSecondName").get.toString, true)
       val injector: Injector = Guice.createInjector(new ShoShogiModule)
 
       loadReturnOption = getBoardBySize(size, injector) match {
@@ -31,18 +34,7 @@ class FileIO extends FileIOInterface {
             getConqueredPieces((json \\ "playerFirstConquered").toArray),
             getConqueredPieces((json \\ "playerSecondConquered").toArray)
           )
-          Some(
-            (
-              newBoard,
-              (json \ "board" \ "state").get.toString.toBoolean, {
-              val name = (json \ "board" \ "playerFirstName").get.toString
-              new Player(name, true)
-            }, {
-              val name = (json \ "board" \ "playerSecondName").get.toString
-              new Player(name, false)
-            }
-            )
-          )
+          Some((newBoard, state, player1, player2))
         }
         case _ => None
       }
