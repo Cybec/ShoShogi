@@ -140,7 +140,7 @@ protected case class SilverGeneral(_isFirstOwner: Boolean)
   * Role:     Stuft das Piece auf
   * Return:   Gibt das Promotete Piece zurueck*/
   override def promotePiece: Option[PieceInterface] = {
-    Some(PromotedSilver(_isFirstOwner))
+    Some(PieceFactory.apply(PiecesEnum.PromotedSilver, _isFirstOwner))
   }
 
   override def toString: String = {
@@ -315,7 +315,7 @@ protected case class Lancer(_isFirstOwner: Boolean)
   * Role:     Stuft das Piece auf
   * Return:   Gibt das Promotete Piece zurueck*/
   override def promotePiece: Option[PieceInterface] = {
-    Some(PromotedLancer(_isFirstOwner))
+    Some(PieceFactory.apply(PiecesEnum.PromotedLancer, _isFirstOwner))
   }
 
   override def toString: String = {
@@ -396,7 +396,7 @@ protected case class Bishop(_isFirstOwner: Boolean)
   * Role:     Stuft das Piece auf
   * Return:   Gibt das Promotete Piece zurueck*/
   override def promotePiece: Option[PieceInterface] = {
-    Some(PromotedBishop(_isFirstOwner))
+    Some(PieceFactory.apply(PiecesEnum.PromotedBishop, _isFirstOwner))
   }
 
   override def toString: String = {
@@ -468,7 +468,7 @@ protected case class Rook(_isFirstOwner: Boolean)
   * Role:     Stuft das Piece auf
   * Return:   Gibt das Promotete Piece zurueck*/
   override def promotePiece: Option[PieceInterface] = {
-    Some(PromotedRook(_isFirstOwner))
+    Some(PieceFactory.apply(PiecesEnum.PromotedRook, _isFirstOwner))
   }
 
   override def toString: String = {
@@ -540,7 +540,7 @@ protected case class Pawn(_isFirstOwner: Boolean)
   * Role:     Stuft das Piece auf
   * Return:   Gibt das Promotete Piece zurueck*/
   override def promotePiece: Option[PieceInterface] = {
-    Some(PromotedPawn(_isFirstOwner))
+    Some(PieceFactory.apply(PiecesEnum.PromotedPawn, _isFirstOwner))
   }
 
   override def toString: String = {

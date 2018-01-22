@@ -870,7 +870,74 @@ class ControllerSpec extends WordSpec with Matchers {
     //TODO: how to test changeState
     //    "called changeState" should {
     //      "change the state from PlayerOnesTurn to PlayerTwosTurn and the other way around" in {
+    //        val playerOnesTurn: RoundState = new playerOneRound(controller)
+    //        val playerTwosTurn: RoundState = new playerTwoRound(controller)
+    //        var currentState: RoundState = playerOnesTurn
+    //        currentState.changeState() should be(playerTwosTurn)
+
     //      }
     //    }
+    "called save and load" should {
+      "save the board and load the saved board" in {
+        controller.createNewBoard()
+        controller.movePiece((0, 2), (0, 3)) should be(MoveResult.validMove)
+        controller.save
+        controller.movePiece((0, 6), (0, 5)) should be(MoveResult.validMove)
+        controller.load
+        controller.boardToString() should be(
+          "Captured: \n" +
+            "    0     1     2     3     4     5     6     7     8 \n \n" +
+            "---------------------------------------------------------\n " +
+            "| L°  | KN° | SG° | GG° | K°  | GG° | SG° | KN° | L°  | \ta\n" +
+            "---------------------------------------------------------\n " +
+            "|     | R°  |     |     |     |     |     | B°  |     | \tb\n" +
+            "---------------------------------------------------------\n " +
+            "|     | P°  | P°  | P°  | P°  | P°  | P°  | P°  | P°  | \tc\n" +
+            "---------------------------------------------------------\n " +
+            "| P°  |     |     |     |     |     |     |     |     | \td\n" +
+            "---------------------------------------------------------\n " +
+            "|     |     |     |     |     |     |     |     |     | \te\n" +
+            "---------------------------------------------------------\n " +
+            "|     |     |     |     |     |     |     |     |     | \tf\n" +
+            "---------------------------------------------------------\n " +
+            "| P   | P   | P   | P   | P   | P   | P   | P   | P   | \tg\n" +
+            "---------------------------------------------------------\n " +
+            "|     | B   |     |     |     |     |     | R   |     | \th\n" +
+            "---------------------------------------------------------\n " +
+            "| L   | KN  | SG  | GG  | K   | GG  | SG  | KN  | L   | \ti\n" +
+            "---------------------------------------------------------\n" +
+            "Captured: \n"
+        )
+      }
+      "not saving the board load changes nothing" in {
+        controller.createNewBoard()
+        controller.movePiece((0, 2), (0, 3)) should be(MoveResult.validMove)
+        controller.load
+        controller.boardToString() should be(
+          "Captured: \n" +
+            "    0     1     2     3     4     5     6     7     8 \n \n" +
+            "---------------------------------------------------------\n " +
+            "| L°  | KN° | SG° | GG° | K°  | GG° | SG° | KN° | L°  | \ta\n" +
+            "---------------------------------------------------------\n " +
+            "|     | R°  |     |     |     |     |     | B°  |     | \tb\n" +
+            "---------------------------------------------------------\n " +
+            "|     | P°  | P°  | P°  | P°  | P°  | P°  | P°  | P°  | \tc\n" +
+            "---------------------------------------------------------\n " +
+            "| P°  |     |     |     |     |     |     |     |     | \td\n" +
+            "---------------------------------------------------------\n " +
+            "|     |     |     |     |     |     |     |     |     | \te\n" +
+            "---------------------------------------------------------\n " +
+            "|     |     |     |     |     |     |     |     |     | \tf\n" +
+            "---------------------------------------------------------\n " +
+            "| P   | P   | P   | P   | P   | P   | P   | P   | P   | \tg\n" +
+            "---------------------------------------------------------\n " +
+            "|     | B   |     |     |     |     |     | R   |     | \th\n" +
+            "---------------------------------------------------------\n " +
+            "| L   | KN  | SG  | GG  | K   | GG  | SG  | KN  | L   | \ti\n" +
+            "---------------------------------------------------------\n" +
+            "Captured: \n"
+        )
+      }
+    }
   }
 }
