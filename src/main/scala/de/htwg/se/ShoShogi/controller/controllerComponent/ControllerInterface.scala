@@ -13,15 +13,15 @@ trait ControllerInterface extends scala.swing.Publisher {
 
   val boardSize = 9
 
-  def saveState: Unit
+  def saveState(): Unit
 
-  def undoCommand: Unit
+  def undoCommand(): Unit
 
-  def redoCommand: Unit
+  def redoCommand(): Unit
 
-  def save: Unit
+  def save(): Unit
 
-  def load: Unit
+  def load(): Unit
 
   def getPlayers: (Player, Player)
 

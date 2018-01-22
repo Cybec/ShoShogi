@@ -1,11 +1,11 @@
 package de.htwg.se.ShoShogi.model
 
-import de.htwg.se.ShoShogi.util.{ Observable, Observer }
+import de.htwg.se.ShoShogi.util.{Observable, Observer}
+import org.junit.runner.RunWith
+import org.scalatest.junit.JUnitRunner
+import org.scalatest.{Matchers, WordSpec}
 
 import scala.language.reflectiveCalls
-import org.junit.runner.RunWith
-import org.scalatest.{ Matchers, WordSpec }
-import org.scalatest.junit.JUnitRunner
 
 //noinspection ScalaStyle
 @RunWith(classOf[JUnitRunner])
@@ -19,10 +19,10 @@ class ObservableSpec extends WordSpec with Matchers {
         class TestTui(testController: TestController) extends Observer {
           testController.add(this)
 
-          override def update: Unit = {}
+          override def update(): Unit = {}
         }
         val con = new TestController()
-        val tui = new TestTui(con)
+        new TestTui(con)
         con.subscribers.size should be(1)
       }
     }
@@ -38,7 +38,7 @@ class ObservableSpec extends WordSpec with Matchers {
 
           def removeFromObserver(): Unit = testController.remove(this)
 
-          override def update: Unit = {}
+          override def update(): Unit = {}
         }
         val con = new TestController()
         val tui = new TestTui(con)
@@ -52,7 +52,7 @@ class ObservableSpec extends WordSpec with Matchers {
     "notified" should {
       "update all subscribers" in {
         class TestController() extends Observable {
-          def updateSubscribers(): Unit = notifyObservers
+          def updateSubscribers(): Unit = notifyObservers()
         }
         class TestTui(testController: TestController) extends Observer {
           testController.add(this)
@@ -60,7 +60,7 @@ class ObservableSpec extends WordSpec with Matchers {
 
           def removeFromObserver(): Unit = testController.remove(this)
 
-          override def update: Unit = {
+          override def update(): Unit = {
             updated = true
           }
         }

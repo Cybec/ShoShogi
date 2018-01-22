@@ -10,7 +10,7 @@ trait BoardInterface {
 
   def copyBoard(): BoardInterface
 
-  def getContainer(): (List[PieceInterface], List[PieceInterface])
+  def getContainer: (List[PieceInterface], List[PieceInterface])
 
   def createNewBoard(): BoardInterface
 

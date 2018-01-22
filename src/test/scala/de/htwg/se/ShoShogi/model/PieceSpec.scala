@@ -11,11 +11,10 @@ import org.scalatest.junit.JUnitRunner
 @RunWith(classOf[JUnitRunner])
 class PieceSpec extends WordSpec with Matchers {
   val boardSize = 9
-  val player_1 = Player("Player 1", true)
-  val player_2 = Player("Player 2", false)
+  val player_1: Player = Player("Player 1", first = true)
+  val player_2: Player = Player("Player 2", first = false)
   var board = new Board(boardSize, PieceFactory.apply(PiecesEnum.EmptyPiece, player_1.first))
 
-  //Steine fuer Spieler 1
   board = board.replaceCell(0, 0, PieceFactory.apply(PiecesEnum.Lancer, player_1.first))
   board = board.replaceCell(1, 0, PieceFactory.apply(PiecesEnum.Knight, player_1.first))
   board = board.replaceCell(2, 0, PieceFactory.apply(PiecesEnum.SilverGeneral, player_1.first))
@@ -31,7 +30,6 @@ class PieceSpec extends WordSpec with Matchers {
     board = board.replaceCell(i, 2, PieceFactory.apply(PiecesEnum.Pawn, player_1.first))
   }
 
-  //Steine fuer Spieler 2
   board = board.replaceCell(0, 8, PieceFactory.apply(PiecesEnum.Lancer, player_2.first))
   board = board.replaceCell(1, 8, PieceFactory.apply(PiecesEnum.Knight, player_2.first))
   board = board.replaceCell(2, 8, PieceFactory.apply(PiecesEnum.SilverGeneral, player_2.first))
@@ -682,7 +680,7 @@ class PieceSpec extends WordSpec with Matchers {
   }
 
   "A Piece" when {
-    "called isForstOwner" should {
+    "called isFirstOwner" should {
       "be true when Piece belongs to first player" in {
         val piecePlayer1 = PieceFactory.apply(PiecesEnum.King, player_1.first)
         piecePlayer1.isFirstOwner should be(true)

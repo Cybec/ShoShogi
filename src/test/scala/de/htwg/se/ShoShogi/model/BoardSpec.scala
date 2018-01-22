@@ -20,7 +20,7 @@ import scala.collection.mutable.ListBuffer
 class BoardSpec extends WordSpec with Matchers {
   "A Board is the playing field of Shogi. A Board" when {
     "to be constructed" should {
-      val player_1 = Player("Nick", true)
+      val player_1 = Player("Nick", first = true)
       val injector = Guice.createInjector(new ShoShogiModule)
       val board: BoardInterface = injector.instance[BoardInterface](Names.named("normal")).createNewBoard()
       val smallBoard = new Board(1, PieceFactory.apply(PiecesEnum.EmptyPiece, player_1.first))
@@ -46,7 +46,7 @@ class BoardSpec extends WordSpec with Matchers {
       }
     }
     "using an actual Board" should {
-      val player_1 = Player("Nick", true)
+      val player_1 = Player("Nick", first = true)
       var board = new Board(9, PieceFactory.apply(PiecesEnum.EmptyPiece, player_1.first))
 
       board = board.replaceCell(0, 0, PieceFactory.apply(PiecesEnum.Lancer, player_1.first))
@@ -84,8 +84,8 @@ class BoardSpec extends WordSpec with Matchers {
   "Board" when {
     "something added to container" should {
       "have pieces in both container" in {
-        val player_1 = Player("Nick", true)
-        val player_2 = Player("Mert", false)
+        val player_1 = Player("Nick", first = true)
+        val player_2 = Player("Mert", first = false)
         var board = new Board(9, PieceFactory.apply(PiecesEnum.EmptyPiece, player_1.first))
 
         board = board.addToPlayerContainer(player_1.first, PieceFactory.apply(PiecesEnum.Lancer, player_2.first))
@@ -93,7 +93,7 @@ class BoardSpec extends WordSpec with Matchers {
         board = board.addToPlayerContainer(player_2.first, PieceFactory.apply(PiecesEnum.Lancer, player_2.first))
         board = board.addToPlayerContainer(player_2.first, PieceFactory.apply(PiecesEnum.King, player_1.first))
 
-        board.getContainer() should be((
+        board.getContainer should be((
           ListBuffer(PieceFactory.apply(PiecesEnum.Lancer, player_1.first), PieceFactory.apply(PiecesEnum.King, player_1.first)),
           ListBuffer(PieceFactory.apply(PiecesEnum.Lancer, player_2.first), PieceFactory.apply(PiecesEnum.King, player_2.first))
         ))
@@ -104,8 +104,8 @@ class BoardSpec extends WordSpec with Matchers {
   "Board" when {
     "something removed from container" should {
       "have less pieces in both container" in {
-        val player_1 = Player("Nick", true)
-        val player_2 = Player("Mert", false)
+        val player_1 = Player("Nick", first = true)
+        val player_2 = Player("Mert", first = false)
 
         var board = new Board(9, PieceFactory.apply(PiecesEnum.EmptyPiece, player_1.first))
         var wantedPiece_0: PieceInterface = PieceFactory.apply(PiecesEnum.EmptyPiece, player_1.first)
@@ -120,7 +120,7 @@ class BoardSpec extends WordSpec with Matchers {
         board = board.addToPlayerContainer(player_2.first, PieceFactory.apply(PiecesEnum.King, player_1.first))
         board = board.addToPlayerContainer(player_2.first, PieceFactory.apply(PiecesEnum.King, player_1.first))
 
-        board.getContainer() should be((
+        board.getContainer should be((
           ListBuffer(PieceFactory.apply(PiecesEnum.Lancer, player_1.first), PieceFactory.apply(PiecesEnum.Lancer, player_1.first), PieceFactory.apply(PiecesEnum.King, player_1.first), PieceFactory.apply(PiecesEnum.King, player_1.first)),
           ListBuffer(PieceFactory.apply(PiecesEnum.Lancer, player_2.first), PieceFactory.apply(PiecesEnum.Lancer, player_2.first), PieceFactory.apply(PiecesEnum.King, player_2.first), PieceFactory.apply(PiecesEnum.King, player_2.first))
         ))
@@ -143,7 +143,7 @@ class BoardSpec extends WordSpec with Matchers {
           case None =>
         }
 
-        board.getContainer() should be((
+        board.getContainer should be((
           ListBuffer(PieceFactory.apply(PiecesEnum.Lancer, player_1.first), PieceFactory.apply(PiecesEnum.King, player_1.first), PieceFactory.apply(PiecesEnum.King, player_1.first)),
           ListBuffer(PieceFactory.apply(PiecesEnum.Lancer, player_2.first), PieceFactory.apply(PiecesEnum.Lancer, player_2.first), PieceFactory.apply(PiecesEnum.King, player_2.first))
         ))
@@ -152,8 +152,8 @@ class BoardSpec extends WordSpec with Matchers {
         PieceFactory.isInstanceOfPiece(PiecesEnum.King, wantedPiece_1) should be(true)
       }
       "return None if there is no such piece" in {
-        val player_1 = Player("Nick", true)
-        val player_2 = Player("Mert", false)
+        val player_1 = Player("Nick", first = true)
+        val player_2 = Player("Mert", first = false)
         var board = new Board(9, PieceFactory.apply(PiecesEnum.EmptyPiece, player_1.first))
         var wantedPiece_0: PieceInterface = PieceFactory.apply(PiecesEnum.EmptyPiece, player_1.first)
         var wantedPiece_1: PieceInterface = PieceFactory.apply(PiecesEnum.EmptyPiece, player_1.first)
@@ -168,7 +168,7 @@ class BoardSpec extends WordSpec with Matchers {
         board = board.addToPlayerContainer(player_2.first, PieceFactory.apply(PiecesEnum.King, player_1.first))
         board.addToPlayerContainer(player_2.first, PieceFactory.apply(PiecesEnum.EmptyPiece, player_1.first))
 
-        board.getContainer() should be((
+        board.getContainer should be((
           ListBuffer(PieceFactory.apply(PiecesEnum.Lancer, player_1.first), PieceFactory.apply(PiecesEnum.Lancer, player_1.first), PieceFactory.apply(PiecesEnum.King, player_1.first), PieceFactory.apply(PiecesEnum.King, player_1.first)),
           ListBuffer(PieceFactory.apply(PiecesEnum.Lancer, player_2.first), PieceFactory.apply(PiecesEnum.Lancer, player_2.first), PieceFactory.apply(PiecesEnum.King, player_2.first), PieceFactory.apply(PiecesEnum.King, player_2.first))
         ))
@@ -191,7 +191,7 @@ class BoardSpec extends WordSpec with Matchers {
           case None =>
         }
 
-        board.getContainer() should be((
+        board.getContainer should be((
           ListBuffer(PieceFactory.apply(PiecesEnum.Lancer, player_1.first), PieceFactory.apply(PiecesEnum.Lancer, player_1.first), PieceFactory.apply(PiecesEnum.King, player_1.first)),
           ListBuffer(PieceFactory.apply(PiecesEnum.Lancer, player_2.first), PieceFactory.apply(PiecesEnum.Lancer, player_2.first), PieceFactory.apply(PiecesEnum.King, player_2.first), PieceFactory.apply(PiecesEnum.King, player_2.first))
         ))
@@ -204,8 +204,7 @@ class BoardSpec extends WordSpec with Matchers {
   }
 
   "Board" when {
-    val player_1 = Player("Nick", true)
-    val player_2 = Player("Mert", false)
+    val player_1 = Player("Nick", first = true)
     var board = new Board(9, PieceFactory.apply(PiecesEnum.EmptyPiece, player_1.first))
     val pawn = PieceFactory.apply(PiecesEnum.Pawn, player_1.first)
     val lancer = PieceFactory.apply(PiecesEnum.Lancer, player_1.first)
@@ -213,11 +212,11 @@ class BoardSpec extends WordSpec with Matchers {
     board = board.replaceCell(0, 7, lancer)
     "checked if Piece is in Column" should {
       "have Piece Pawn and Lancer" in {
-        board.getPiecesInColumn(0, true) should be(List[PieceInterface](pawn, lancer))
-        board.getPiecesInColumn(3, true) should be(List[PieceInterface]())
+        board.getPiecesInColumn(0, stateTurn = true) should be(List[PieceInterface](pawn, lancer))
+        board.getPiecesInColumn(3, stateTurn = true) should be(List[PieceInterface]())
       }
       "give nothing" in {
-        board.getPiecesInColumn(10, true) should be(List[(Int, Int)]())
+        board.getPiecesInColumn(10, stateTurn = true) should be(List[(Int, Int)]())
       }
     }
     "checked which fields in a column are empty" should {
@@ -233,8 +232,8 @@ class BoardSpec extends WordSpec with Matchers {
   "Board" when {
     "called toArray" should {
       "return a two dimensional Array of all Pieces" in {
-        val player_1 = Player("Nick", true)
-        val player_2 = Player("Mert", false)
+        val player_1 = Player("Nick", first = true)
+        val player_2 = Player("Mert", first = false)
         var board = new Board(2, PieceFactory.apply(PiecesEnum.EmptyPiece, player_1.first))
         val pawn = PieceFactory.apply(PiecesEnum.Pawn, player_2.first)
         val empty = PieceFactory.apply(PiecesEnum.EmptyPiece, player_1.first)
@@ -247,15 +246,15 @@ class BoardSpec extends WordSpec with Matchers {
   "A Board" when {
     "called setContainer" should {
       "return a Board with new Containers" in {
-        val player_1 = Player("Nick", true)
-        val player_2 = Player("Mert", false)
-        var board = new Board(9, PieceFactory.apply(PiecesEnum.EmptyPiece, player_1.first))
+        val player_1 = Player("Nick", first = true)
+        val player_2 = Player("Mert", first = false)
+        val board = new Board(9, PieceFactory.apply(PiecesEnum.EmptyPiece, player_1.first))
         val pawn = PieceFactory.apply(PiecesEnum.Pawn, player_1.first)
         val pawn2 = PieceFactory.apply(PiecesEnum.Pawn, player_2.first)
         val lancer = PieceFactory.apply(PiecesEnum.Lancer, player_1.first)
         val lancer2 = PieceFactory.apply(PiecesEnum.Lancer, player_2.first)
 
-        board.getContainer() should be(List(), List())
+        board.getContainer should be(List(), List())
         board.setContainer(List(pawn, lancer), List(pawn2, lancer2)).toString should be(
           "Captured: P°    L°    \n" +
             "    0     1     2     3     4     5     6     7     8 \n \n" +
@@ -286,9 +285,9 @@ class BoardSpec extends WordSpec with Matchers {
   "A Board" when {
     "called createNewBoard" should {
       "create a Board with only Empty Pieces" in {
-        val player_1 = Player("", true)
-        var board = new Board(9, PieceFactory.apply(PiecesEnum.EmptyPiece, player_1.first))
-        board.createNewBoard.toString should be(
+        val player_1 = Player("", first = true)
+        val board = new Board(9, PieceFactory.apply(PiecesEnum.EmptyPiece, player_1.first))
+        board.createNewBoard().toString should be(
           "Captured: \n" +
             "    0     1     2     3     4     5     6     7     8 \n \n" +
             "---------------------------------------------------------\n " +

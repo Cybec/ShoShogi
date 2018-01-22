@@ -24,23 +24,22 @@ class FileIO extends FileIOInterface {
       val json: JsValue = Json.parse(source)
       val size = (json \ "board" \ "size").get.toString.toInt
       val state = (json \ "board" \ "state").get.toString.toBoolean
-      val player1 = new Player((json \ "board" \ "playerFirstName").get.toString, true)
-      val player2 = new Player((json \ "board" \ "playerSecondName").get.toString, true)
+      val player1 = Player((json \ "board" \ "playerFirstName").get.toString, first = true)
+      val player2 = Player((json \ "board" \ "playerSecondName").get.toString, first = true)
       val injector: Injector = Guice.createInjector(new ShoShogiModule)
 
       loadReturnOption = getBoardBySize(size, injector) match {
-        case Some(board) => {
+        case Some(board) =>
           val newBoard = board.setContainer(
             getConqueredPieces((json \\ "playerFirstConquered").toArray),
             getConqueredPieces((json \\ "playerSecondConquered").toArray)
           )
           Some((newBoard, state, player1, player2))
-        }
         case _ => None
       }
 
       loadReturnOption match {
-        case Some((board, state, player_1, player_2)) => {
+        case Some((board, savedState, player_1, player_2)) =>
           var _board = board
           for (index <- 0 until size * size) {
             val row = (json \\ "row") (index).as[Int]
@@ -54,50 +53,25 @@ class FileIO extends FileIOInterface {
               case None =>
             }
           }
-          loadReturnOption = Some(_board, state, player_1, player_2)
-        }
+          loadReturnOption = Some(_board, savedState, player_1, player_2)
         case None =>
       }
       loadReturnOption
     }
 
-  override def save(board: BoardInterface, state: Boolean, player_1: Player, player_2: Player): Unit = {
-    import java.io._
-    val pw = new PrintWriter(new File("board.json"))
-    pw.write(Json.prettyPrint(gridToJson(board, state, player_1, player_2)))
-    pw.close
-  }
+  def getConqueredPieces(jsArray: Array[JsValue]): List[PieceInterface] = {
+    var stringList: List[String] = List[String]()
+    var pieceList: List[PieceInterface] = List[PieceInterface]()
 
-  def gridToJson(board: BoardInterface, state: Boolean, player_1: Player, player_2: Player): JsValue = {
-    Json.obj(
-      "board" -> Json.obj(
-        "size" -> JsNumber(board.size),
-        "state" -> JsBoolean(state),
-        "playerFirstName" -> JsString(player_1.name),
-        "playerSecondName" -> JsString(player_2.name),
-        "playerFirstConquered" -> Json.toJson(board.getContainer()._1.distinct),
-        "playerSecondConquered" -> Json.toJson(board.getContainer()._2.distinct),
-        "cell" -> Json.toJson(
-          for {
-            col <- 0 until board.size;
-            row <- 0 until board.size
-          } yield {
-            Json.obj(
-              "row" -> row,
-              "col" -> col,
-              "piece" -> Json.toJson(board.cell(col, row))
-            )
-          }
-        )
-      )
-    )
-  }
+    for (x <- jsArray) yield (x \\ "pieceName").foreach(i => stringList = stringList :+ i.as[String])
 
-  implicit val cellWrites = new Writes[PieceInterface] {
-    def writes(piece: PieceInterface) = Json.obj(
-      "pieceName" -> piece.toStringLong,
-      "firstPlayer" -> piece.isFirstOwner
-    )
+    for (x: String <- stringList) {
+      PiecesEnum.withNameOpt(x) match {
+        case Some(pieceEnum) => pieceList = pieceList :+ PieceFactory.apply(pieceEnum, isFirstOwner = false)
+        case None =>
+      }
+    }
+    pieceList
   }
 
   def getBoardBySize(size: Int, injector: Injector): Option[BoardInterface] = {
@@ -112,18 +86,42 @@ class FileIO extends FileIOInterface {
     }
   }
 
-  def getConqueredPieces(jsArray: Array[JsValue]): List[PieceInterface] = {
-    var stringList: List[String] = List[String]()
-    var pieceList: List[PieceInterface] = List[PieceInterface]()
+  implicit val cellWrites = new Writes[PieceInterface] {
+    def writes(piece: PieceInterface): JsObject = Json.obj(
+      "pieceName" -> piece.toStringLong,
+      "firstPlayer" -> piece.isFirstOwner
+    )
+  }
 
-    for (x <- jsArray) yield (x \\ "pieceName").foreach(i => stringList = stringList :+ i.as[String])
+  override def save(board: BoardInterface, state: Boolean, player_1: Player, player_2: Player): Unit = {
+    import java.io._
+    val pw = new PrintWriter(new File("board.json"))
+    pw.write(Json.prettyPrint(gridToJson(board, state, player_1, player_2)))
+    pw.close()
+  }
 
-    for (x: String <- stringList) {
-      PiecesEnum.withNameOpt(x) match {
-        case Some(pieceEnum) => pieceList = pieceList :+ PieceFactory.apply(pieceEnum, false)
-        case None =>
-      }
-    }
-    pieceList
+  def gridToJson(board: BoardInterface, state: Boolean, player_1: Player, player_2: Player): JsValue = {
+    Json.obj(
+      "board" -> Json.obj(
+        "size" -> JsNumber(board.size),
+        "state" -> JsBoolean(state),
+        "playerFirstName" -> JsString(player_1.name),
+        "playerSecondName" -> JsString(player_2.name),
+        "playerFirstConquered" -> Json.toJson(board.getContainer._1.distinct),
+        "playerSecondConquered" -> Json.toJson(board.getContainer._2.distinct),
+        "cell" -> Json.toJson(
+          for {
+            col <- 0 until board.size
+            row <- 0 until board.size
+          } yield {
+            Json.obj(
+              "row" -> row,
+              "col" -> col,
+              "piece" -> Json.toJson(board.cell(col, row))
+            )
+          }
+        )
+      )
+    )
   }
 }

@@ -17,7 +17,7 @@ abstract class Piece(_name: String, _isFirstOwner: Boolean) extends PieceInterfa
         if (PieceFactory.isInstanceOfPiece(PiecesEnum.EmptyPiece, i) || i.isFirstOwner != this.isFirstOwner) {
           l = List[(Int, Int)]((newPos._1, newPos._2))
           if (i.isInstanceOf[EmptyPiece]) {
-            l = l ::: rekMoveSet(board, ((newPos._1 + value._1), (newPos._2 + value._2)), rek - 1, value)
+            l = l ::: rekMoveSet(board, (newPos._1 + value._1, newPos._2 + value._2), rek - 1, value)
           }
         })
       l
@@ -26,7 +26,7 @@ abstract class Piece(_name: String, _isFirstOwner: Boolean) extends PieceInterfa
     }
   }
 
-  override def typeEquals(piecesAbbreviation: String): Boolean = this.toString().trim == piecesAbbreviation.trim
+  override def typeEquals(piecesAbbreviation: String): Boolean = this.toString.trim == piecesAbbreviation.trim
 }
 
 //region King

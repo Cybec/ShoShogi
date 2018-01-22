@@ -1,11 +1,8 @@
 package de.htwg.se.ShoShogi.aview.gui
 
+import javax.swing._
+
 import scala.swing.Dialog
-import javax.swing.JPasswordField
-import javax.swing.JTextField
-import javax.swing.JComponent
-import javax.swing.JLabel
-import javax.swing.JOptionPane
 
 class ChangeNameDialog() extends Dialog {
   val p1DefaultName = "Player 1"
@@ -22,9 +19,10 @@ class ChangeNameDialog() extends Dialog {
     player2NameTextBox
   )
 
-  def getNames(): (String, String) = (player1NameTextBox.getText(), player2NameTextBox.getText())
+  def getNames: (String, String) = (player1NameTextBox.getText(), player2NameTextBox.getText())
 
   def showDialog(): Dialog.Result.Value = {
+    //noinspection ScalaStyle
     val result = JOptionPane.showConfirmDialog(null, inputs, "New Game", JOptionPane.OK_CANCEL_OPTION)
     if (result == 0) Dialog.Result.Ok else Dialog.Result.Cancel
   }

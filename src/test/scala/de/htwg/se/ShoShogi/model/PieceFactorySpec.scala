@@ -1,6 +1,6 @@
 package de.htwg.se.ShoShogi.model
 
-import com.google.inject.Guice
+import com.google.inject.{Guice, Injector}
 import de.htwg.se.ShoShogi.ShoShogiModule
 import de.htwg.se.ShoShogi.controller.controllerComponent.ControllerInterface
 import de.htwg.se.ShoShogi.model.pieceComponent.pieceBaseImpl._
@@ -11,8 +11,8 @@ import org.scalatest.{Matchers, WordSpec}
 //noinspection ScalaStyle
 @RunWith(classOf[JUnitRunner])
 class PieceFactorySpec extends WordSpec with Matchers {
-  val injector = Guice.createInjector(new ShoShogiModule)
-  val controller = injector.getInstance(classOf[ControllerInterface])
+  val injector: Injector = Guice.createInjector(new ShoShogiModule)
+  val controller: ControllerInterface = injector.getInstance(classOf[ControllerInterface])
 
   "A PieceFactory" when {
     "called apply" should {

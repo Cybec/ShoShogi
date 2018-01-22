@@ -7,18 +7,19 @@ import de.htwg.se.ShoShogi.model.pieceComponent.PieceInterface
 import de.htwg.se.ShoShogi.model.pieceComponent.pieceBaseImpl.{PieceFactory, PiecesEnum}
 import de.htwg.se.ShoShogi.model.playerComponent.Player
 
-class BoardInj @Inject() (@Named("DefaultSize") boardSize: Int) extends Board(boardSize, PieceFactory.getEmptyPiece) {
+class BoardInj @Inject()(@Named("DefaultSize") boardSize: Int) extends Board(boardSize, PieceFactory.getEmptyPiece)
 
-  //  override def createNewBoard: BoardInterface = new Board(boardSize, PieceFactory.getEmptyPiece)
+case class Board(
+                  board: Vector[Vector[PieceInterface]],
+                  containerPlayer_0: List[PieceInterface],
+                  containerPlayer_1: List[PieceInterface]
+                ) extends BoardInterface {
+  override def createNewBoard(): BoardInterface = new Board(size, PieceFactory.getEmptyPiece)
 
-}
+  def this(size: Int, filling: PieceInterface) =
+    this(Vector.tabulate(size, size) { (_, _) => filling }, List.empty[PieceInterface], List.empty[PieceInterface])
 
-case class Board(board: Vector[Vector[PieceInterface]], containerPlayer_0: List[PieceInterface], containerPlayer_1: List[PieceInterface]) extends BoardInterface {
-  def this(size: Int, filling: PieceInterface) = this(Vector.tabulate(size, size) { (row, col) => filling }, List.empty[PieceInterface], List.empty[PieceInterface])
-
-  override def createNewBoard: BoardInterface = new Board(size, PieceFactory.getEmptyPiece)
-
-  override def getContainer(): (List[PieceInterface], List[PieceInterface]) = {
+  override def getContainer: (List[PieceInterface], List[PieceInterface]) = {
     (containerPlayer_0, containerPlayer_1)
   }
 
@@ -73,11 +74,11 @@ case class Board(board: Vector[Vector[PieceInterface]], containerPlayer_0: List[
     if (column <= this.size && column >= 0) {
       for (i <- 0 until this.size) {
         this.cell(column, i) match {
-          case Some(piece) if (PieceFactory.isInstanceOfPiece(PiecesEnum.EmptyPiece, piece)) => {}
+          case Some(piece) if PieceFactory.isInstanceOfPiece(PiecesEnum.EmptyPiece, piece) =>
           case Some(piece) => if (stateTurn == piece.isFirstOwner) {
             pieces = pieces :+ piece
           }
-          case None => {}
+          case None =>
         }
       }
     }
@@ -90,14 +91,13 @@ case class Board(board: Vector[Vector[PieceInterface]], containerPlayer_0: List[
     if (column <= this.size && column >= 0) {
       for (i <- range._1 to range._2) {
         this.cell(column, i) match {
-          case Some(piece) if (PieceFactory.isInstanceOfPiece(PiecesEnum.EmptyPiece, piece)) =>
+          case Some(piece) if PieceFactory.isInstanceOfPiece(PiecesEnum.EmptyPiece, piece) =>
             emptyCells = emptyCells :+ (column, i)
-          case Some(_) => {}
-          case None => {}
+          case Some(_) =>
+          case None =>
         }
       }
     }
-
     emptyCells
   }
 
@@ -113,7 +113,6 @@ case class Board(board: Vector[Vector[PieceInterface]], containerPlayer_0: List[
         case None => returnList(col)(row) = PieceFactory.getEmptyPiece
       }
     }
-
     returnList
   }
 
@@ -131,7 +130,7 @@ case class Board(board: Vector[Vector[PieceInterface]], containerPlayer_0: List[
 
     for (a <- 1 to 19) {
       if (a % 2 == 1) {
-        for (b <- 1 to 57) returnValue.append("-")
+        for (_ <- 1 to 57) returnValue.append("-")
       } else {
         for (c <- 0 to 8) {
           cell(c, index) match {
@@ -144,7 +143,6 @@ case class Board(board: Vector[Vector[PieceInterface]], containerPlayer_0: List[
       }
       returnValue.append("\n")
     }
-
     returnValue.append("Captured: ")
     containerPlayer_1.foreach(x => returnValue.append(x).append("   "))
     returnValue.append("\n")
@@ -160,4 +158,3 @@ case class Board(board: Vector[Vector[PieceInterface]], containerPlayer_0: List[
     }
   }
 }
-

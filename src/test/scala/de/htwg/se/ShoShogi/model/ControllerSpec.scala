@@ -1,7 +1,7 @@
 package de.htwg.se.ShoShogi.model
 
-import com.google.inject.Guice
 import com.google.inject.name.Names
+import com.google.inject.{Guice, Injector}
 import de.htwg.se.ShoShogi.ShoShogiModule
 import de.htwg.se.ShoShogi.controller.controllerComponent.{ControllerInterface, MoveResult}
 import de.htwg.se.ShoShogi.model.boardComponent.BoardInterface
@@ -18,8 +18,8 @@ import scala.language.reflectiveCalls
 @RunWith(classOf[JUnitRunner])
 class ControllerSpec extends WordSpec with Matchers {
 
-  val injector = Guice.createInjector(new ShoShogiModule)
-  val controller = injector.getInstance(classOf[ControllerInterface])
+  val injector: Injector = Guice.createInjector(new ShoShogiModule)
+  val controller: ControllerInterface = injector.getInstance(classOf[ControllerInterface])
   controller.createNewBoard()
   controller.changeNamePlayer1("Nick")
   controller.changeNamePlayer2("Mert")
@@ -765,7 +765,7 @@ class ControllerSpec extends WordSpec with Matchers {
       "undo the last move done and change the state of the game back" in {
         controller.createNewBoard()
         controller.movePiece((0, 2), (0, 3)) should be(MoveResult.validMove) // player_1
-        controller.undoCommand
+        controller.undoCommand()
         controller.boardToString() should be(
           "Captured: \n" +
             "    0     1     2     3     4     5     6     7     8 \n \n" +
@@ -793,6 +793,7 @@ class ControllerSpec extends WordSpec with Matchers {
       }
       "give back the Nil when no move was done till now" in {
         controller.createNewBoard()
+        //TODO: Nick was soll das???
         controller.undoCommand should be()
       }
     }
@@ -800,8 +801,8 @@ class ControllerSpec extends WordSpec with Matchers {
       "redo the last undone Command and change the state back to the state before undo was applied" in {
         controller.createNewBoard()
         controller.movePiece((0, 2), (0, 3)) should be(MoveResult.validMove) // player_1
-        controller.undoCommand
-        controller.redoCommand
+        controller.undoCommand()
+        controller.redoCommand()
         controller.boardToString() should be(
           "Captured: \n" +
             "    0     1     2     3     4     5     6     7     8 \n \n" +
@@ -829,6 +830,8 @@ class ControllerSpec extends WordSpec with Matchers {
       }
       "give back Nil when no undo was done till now" in {
         controller.createNewBoard()
+
+        //TODO: Nick was soll das???
         controller.redoCommand should be()
       }
     }
