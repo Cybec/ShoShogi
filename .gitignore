@@ -12,8 +12,6 @@ target/
 
 # Maven
 log/
-target/
-
 # Gradle
 .gradle/
 build/
@@ -57,3 +55,4 @@ codestyles/
 /scala.xml
 /keymaps/
 /find.xml
+/.metadata/
