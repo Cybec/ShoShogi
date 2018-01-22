@@ -6,8 +6,18 @@ import de.htwg.se.ShoShogi.model.playerComponent.Player
 
 trait BoardInterface {
 
+  /**
+    * The size of the playing board
+    *
+    * @return the size of the board
+    */
   def size: Int
 
+  /**
+    * Copys the current board
+    *
+    * @return a board Interface
+    */
   def copyBoard(): BoardInterface
 
   def getContainer: (List[PieceInterface], List[PieceInterface])

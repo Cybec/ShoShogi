@@ -1,5 +1,6 @@
 package de.htwg.se.ShoShogi.aview
 
+import com.typesafe.scalalogging.LazyLogging
 import de.htwg.se.ShoShogi.controller.controllerComponent.controllerBaseImpl.{StartNewGame, UpdateAll}
 import de.htwg.se.ShoShogi.controller.controllerComponent.{ControllerInterface, MoveResult}
 
@@ -35,7 +36,7 @@ trait State {
   )
 }
 
-class Tui(controller: ControllerInterface) extends Reactor with State {
+class Tui(controller: ControllerInterface) extends Reactor with State with LazyLogging {
   listenTo(controller)
 
   case class Event(command: String, input: Array[String])
@@ -268,8 +269,8 @@ class Tui(controller: ControllerInterface) extends Reactor with State {
   }
 
   def printString(stringToPrint: String): Boolean = {
-    //noinspection ScalaStyle
-    println(stringToPrint)
+    //    println(stringToPrint)
+    logger.info(stringToPrint)
     true
   }
 

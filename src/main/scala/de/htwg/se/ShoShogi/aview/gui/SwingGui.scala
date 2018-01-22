@@ -70,23 +70,23 @@ class SwingGui(controller: ControllerInterface) extends Frame {
       })
       contents += new Separator
       contents += new MenuItem(Action("Save") {
-        controller.save()
+        controller.save
       })
       contents += new MenuItem(Action("Load") {
-        controller.load()
+        controller.load
       })
       contents += new Separator
       contents += new MenuItem(Action("Quit") {
-        closeOperation()
+        closeOperation
       })
     }
     contents += new Menu("Edit") {
       mnemonic = Key.E
       contents += new MenuItem(Action("undo") {
-        controller.undoCommand()
+        controller.undoCommand
       })
       contents += new MenuItem(Action("redo") {
-        controller.redoCommand()
+        controller.redoCommand
       })
     }
   }

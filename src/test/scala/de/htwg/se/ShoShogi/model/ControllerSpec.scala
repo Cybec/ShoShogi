@@ -765,7 +765,7 @@ class ControllerSpec extends WordSpec with Matchers {
       "undo the last move done and change the state of the game back" in {
         controller.createNewBoard()
         controller.movePiece((0, 2), (0, 3)) should be(MoveResult.validMove) // player_1
-        controller.undoCommand()
+        controller.undoCommand
         controller.boardToString() should be(
           "Captured: \n" +
             "    0     1     2     3     4     5     6     7     8 \n \n" +
@@ -801,8 +801,8 @@ class ControllerSpec extends WordSpec with Matchers {
       "redo the last undone Command and change the state back to the state before undo was applied" in {
         controller.createNewBoard()
         controller.movePiece((0, 2), (0, 3)) should be(MoveResult.validMove) // player_1
-        controller.undoCommand()
-        controller.redoCommand()
+        controller.undoCommand
+        controller.redoCommand
         controller.boardToString() should be(
           "Captured: \n" +
             "    0     1     2     3     4     5     6     7     8 \n \n" +
