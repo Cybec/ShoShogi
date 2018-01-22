@@ -1,131 +1,135 @@
 package de.htwg.se.ShoShogi.controller.controllerComponent.controllerBaseImpl
 
 import com.google.inject.name.Names
-import com.google.inject.{ Guice, Inject }
+import com.google.inject.{Guice, Inject, Injector}
 import de.htwg.se.ShoShogi.ShoShogiModule
 import de.htwg.se.ShoShogi.controller.controllerComponent._
 import de.htwg.se.ShoShogi.model.boardComponent.BoardInterface
 import de.htwg.se.ShoShogi.model.fileIoComponent.FileIOInterface
 import de.htwg.se.ShoShogi.model.pieceComponent.PieceInterface
-import de.htwg.se.ShoShogi.model.pieceComponent.pieceBaseImpl.{ PieceFactory, PiecesEnum }
+import de.htwg.se.ShoShogi.model.pieceComponent.pieceBaseImpl.{PieceFactory, PiecesEnum}
 import de.htwg.se.ShoShogi.model.playerComponent.Player
 import de.htwg.se.ShoShogi.util.UndoManager
 import net.codingwell.scalaguice.InjectorExtensions._
 
 class Controller @Inject() extends RoundState with ControllerInterface {
-  val injector = Guice.createInjector(new ShoShogiModule)
-  val fileIo = injector.instance[FileIOInterface]
+  val injector: Injector = Guice.createInjector(new ShoShogiModule)
+  val fileIo: FileIOInterface = injector.instance[FileIOInterface]
   var board: BoardInterface = injector.instance[BoardInterface](Names.named("normal")).createNewBoard()
-  var player_1: Player = new Player("Player1", true)
-  var player_2: Player = new Player("Player2", false)
-
-  override def getPlayers: (Player, Player) = {
-    (new Player(player_1.name, player_1.first), new Player(player_2.name, player_2.first))
-  }
+  val playerOnesTurn: RoundState = playerOneRound(this)
+  val playerTwosTurn: RoundState = playerTwoRound(this)
+  var player_1: Player = Player("Player1", first = true)
 
   private val undoManager = new UndoManager
+  var player_2: Player = Player("Player2", first = false)
 
-  val playerOnesTurn: RoundState = new playerOneRound(this)
-  val playerTwosTurn: RoundState = new playerTwoRound(this)
+  override def getPlayers: (Player, Player) = {
+    (Player(player_1.name, player_1.first), Player(player_2.name, player_2.first))
+  }
   var currentState: RoundState = playerOnesTurn
   override val boardSize = 9
 
-  override def changeNamePlayer1(newName: String): Unit = player_1 = new Player(newName, player_1.first)
+  override def changeNamePlayer1(Name: String): Unit = player_1 = Player(Name, player_1.first)
 
-  override def changeNamePlayer2(newName: String): Unit = player_2 = new Player(newName, player_2.first)
+  override def changeNamePlayer2(Name: String): Unit = player_2 = Player(Name, player_2.first)
 
-  override def getContainer: (List[PieceInterface], List[PieceInterface]) = board.getContainer()
+  override def getContainer: (List[PieceInterface], List[PieceInterface]) = board.getContainer
 
   override def setContainer(container: (List[PieceInterface], List[PieceInterface])): Unit = {
     board = board.setContainer(container)
   }
 
-  override def saveState: Unit = {
-    undoManager.saveStep(new SolveCommand(this))
-  }
-
-  override def undoCommand: Unit = {
-    undoManager.undoStep
+  override def undoCommand(): Unit = {
+    undoManager.undoStep()
     publish(new UpdateAll)
   }
 
-  override def redoCommand: Unit = {
-    undoManager.redoStep
+  override def redoCommand(): Unit = {
+    undoManager.redoStep()
     publish(new UpdateAll)
   }
 
-  override def save: Unit = {
+  override def save(): Unit = {
     val state = if (currentState.isInstanceOf[playerOneRound]) true else false
     fileIo.save(board, state, player_1, player_2)
   }
 
-  override def load: Unit = {
+  override def load(): Unit = {
     val boardOption = fileIo.load
     boardOption match {
-      case None => {
+      case None =>
         createEmptyBoard()
-      }
-      case Some((_board, state, _player1, _player2)) => {
+      case Some((_board, state, _player1, _player2)) =>
         board = _board
         currentState = if (state) playerOnesTurn else playerTwosTurn
         player_1 = _player1
         player_2 = _player2
-      }
     }
     publish(new UpdateAll)
   }
 
   override def createEmptyBoard(): Unit = {
     board = injector.instance[BoardInterface](Names.named("normal")).createNewBoard()
-    //    board = new Board(boardSize, PieceFactory.apply(PiecesEnum.EmptyPiece, player_1))
+    //    board =  Board(boardSize, PieceFactory.apply(PiecesEnum.EmptyPiece, player_1))
 
     currentState = playerOnesTurn
     publish(new UpdateAll)
   }
 
-  def getBoardClone: BoardInterface = board.copyBoard()
+  def replaceBoard(Board: BoardInterface): Unit = board = Board
 
-  def replaceBoard(newBoard: BoardInterface): Unit = board = newBoard
+  def getBoardClone: BoardInterface = board.copyBoard()
 
   override def createNewBoard(): Unit = {
     board = injector.instance[BoardInterface](Names.named("normal")).createNewBoard()
-    //    board = new Board(boardSize, PieceFactory.apply(PiecesEnum.EmptyPiece, player_1))
 
-    //Steine fuer Spieler 1
-    board = board.replaceCell(0, 0, PieceFactory.apply(PiecesEnum.Lancer, player_1))
-    board = board.replaceCell(1, 0, PieceFactory.apply(PiecesEnum.Knight, player_1))
-    board = board.replaceCell(2, 0, PieceFactory.apply(PiecesEnum.SilverGeneral, player_1))
-    board = board.replaceCell(3, 0, PieceFactory.apply(PiecesEnum.GoldenGeneral, player_1))
-    board = board.replaceCell(4, 0, PieceFactory.apply(PiecesEnum.King, player_1))
-    board = board.replaceCell(5, 0, PieceFactory.apply(PiecesEnum.GoldenGeneral, player_1))
-    board = board.replaceCell(6, 0, PieceFactory.apply(PiecesEnum.SilverGeneral, player_1))
-    board = board.replaceCell(7, 0, PieceFactory.apply(PiecesEnum.Knight, player_1))
-    board = board.replaceCell(8, 0, PieceFactory.apply(PiecesEnum.Lancer, player_1))
-    board = board.replaceCell(7, 1, PieceFactory.apply(PiecesEnum.Bishop, player_1))
-    board = board.replaceCell(1, 1, PieceFactory.apply(PiecesEnum.Rook, player_1))
+    val col_0, row_0 = 0
+    val col_1, row_1 = 1
+    val col_2, row_2 = 2
+    val col_3 = 3
+    val col_4 = 4
+    val col_5 = 5
+    val col_6, row_6 = 6
+    val col_7, row_7 = 7
+    val col_8, row_8 = 8
+
+    board = board.replaceCell(col_0, row_0, PieceFactory.apply(PiecesEnum.Lancer, player_1.first))
+    board = board.replaceCell(col_1, row_0, PieceFactory.apply(PiecesEnum.Knight, player_1.first))
+    board = board.replaceCell(col_2, row_0, PieceFactory.apply(PiecesEnum.SilverGeneral, player_1.first))
+    board = board.replaceCell(col_3, row_0, PieceFactory.apply(PiecesEnum.GoldenGeneral, player_1.first))
+    board = board.replaceCell(col_4, row_0, PieceFactory.apply(PiecesEnum.King, player_1.first))
+    board = board.replaceCell(col_5, row_0, PieceFactory.apply(PiecesEnum.GoldenGeneral, player_1.first))
+    board = board.replaceCell(col_6, row_0, PieceFactory.apply(PiecesEnum.SilverGeneral, player_1.first))
+    board = board.replaceCell(col_7, row_0, PieceFactory.apply(PiecesEnum.Knight, player_1.first))
+    board = board.replaceCell(col_8, row_0, PieceFactory.apply(PiecesEnum.Lancer, player_1.first))
+    board = board.replaceCell(col_7, row_1, PieceFactory.apply(PiecesEnum.Bishop, player_1.first))
+    board = board.replaceCell(col_1, row_1, PieceFactory.apply(PiecesEnum.Rook, player_1.first))
     for (i <- 0 to 8) {
-      board = board.replaceCell(i, 2, PieceFactory.apply(PiecesEnum.Pawn, player_1))
+      board = board.replaceCell(i, row_2, PieceFactory.apply(PiecesEnum.Pawn, player_1.first))
     }
 
-    //Steine fuer Spieler 2
-    board = board.replaceCell(0, 8, PieceFactory.apply(PiecesEnum.Lancer, player_2))
-    board = board.replaceCell(1, 8, PieceFactory.apply(PiecesEnum.Knight, player_2))
-    board = board.replaceCell(2, 8, PieceFactory.apply(PiecesEnum.SilverGeneral, player_2))
-    board = board.replaceCell(3, 8, PieceFactory.apply(PiecesEnum.GoldenGeneral, player_2))
-    board = board.replaceCell(4, 8, PieceFactory.apply(PiecesEnum.King, player_2))
-    board = board.replaceCell(5, 8, PieceFactory.apply(PiecesEnum.GoldenGeneral, player_2))
-    board = board.replaceCell(6, 8, PieceFactory.apply(PiecesEnum.SilverGeneral, player_2))
-    board = board.replaceCell(7, 8, PieceFactory.apply(PiecesEnum.Knight, player_2))
-    board = board.replaceCell(8, 8, PieceFactory.apply(PiecesEnum.Lancer, player_2))
-    board = board.replaceCell(1, 7, PieceFactory.apply(PiecesEnum.Bishop, player_2))
-    board = board.replaceCell(7, 7, PieceFactory.apply(PiecesEnum.Rook, player_2))
+    board = board.replaceCell(col_0, row_8, PieceFactory.apply(PiecesEnum.Lancer, player_2.first))
+    board = board.replaceCell(col_1, row_8, PieceFactory.apply(PiecesEnum.Knight, player_2.first))
+    board = board.replaceCell(col_2, row_8, PieceFactory.apply(PiecesEnum.SilverGeneral, player_2.first))
+    board = board.replaceCell(col_3, row_8, PieceFactory.apply(PiecesEnum.GoldenGeneral, player_2.first))
+    board = board.replaceCell(col_4, row_8, PieceFactory.apply(PiecesEnum.King, player_2.first))
+    board = board.replaceCell(col_5, row_8, PieceFactory.apply(PiecesEnum.GoldenGeneral, player_2.first))
+    board = board.replaceCell(col_6, row_8, PieceFactory.apply(PiecesEnum.SilverGeneral, player_2.first))
+    board = board.replaceCell(col_7, row_8, PieceFactory.apply(PiecesEnum.Knight, player_2.first))
+    board = board.replaceCell(col_8, row_8, PieceFactory.apply(PiecesEnum.Lancer, player_2.first))
+    board = board.replaceCell(col_1, row_7, PieceFactory.apply(PiecesEnum.Bishop, player_2.first))
+    board = board.replaceCell(col_7, row_7, PieceFactory.apply(PiecesEnum.Rook, player_2.first))
     for (i <- 0 to 8) {
-      board = board.replaceCell(i, 6, PieceFactory.apply(PiecesEnum.Pawn, player_2))
+      board = board.replaceCell(i, row_6, PieceFactory.apply(PiecesEnum.Pawn, player_2.first))
     }
 
     publish(new StartNewGame)
     currentState = playerOnesTurn
-    saveState
+    saveState()
+  }
+
+  override def saveState(): Unit = {
+    undoManager.saveStep(new SolveCommand(this))
   }
 
   override def movePiece(currentPos: (Int, Int), destination: (Int, Int)): MoveResult.Value = {
@@ -161,12 +165,16 @@ class Controller @Inject() extends RoundState with ControllerInterface {
   }
 
   override def promotable(position: (Int, Int)): Boolean = {
+    //noinspection ScalaStyle
     val piece = board.cell(position._1, position._2).getOrElse(return false)
-    piece.hasPromotion && ((piece.player == player_1 && position._2 > 5) || (piece.player == player_2 && position._2 < 3))
+    piece.hasPromotion && ((piece.isFirstOwner == player_1.first && position._2 > 5) ||
+      (piece.isFirstOwner == player_2.first && position._2 < 3))
   }
 
   override def promotePiece(piecePosition: (Int, Int)): Boolean = {
+    //noinspection ScalaStyle
     var piece = board.cell(piecePosition._1, piecePosition._2).getOrElse(return false)
+    //noinspection ScalaStyle
     piece = piece.promotePiece.getOrElse(return false)
     board = board.replaceCell(piecePosition._1, piecePosition._2, piece)
     publish(new UpdateAll)

@@ -6,11 +6,11 @@ import de.htwg.se.ShoShogi.util.Command
 class SolveCommand(controller: Controller) extends Command {
   var mementoBoard: BoardInterface = controller.getBoardClone
   var (mementoContainer1, mementoContainer2) = controller.getContainer
-  var mementoState = controller.currentState
+  var mementoState: RoundState = controller.currentState
 
-  override def saveStep: Unit = {}
+  override def saveStep(): Unit = {}
 
-  override def undoStep: Unit = {
+  override def undoStep(): Unit = {
     val new_memento = controller.getBoardClone
     val (new_mementoContainer1, new_mementoContainer2) = controller.getContainer
     val new_mementoState = controller.currentState
@@ -25,7 +25,7 @@ class SolveCommand(controller: Controller) extends Command {
     mementoBoard = new_memento
   }
 
-  override def redoStep: Unit = {
+  override def redoStep(): Unit = {
     val new_memento = controller.getBoardClone
     val (new_mementoContainer1, new_mementoContainer2) = controller.getContainer
     val new_mementoState = controller.currentState

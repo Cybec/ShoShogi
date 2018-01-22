@@ -1,18 +1,16 @@
 package de.htwg.se.ShoShogi.aview.gui
 
-import java.awt.Color
 import java.io.File
-import javax.swing.{ Icon, ImageIcon, WindowConstants }
+import javax.swing.{Icon, ImageIcon, WindowConstants}
 
-import de.htwg.se.ShoShogi.controller.controllerComponent.controllerBaseImpl.{ StartNewGame, UpdateAll }
-import de.htwg.se.ShoShogi.controller.controllerComponent.{ ControllerInterface, MoveResult }
+import de.htwg.se.ShoShogi.controller.controllerComponent.controllerBaseImpl.{StartNewGame, UpdateAll}
+import de.htwg.se.ShoShogi.controller.controllerComponent.{ControllerInterface, MoveResult}
 import de.htwg.se.ShoShogi.model.pieceComponent.PieceInterface
-import de.htwg.se.ShoShogi.model.pieceComponent.pieceBaseImpl.{ PieceFactory }
+import de.htwg.se.ShoShogi.model.pieceComponent.pieceBaseImpl.PieceFactory
 
 import scala.swing.GridBagPanel.Anchor
 import scala.swing._
-import scala.swing.event.{ Key, MouseClicked, _ }
-// scalastyle:off magic.number
+import scala.swing.event.{Key, MouseClicked, _}
 
 class SwingGui(controller: ControllerInterface) extends Frame {
   listenTo(controller)
@@ -22,21 +20,21 @@ class SwingGui(controller: ControllerInterface) extends Frame {
   var containerPanel_2: BoxPanel = new BoxPanel(Orientation.Vertical) {}
   var highlightedPiece: (Int, Int) = (-1, -1)
   var containerPiece: PieceInterface = PieceFactory.getEmptyPiece
-  val boardColor: Color = getColorFromRGB(Array[Int](255, 235, 182))
-  val pieceColor: Color = getColorFromRGB(Array[Int](249, 250, 242))
-  val markedColor: Color = Color.BLUE
-  val containerBorderColor: Color = getColorFromRGB(Array[Int](153, 51, 0))
-  val containerBackgroundColor: Color = getColorFromRGB(Array[Int](246, 217, 157))
-  val resourcesPath: String = new File(".").getCanonicalPath() + "/src/main/scala/de/htwg/se/ShoShogi/zresources"
-  val backgroundPath = resourcesPath + "/images/background.jpg"
+  //noinspection ScalaStyle
+  val boardColor: java.awt.Color = getColorFromRGB(255, 235, 182)
+  //noinspection ScalaStyle
+  val pieceColor: java.awt.Color = getColorFromRGB(249, 250, 242)
+  val markedColor: java.awt.Color = java.awt.Color.BLUE
+  //noinspection ScalaStyle
+  val containerBorderColor: Color = getColorFromRGB(153, 51, 0)
+  //noinspection ScalaStyle
+  val containerBackgroundColor: Color = getColorFromRGB(246, 217, 157)
+  val resourcesPath: String = new File(".").getCanonicalPath + "/src/main/scala/de/htwg/se/ShoShogi/zresources"
+  val backgroundPath: String = resourcesPath + "/images/background.jpg"
 
   def getBoardArray: Array[Array[PieceInterface]] = controller.boardToArray()
 
-  def getColorFromRGB(xyz: Array[Int]): Color = {
-    val ret: Array[Float] = Array.ofDim[Float](3)
-    Color.RGBtoHSB(xyz(0), xyz(1), xyz(2), ret)
-    Color.getHSBColor(ret(0), ret(1), ret(2))
-  }
+  val width = 500
 
   object Panels extends Enumeration {
     type EnumType = Value
@@ -44,7 +42,15 @@ class SwingGui(controller: ControllerInterface) extends Frame {
   }
 
   title = "Shogi"
-  minimumSize = new Dimension(500, 500)
+  val height = 500
+
+  def getColorFromRGB(r: Int, g: Int, b: Int): Color = {
+    val ret: Array[Float] = Array.ofDim[Float](3)
+    java.awt.Color.RGBtoHSB(r, g, b, ret)
+    java.awt.Color.getHSBColor(ret(0), ret(1), ret(2))
+  }
+
+  minimumSize = new Dimension(width, height)
   maximize()
 
   menuBar = new MenuBar {
@@ -56,18 +62,18 @@ class SwingGui(controller: ControllerInterface) extends Frame {
 
         if (res == Dialog.Result.Ok) {
           controller.createNewBoard()
-          val p1Name: String = if (dialog.getNames()._1.size == 0) dialog.p1DefaultName else dialog.getNames()._1
-          val p2Name: String = if (dialog.getNames()._2.size == 0) dialog.p2DefaultName else dialog.getNames()._2
+          val p1Name: String = if (dialog.getNames._1.isEmpty) dialog.p1DefaultName else dialog.getNames._1
+          val p2Name: String = if (dialog.getNames._2.isEmpty) dialog.p2DefaultName else dialog.getNames._2
           controller.changeNamePlayer1(p1Name)
           controller.changeNamePlayer2(p2Name)
         }
       })
       contents += new Separator
       contents += new MenuItem(Action("Save") {
-        controller.save
+        controller.save()
       })
       contents += new MenuItem(Action("Load") {
-        controller.load
+        controller.load()
       })
       contents += new Separator
       contents += new MenuItem(Action("Quit") {
@@ -77,10 +83,10 @@ class SwingGui(controller: ControllerInterface) extends Frame {
     contents += new Menu("Edit") {
       mnemonic = Key.E
       contents += new MenuItem(Action("undo") {
-        controller.undoCommand
+        controller.undoCommand()
       })
       contents += new MenuItem(Action("redo") {
-        controller.redoCommand
+        controller.redoCommand()
       })
     }
   }
@@ -112,14 +118,15 @@ class SwingGui(controller: ControllerInterface) extends Frame {
     add(containerPanel_1, constraints(0, 0, gridHeight = 3, weightX = 0.0, anchor = Anchor.NorthEast))
     add(boardPanel, constraints(1, 0, gridHeight = 3))
     add(containerPanel_2, constraints(2, 0, gridHeight = 3, weightX = 0.0, anchor = Anchor.SouthWest))
-    //    add(statisticsPanel, constraints(3, 0, gridHeight = 3))
 
     override def paintComponent(g: java.awt.Graphics2D) {
+      //noinspection ScalaStyle
       g.drawImage(new ImageIcon(backgroundPath).getImage, 0, 0, null)
     }
   }
 
   override def closeOperation() {
+    //noinspection ScalaStyle
     Dialog.showConfirmation(
       parent = null,
       title = "Exit",
@@ -137,23 +144,22 @@ class SwingGui(controller: ControllerInterface) extends Frame {
         fillDataBoard()
         listenTo(this)
         reactions += {
-          case UIElementResized(_) => {
+          case UIElementResized(_) =>
             redrawPanel(Panels.boardP)
-          }
         }
       }
       boardPanel.revalidate()
     }
     if (panel == Panels.containerP_1 || panel == Panels.All) {
       containerPanel_1 = new BoxPanel(Orientation.Vertical) {
-        fillDataContainer1
+        fillDataContainer1()
         opaque = false
         revalidate()
       }
     }
     if (panel == Panels.containerP_2 || panel == Panels.All) {
       containerPanel_2 = new BoxPanel(Orientation.Vertical) {
-        fillDataContainer2
+        fillDataContainer2()
         opaque = false
         revalidate()
       }
@@ -169,13 +175,13 @@ class SwingGui(controller: ControllerInterface) extends Frame {
 
     if (panel == Panels.containerP_1 || panel == Panels.All) {
       containerPanel_1.contents.clear()
-      fillDataContainer1
+      fillDataContainer1()
       containerPanel_1.revalidate()
     }
 
     if (panel == Panels.containerP_2 || panel == Panels.All) {
       containerPanel_2.contents.clear()
-      fillDataContainer2
+      fillDataContainer2()
       containerPanel_2.revalidate()
     }
   }
@@ -188,7 +194,7 @@ class SwingGui(controller: ControllerInterface) extends Frame {
     } {
       boardPanel.contents += newPieceButton(
         tempArray(col)(row),
-        false,
+        container = false,
         (col, row),
         if (boardPanel.size.width < 1000 || boardPanel.size.height < 800) "50x50" else "100x100"
       )
@@ -196,28 +202,30 @@ class SwingGui(controller: ControllerInterface) extends Frame {
   }
 
   def fillDataContainer1(): Unit = {
+    val distanceTop = 5
     controller.getContainer._1.foreach(x => {
-      containerPanel_1.contents += Swing.VStrut(5)
-      containerPanel_1.contents += newPieceButton(x, true, scale = "50x50")
+      containerPanel_1.contents += Swing.VStrut(distanceTop)
+      containerPanel_1.contents += newPieceButton(x, container = true, scale = "50x50")
       containerPanel_1.border = Swing.LineBorder(containerBorderColor, 2)
       containerPanel_1.background = containerBackgroundColor
       containerPanel_1.opaque = true
     })
-    if (controller.getContainer._1.size == 0) {
+    if (controller.getContainer._1.isEmpty) {
       containerPanel_1.opaque = false
       containerPanel_1.border = Swing.EmptyBorder(0, 0, 0, 0)
     }
   }
 
   def fillDataContainer2(): Unit = {
+    val distanceTop = 5
     controller.getContainer._2.foreach(x => {
-      containerPanel_2.contents += Swing.VStrut(5)
-      containerPanel_2.contents += newPieceButton(x, true, scale = "50x50")
+      containerPanel_2.contents += Swing.VStrut(distanceTop)
+      containerPanel_2.contents += newPieceButton(x, container = true, scale = "50x50")
       containerPanel_2.border = Swing.LineBorder(containerBorderColor, 2)
       containerPanel_2.background = containerBackgroundColor
       containerPanel_2.opaque = true
     })
-    if (controller.getContainer._2.size == 0) {
+    if (controller.getContainer._2.isEmpty) {
       containerPanel_2.opaque = false
       containerPanel_2.border = Swing.EmptyBorder(0, 0, 0, 0)
     }
@@ -230,23 +238,22 @@ class SwingGui(controller: ControllerInterface) extends Frame {
       listenTo(mouse.clicks)
 
       reactions += {
-        case MouseClicked(src, pt, mod, clicks, pops) => {
+        case MouseClicked(_, _, _, _, _) =>
           if (this.background == markedColor) {
             PieceClickedReaction.movePiece(controller, pos) match {
               case MoveResult.validMove => promoteQuery(controller, pos)
-              case MoveResult.kingSlain => showWonDialog
+              case MoveResult.kingSlain => showWonDialog()
               case MoveResult.invalidMove =>
               case MoveResult.validMoveContainer =>
             }
           }
           highlightCells(PieceClickedReaction.getPossibleMoves(this, controller))
-        }
       }
     }
   }
 
   def getPieceIcon(piece: PieceInterface, scale: String): Icon = {
-    if (piece.toString.trim.size > 0) {
+    if (piece.toString.trim.nonEmpty) {
       val player = if (piece.isFirstOwner) "1" else "2"
       new ImageIcon(resourcesPath + "/images/player" +
         player + "/" + scale + "/" + piece.toStringLong + "_" + scale + ".png")
@@ -255,18 +262,13 @@ class SwingGui(controller: ControllerInterface) extends Frame {
     }
   }
 
-  private def showWonDialog = {
-    val res = Dialog.showConfirmation(
-      contents.head,
-      "You Won! Do you want to start a new game?",
-      optionType = Dialog.Options.YesNo,
-      title = "End"
-    )
-    if (res == Dialog.Result.Ok) {
-      controller.createNewBoard()
-    } else {
-      System.exit(0)
+  def highlightCells(cells: List[(Int, Int)]): Unit = {
+    redrawPanel(Panels.All)
+
+    for (cell <- cells) {
+      boardPanel.contents(cell._1 + (cell._2 * 9)).background = markedColor
     }
+    boardPanel.revalidate()
   }
 
   private def promoteQuery(controller: ControllerInterface, desPos: (Int, Int)): Unit = {
@@ -284,26 +286,24 @@ class SwingGui(controller: ControllerInterface) extends Frame {
     }
   }
 
-  def statisticsPanel: GridPanel = new GridPanel(5, 1) {
-    //    background = java.awt.Color.BLACK
-    opaque = false
-  }
-
-  def highlightCells(cells: List[(Int, Int)]): Unit = {
-    redrawPanel(Panels.All)
-
-    for (cell <- cells) {
-      boardPanel.contents((cell._1 + (cell._2 * 9))).background = markedColor
+  private def showWonDialog(): Unit = {
+    val res = Dialog.showConfirmation(
+      contents.head,
+      "You Won! Do you want to start a new game?",
+      optionType = Dialog.Options.YesNo,
+      title = "End"
+    )
+    if (res == Dialog.Result.Ok) {
+      controller.createNewBoard()
+    } else {
+      System.exit(0)
     }
-    boardPanel.revalidate()
   }
 
   reactions += {
-    case _: UpdateAll => {
+    case _: UpdateAll =>
       redrawPanel(Panels.All)
-    }
-    case _: StartNewGame => {
+    case _: StartNewGame =>
       redrawPanel(Panels.All)
-    }
   }
 }

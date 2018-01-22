@@ -1,8 +1,8 @@
 package de.htwg.se.ShoShogi.aview.gui
 
-import de.htwg.se.ShoShogi.controller.controllerComponent.{ ControllerInterface, MoveResult }
+import de.htwg.se.ShoShogi.controller.controllerComponent.{ControllerInterface, MoveResult}
 import de.htwg.se.ShoShogi.model.pieceComponent.PieceInterface
-import de.htwg.se.ShoShogi.model.pieceComponent.pieceBaseImpl.{ PieceFactory }
+import de.htwg.se.ShoShogi.model.pieceComponent.pieceBaseImpl.PieceFactory
 
 import scala.swing.Button
 
@@ -18,13 +18,28 @@ trait PieceClickedInterface {
     }
   }
 
+  val initialState: State = new InitialState
+  val onBoardMarkedState: State = new OnBoardMarkedState
+  val containerMarkedState: State = new ContainerMarkedState
+
+  def resetPiecePosOnBoard(): Unit = piecePosOnBoard = (-1, -1)
+
+  def resetPieceContainer(): Unit = pieceContainer = PieceFactory.getEmptyPiece
+
+  var currentState: State = initialState
+
+  case class CustomButton(currentPiece: PieceInterface, pos: (Int, Int) = (-1, -1), isInContainer: Boolean) extends Button
+
+  var piecePosOnBoard: (Int, Int) = (-1, -1)
+  var pieceContainer: PieceInterface = PieceFactory.getEmptyPiece
+
   case class OnBoardMarkedState() extends State {
     override def move(controller: ControllerInterface, desPos: (Int, Int)): MoveResult.Value = {
       val temp = controller.movePiece(piecePosOnBoard, desPos)
 
       if (temp == MoveResult.validMove ||
         temp == MoveResult.kingSlain) {
-        resetPiecePosOnBoard
+        resetPiecePosOnBoard()
         currentState = initialState
       }
       temp
@@ -34,26 +49,11 @@ trait PieceClickedInterface {
   case class ContainerMarkedState() extends State {
     override def move(controller: ControllerInterface, desPos: (Int, Int)): MoveResult.Value = {
       controller.moveConqueredPiece(pieceContainer.toString.trim, desPos)
-      resetPieceContainer
+      resetPieceContainer()
       currentState = initialState
       MoveResult.validMoveContainer
     }
   }
-
-  var initialState: State = new InitialState
-  var onBoardMarkedState: State = new OnBoardMarkedState
-  var containerMarkedState: State = new ContainerMarkedState
-
-  var currentState: State = initialState
-
-  case class CustomButton(currentPiece: PieceInterface, pos: (Int, Int) = (-1, -1), isInContainer: Boolean) extends Button
-
-  var piecePosOnBoard: (Int, Int) = (-1, -1)
-  var pieceContainer: PieceInterface = PieceFactory.getEmptyPiece
-
-  def resetPiecePosOnBoard: Unit = piecePosOnBoard = (-1, -1)
-
-  def resetPieceContainer: Unit = pieceContainer = PieceFactory.getEmptyPiece
 
 }
 
@@ -66,23 +66,23 @@ object PieceClickedReaction extends PieceClickedInterface {
     var returnList = List[(Int, Int)]()
 
     if (customButton.isInContainer) {
-      resetPiecePosOnBoard
-      resetPieceContainer
+      resetPiecePosOnBoard()
+      resetPieceContainer()
       pieceContainer = customButton.currentPiece
       currentState = containerMarkedState
       returnList = controller.getPossibleMovesConqueredPiece(customButton.currentPiece.toString.trim)
     } else {
       if (piecePosOnBoard == (-1, -1) || piecePosOnBoard == customButton.pos) {
         returnList = controller.getPossibleMoves(customButton.pos)
-        if (returnList.size > 0) {
-          resetPiecePosOnBoard
-          resetPieceContainer
+        if (returnList.nonEmpty) {
+          resetPiecePosOnBoard()
+          resetPieceContainer()
           piecePosOnBoard = customButton.pos
           currentState = onBoardMarkedState
         }
       } else {
-        resetPiecePosOnBoard
-        resetPieceContainer
+        resetPiecePosOnBoard()
+        resetPieceContainer()
         currentState = initialState
       }
     }
