@@ -72,7 +72,7 @@ class ControllerSpec extends WordSpec with Matchers {
         controller.getPossibleMoves(-1, 9) should be(List())
         controller.getPossibleMoves(9, -1) should be(List())
         controller.movePiece((0, 2), (0, 3)) should be(MoveResult.validMove)
-        controller.getPossibleMoves(-1, 0) should be(List())
+        controller.getPossibleMoves(-1, 8) should be(List())
       }
     }
 
@@ -791,11 +791,10 @@ class ControllerSpec extends WordSpec with Matchers {
             "Captured: \n"
         )
       }
-      "give back the Nil when no move was done till now" in {
-        controller.createNewBoard()
-        //TODO: Nick was soll das???
-        controller.undoCommand should be()
-      }
+      //      "give back nothing when no move was done till now" in {
+      //        controller.createNewBoard()
+      //        controller.undoCommand should be()
+      //      }
     }
     "called redoCommand" should {
       "redo the last undone Command and change the state back to the state before undo was applied" in {
@@ -828,12 +827,10 @@ class ControllerSpec extends WordSpec with Matchers {
             "Captured: \n"
         )
       }
-      "give back Nil when no undo was done till now" in {
-        controller.createNewBoard()
-
-        //TODO: Nick was soll das???
-        controller.redoCommand should be()
-      }
+      //      "give back nothing when no undo was done till now" in {
+      //        controller.createNewBoard()
+      //        controller.redoCommand should be()
+      //      }
     }
     "called replaceBoard" should {
       "set the current Playboard to the board given" in {
@@ -908,7 +905,35 @@ class ControllerSpec extends WordSpec with Matchers {
             "---------------------------------------------------------\n" +
             "Captured: \n"
         )
+        controller.save
+        controller.movePiece((0, 6), (0, 5)) should be(MoveResult.validMove)
+        controller.load
+        controller.boardToString() should be(
+          "Captured: \n" +
+            "    0     1     2     3     4     5     6     7     8 \n \n" +
+            "---------------------------------------------------------\n " +
+            "| L°  | KN° | SG° | GG° | K°  | GG° | SG° | KN° | L°  | \ta\n" +
+            "---------------------------------------------------------\n " +
+            "|     | R°  |     |     |     |     |     | B°  |     | \tb\n" +
+            "---------------------------------------------------------\n " +
+            "|     | P°  | P°  | P°  | P°  | P°  | P°  | P°  | P°  | \tc\n" +
+            "---------------------------------------------------------\n " +
+            "| P°  |     |     |     |     |     |     |     |     | \td\n" +
+            "---------------------------------------------------------\n " +
+            "|     |     |     |     |     |     |     |     |     | \te\n" +
+            "---------------------------------------------------------\n " +
+            "|     |     |     |     |     |     |     |     |     | \tf\n" +
+            "---------------------------------------------------------\n " +
+            "| P   | P   | P   | P   | P   | P   | P   | P   | P   | \tg\n" +
+            "---------------------------------------------------------\n " +
+            "|     | B   |     |     |     |     |     | R   |     | \th\n" +
+            "---------------------------------------------------------\n " +
+            "| L   | KN  | SG  | GG  | K   | GG  | SG  | KN  | L   | \ti\n" +
+            "---------------------------------------------------------\n" +
+            "Captured: \n"
+        )
       }
+
       "not saving the board load changes nothing" in {
         controller.createNewBoard()
         controller.movePiece((0, 2), (0, 3)) should be(MoveResult.validMove)
