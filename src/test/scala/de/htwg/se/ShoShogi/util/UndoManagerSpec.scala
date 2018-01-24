@@ -1,17 +1,11 @@
-package de.htwg.se.ShoShogi.model
+package de.htwg.se.ShoShogi.util
 
-import com.google.inject.{ Guice, Injector }
-import com.google.inject.name.Names
+import com.google.inject.{Guice, Injector}
 import de.htwg.se.ShoShogi.ShoShogiModule
-import de.htwg.se.ShoShogi.controller.controllerComponent.{ ControllerInterface, MoveResult }
-import de.htwg.se.ShoShogi.controller.controllerComponent.controllerBaseImpl.{ RoundState, playerOneRound, playerTwoRound }
-import de.htwg.se.ShoShogi.model.boardComponent.BoardInterface
-import de.htwg.se.ShoShogi.model.fileIoComponent.FileIOInterface
-import de.htwg.se.ShoShogi.model.playerComponent.Player
-import de.htwg.se.ShoShogi.util.UndoManager
+import de.htwg.se.ShoShogi.controller.controllerComponent.{ControllerInterface, MoveResult}
 import org.junit.runner.RunWith
-import org.scalatest.{ Matchers, WordSpec }
 import org.scalatest.junit.JUnitRunner
+import org.scalatest.{Matchers, WordSpec}
 
 @RunWith(classOf[JUnitRunner])
 class UndoManagerSpec extends WordSpec with Matchers {
