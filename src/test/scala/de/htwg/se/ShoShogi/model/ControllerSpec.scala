@@ -1,17 +1,17 @@
 package de.htwg.se.ShoShogi.model
 
 import com.google.inject.name.Names
-import com.google.inject.{ Guice, Injector }
+import com.google.inject.{Guice, Injector}
 import de.htwg.se.ShoShogi.ShoShogiModule
-import de.htwg.se.ShoShogi.controller.controllerComponent.controllerBaseImpl.{ Controller, RoundState, playerOneRound, playerTwoRound }
-import de.htwg.se.ShoShogi.controller.controllerComponent.{ ControllerInterface, MoveResult }
+import de.htwg.se.ShoShogi.controller.controllerComponent.controllerBaseImpl.{Controller, RoundState, playerOneRound, playerTwoRound}
+import de.htwg.se.ShoShogi.controller.controllerComponent.{ControllerInterface, MoveResult}
 import de.htwg.se.ShoShogi.model.boardComponent.BoardInterface
 import de.htwg.se.ShoShogi.model.pieceComponent.PieceInterface
-import de.htwg.se.ShoShogi.model.pieceComponent.pieceBaseImpl.{ PieceFactory, PiecesEnum }
+import de.htwg.se.ShoShogi.model.pieceComponent.pieceBaseImpl.{PieceFactory, PiecesEnum}
 import net.codingwell.scalaguice.InjectorExtensions._
 import org.junit.runner.RunWith
 import org.scalatest.junit.JUnitRunner
-import org.scalatest.{ Matchers, WordSpec }
+import org.scalatest.{Matchers, WordSpec}
 
 import scala.language.reflectiveCalls
 
@@ -879,55 +879,54 @@ class ControllerSpec extends WordSpec with Matchers {
     "called save/load" should {
       "save the board in first players turn" in {
         newController.createNewBoard()
-        val oldState = newController.getCurrentStat() should be(playerOnesTurn)
+        val oldState = newController.currentState
         newController.save
         newController.movePiece((0, 2), (0, 3)) should be(MoveResult.validMove)
         newController.getCurrentStat() should be(playerTwosTurn)
         newController.load
-        newController.getCurrentStat() should be(playerOnesTurn)
+        newController.getCurrentStat() should be(oldState)
       }
 
-      //      "save the board in first players turn" in {
-      //        controller.movePiece((0, 6), (0, 5)) should be(MoveResult.validMove)
-      //        controller.save
-      //      }
+      "save the board in second players turn" in {
+        newController.createNewBoard()
+        newController.movePiece((0, 2), (0, 3)) should be(MoveResult.validMove)
+        val oldState = newController.currentState
+        newController.save
+        newController.movePiece((0, 6), (0, 5)) should be(MoveResult.validMove)
+        newController.getCurrentStat() should be(playerOnesTurn)
+        newController.load
+        newController.getCurrentStat() should be(oldState)
+      }
 
-      //      "called load and overwrite the current game with loaded content" in {
-      //        controller.movePiece((0, 6), (0, 5)) should be(MoveResult.validMove)
-      //        controller.getCurrentStat() should be(playerOnesTurn)
-      //        controller.load
-      //
-      //
-      //      }
-      //      "not saving the board load changes nothing" in {
-      //        controller.createNewBoard()
-      //        controller.movePiece((0, 2), (0, 3)) should be(MoveResult.validMove)
-      //        controller.load
-      //        controller.boardToString() should be(
-      //          "Captured: \n" +
-      //            "    0     1     2     3     4     5     6     7     8 \n \n" +
-      //            "---------------------------------------------------------\n " +
-      //            "| L°  | KN° | SG° | GG° | K°  | GG° | SG° | KN° | L°  | \ta\n" +
-      //            "---------------------------------------------------------\n " +
-      //            "|     | R°  |     |     |     |     |     | B°  |     | \tb\n" +
-      //            "---------------------------------------------------------\n " +
-      //            "|     | P°  | P°  | P°  | P°  | P°  | P°  | P°  | P°  | \tc\n" +
-      //            "---------------------------------------------------------\n " +
-      //            "| P°  |     |     |     |     |     |     |     |     | \td\n" +
-      //            "---------------------------------------------------------\n " +
-      //            "|     |     |     |     |     |     |     |     |     | \te\n" +
-      //            "---------------------------------------------------------\n " +
-      //            "|     |     |     |     |     |     |     |     |     | \tf\n" +
-      //            "---------------------------------------------------------\n " +
-      //            "| P   | P   | P   | P   | P   | P   | P   | P   | P   | \tg\n" +
-      //            "---------------------------------------------------------\n " +
-      //            "|     | B   |     |     |     |     |     | R   |     | \th\n" +
-      //            "---------------------------------------------------------\n " +
-      //            "| L   | KN  | SG  | GG  | K   | GG  | SG  | KN  | L   | \ti\n" +
-      //            "---------------------------------------------------------\n" +
-      //            "Captured: \n"
-      //        )
-      //      }
+      "not saving the board load changes nothing" in {
+        controller.createNewBoard()
+        controller.movePiece((0, 2), (0, 3)) should be(MoveResult.validMove)
+        controller.load
+        controller.boardToString() should be(
+          "Captured: \n" +
+            "    0     1     2     3     4     5     6     7     8 \n \n" +
+            "---------------------------------------------------------\n " +
+            "| L°  | KN° | SG° | GG° | K°  | GG° | SG° | KN° | L°  | \ta\n" +
+            "---------------------------------------------------------\n " +
+            "|     | R°  |     |     |     |     |     | B°  |     | \tb\n" +
+            "---------------------------------------------------------\n " +
+            "|     | P°  | P°  | P°  | P°  | P°  | P°  | P°  | P°  | \tc\n" +
+            "---------------------------------------------------------\n " +
+            "| P°  |     |     |     |     |     |     |     |     | \td\n" +
+            "---------------------------------------------------------\n " +
+            "|     |     |     |     |     |     |     |     |     | \te\n" +
+            "---------------------------------------------------------\n " +
+            "|     |     |     |     |     |     |     |     |     | \tf\n" +
+            "---------------------------------------------------------\n " +
+            "| P   | P   | P   | P   | P   | P   | P   | P   | P   | \tg\n" +
+            "---------------------------------------------------------\n " +
+            "|     | B   |     |     |     |     |     | R   |     | \th\n" +
+            "---------------------------------------------------------\n " +
+            "| L   | KN  | SG  | GG  | K   | GG  | SG  | KN  | L   | \ti\n" +
+            "---------------------------------------------------------\n" +
+            "Captured: \n"
+        )
+      }
     }
   }
 }

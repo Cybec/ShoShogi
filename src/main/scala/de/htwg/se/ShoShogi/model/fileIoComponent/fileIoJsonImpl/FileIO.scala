@@ -1,15 +1,15 @@
 package de.htwg.se.ShoShogi.model.fileIoComponent.fileIoJsonImpl
 
-import java.nio.file.{ Files, Paths }
+import java.nio.file.{Files, Paths}
 
 import com.google.inject.name.Names
-import com.google.inject.{ Guice, Injector }
+import com.google.inject.{Guice, Injector}
 import de.htwg.se.ShoShogi.model.boardComponent.BoardInterface
 import de.htwg.se.ShoShogi.model.fileIoComponent.FileIOInterface
 import de.htwg.se.ShoShogi.model.pieceComponent.PieceInterface
-import de.htwg.se.ShoShogi.model.pieceComponent.pieceBaseImpl.{ PieceFactory, PiecesEnum }
+import de.htwg.se.ShoShogi.model.pieceComponent.pieceBaseImpl.{PieceFactory, PiecesEnum}
 import de.htwg.se.ShoShogi.model.playerComponent.Player
-import de.htwg.se.ShoShogi.{ ShoShogiModule, ShoShogiModuleConf }
+import de.htwg.se.ShoShogi.{ShoShogiModule, ShoShogiModuleConf}
 import net.codingwell.scalaguice.InjectorExtensions._
 import play.api.libs.json._
 
@@ -25,7 +25,7 @@ class FileIO extends FileIOInterface {
       val size = (json \ "board" \ "size").get.toString.toInt
       val state = (json \ "board" \ "state").get.toString.toBoolean
       val player1 = Player((json \ "board" \ "playerFirstName").get.toString, first = true)
-      val player2 = Player((json \ "board" \ "playerSecondName").get.toString, first = true)
+      val player2 = Player((json \ "board" \ "playerSecondName").get.toString, first = false)
       val injector: Injector = Guice.createInjector(new ShoShogiModule)
 
       loadReturnOption = getBoardBySize(size, injector) match {
