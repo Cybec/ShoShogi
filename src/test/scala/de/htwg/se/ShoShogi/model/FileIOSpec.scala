@@ -3,6 +3,7 @@ package de.htwg.se.ShoShogi.model
 import com.google.inject.name.Names
 import com.google.inject.{ Guice, Injector }
 import de.htwg.se.ShoShogi.ShoShogiModule
+import de.htwg.se.ShoShogi.controller.controllerComponent.controllerBaseImpl.Controller
 import de.htwg.se.ShoShogi.controller.controllerComponent.{ ControllerInterface, MoveResult }
 import de.htwg.se.ShoShogi.model.boardComponent.BoardInterface
 import de.htwg.se.ShoShogi.model.fileIoComponent.FileIOInterface
@@ -17,7 +18,7 @@ import net.codingwell.scalaguice.InjectorExtensions._
 class FileIOSpec extends WordSpec with Matchers {
   "A JasonFileIO" when {
     val injector: Injector = Guice.createInjector(new ShoShogiModule)
-    val controller: ControllerInterface = injector.getInstance(classOf[ControllerInterface])
+    val controller: Controller = new Controller()
     var player_1: Player = Player("Player1", first = true)
     var player_2: Player = Player("Player2", first = false)
     var smallBoard: BoardInterface = injector.instance[BoardInterface](Names.named("small")).createNewBoard()

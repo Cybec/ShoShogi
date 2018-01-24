@@ -3,6 +3,7 @@ package de.htwg.se.ShoShogi.model
 import com.google.inject.name.Names
 import com.google.inject.{ Guice, Injector }
 import de.htwg.se.ShoShogi.ShoShogiModule
+import de.htwg.se.ShoShogi.controller.controllerComponent.controllerBaseImpl.{ Controller, RoundState, playerOneRound, playerTwoRound }
 import de.htwg.se.ShoShogi.controller.controllerComponent.{ ControllerInterface, MoveResult }
 import de.htwg.se.ShoShogi.model.boardComponent.BoardInterface
 import de.htwg.se.ShoShogi.model.pieceComponent.PieceInterface
@@ -20,6 +21,10 @@ class ControllerSpec extends WordSpec with Matchers {
 
   val injector: Injector = Guice.createInjector(new ShoShogiModule)
   val controller: ControllerInterface = injector.getInstance(classOf[ControllerInterface])
+  val newController = new Controller()
+  val playerOnesTurn: RoundState = new playerOneRound(newController)
+  val playerTwosTurn: RoundState = new playerTwoRound(newController)
+
   controller.createNewBoard()
   controller.changeNamePlayer1("Nick")
   controller.changeNamePlayer2("Mert")
@@ -762,10 +767,10 @@ class ControllerSpec extends WordSpec with Matchers {
     }
 
     "called undoCommand" should {
-      "undo the last move done and change the state of the game back" in {
+      "undo the last move done and return true" in {
         controller.createNewBoard()
         controller.movePiece((0, 2), (0, 3)) should be(MoveResult.validMove) // player_1
-        controller.undoCommand
+        controller.undoCommand should be(true)
         controller.boardToString() should be(
           "Captured: \n" +
             "    0     1     2     3     4     5     6     7     8 \n \n" +
@@ -791,14 +796,16 @@ class ControllerSpec extends WordSpec with Matchers {
             "Captured: \n"
         )
       }
+      "return false if no command was done yet" in {
+        newController.undoCommand should be(false)
+      }
     }
-
     "called redoCommand" should {
-      "redo the last undone Command and change the state back to the state before undo was applied" in {
+      "redo the last undone Command and return true" in {
         controller.createNewBoard()
         controller.movePiece((0, 2), (0, 3)) should be(MoveResult.validMove) // player_1
-        controller.undoCommand
-        controller.redoCommand
+        controller.undoCommand should be(true)
+        controller.redoCommand should be(true)
         controller.boardToString() should be(
           "Captured: \n" +
             "    0     1     2     3     4     5     6     7     8 \n \n" +
@@ -823,6 +830,10 @@ class ControllerSpec extends WordSpec with Matchers {
             "---------------------------------------------------------\n" +
             "Captured: \n"
         )
+      }
+      "return true when no undo was done yet" in {
+        controller.createNewBoard()
+        controller.redoCommand should be(false)
       }
     }
 
@@ -858,14 +869,13 @@ class ControllerSpec extends WordSpec with Matchers {
         )
       }
     }
-    //TODO: how to test changeState
-    //   "called changeState" should {
-    //     "change the state from PlayerOnesTurn to PlayerTwosTurn and the other way around" in {
-    //     controller.createNewBoard()
-    //       controller.get
-
-    //     }
-    //   }
+    "called changeState" should {
+      "change the state from PlayerOnesTurn to PlayerTwosTurn and the other way around" in {
+        newController.getCurrentStat() should be(playerOnesTurn)
+        newController.changeState()
+        newController.getCurrentStat() should be(playerTwosTurn)
+      }
+    }
     "called save and load" should {
       "save the board and load the saved board in second players turn" in {
         controller.createNewBoard()
@@ -898,38 +908,6 @@ class ControllerSpec extends WordSpec with Matchers {
             "Captured: \n"
         )
       }
-
-      "save the board and load the saved board in first players turn" in {
-        controller.createNewBoard()
-        controller.save
-        controller.movePiece((0, 2), (0, 3)) should be(MoveResult.validMove)
-        controller.load
-        controller.boardToString() should be(
-          "Captured: \n" +
-            "    0     1     2     3     4     5     6     7     8 \n \n" +
-            "---------------------------------------------------------\n " +
-            "| L°  | KN° | SG° | GG° | K°  | GG° | SG° | KN° | L°  | \ta\n" +
-            "---------------------------------------------------------\n " +
-            "|     | R°  |     |     |     |     |     | B°  |     | \tb\n" +
-            "---------------------------------------------------------\n " +
-            "| P°  | P°  | P°  | P°  | P°  | P°  | P°  | P°  | P°  | \tc\n" +
-            "---------------------------------------------------------\n " +
-            "|     |     |     |     |     |     |     |     |     | \td\n" +
-            "---------------------------------------------------------\n " +
-            "|     |     |     |     |     |     |     |     |     | \te\n" +
-            "---------------------------------------------------------\n " +
-            "|     |     |     |     |     |     |     |     |     | \tf\n" +
-            "---------------------------------------------------------\n " +
-            "| P   | P   | P   | P   | P   | P   | P   | P   | P   | \tg\n" +
-            "---------------------------------------------------------\n " +
-            "|     | B   |     |     |     |     |     | R   |     | \th\n" +
-            "---------------------------------------------------------\n " +
-            "| L   | KN  | SG  | GG  | K   | GG  | SG  | KN  | L   | \ti\n" +
-            "---------------------------------------------------------\n" +
-            "Captured: \n"
-        )
-      }
-
       "not saving the board load changes nothing" in {
         controller.createNewBoard()
         controller.movePiece((0, 2), (0, 3)) should be(MoveResult.validMove)

@@ -1,5 +1,6 @@
 package de.htwg.se.ShoShogi.controller.controllerComponent
 
+import de.htwg.se.ShoShogi.controller.controllerComponent.controllerBaseImpl.RoundState
 import de.htwg.se.ShoShogi.model.boardComponent.BoardInterface
 import de.htwg.se.ShoShogi.model.pieceComponent.PieceInterface
 import de.htwg.se.ShoShogi.model.playerComponent.Player
@@ -18,7 +19,12 @@ object MoveResult extends Enumeration {
  */
 trait ControllerInterface extends scala.swing.Publisher {
 
-  var board: BoardInterface
+  /**
+   * Gets the Copy of the current game board
+   * @return a game board
+   */
+  def getBoardClone: BoardInterface
+
   /**
    * The typical size of a Shoshogi board is 9*9.
    */
@@ -33,13 +39,13 @@ trait ControllerInterface extends scala.swing.Publisher {
    * Sets the game to the same state before the last done move.
    * Removes the last move from the command stack.
    */
-  def undoCommand: Unit
+  def undoCommand: Boolean
 
   /**
    * Sets the game to the state before the last undo and adds.
    * the move to the command stack
    */
-  def redoCommand: Unit
+  def redoCommand: Boolean
 
   /**
    * Saves the current state of the game in a file.
@@ -180,4 +186,16 @@ trait ControllerInterface extends scala.swing.Publisher {
    * @return true if the piece has a promotion, false when not
    */
   def promotePiece(piecePosition: (Int, Int)): Boolean
+
+  /**
+   * returns the current state of the controller
+   * @return the state of the controller
+   */
+  def getCurrentStat(): RoundState
+
+  /**
+   * changes the currentState to given State
+   * @param newState is the state the controller should be
+   */
+  def setCurrentStat(newState: RoundState): Unit
 }

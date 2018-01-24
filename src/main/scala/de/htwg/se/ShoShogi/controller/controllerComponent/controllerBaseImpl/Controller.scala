@@ -15,7 +15,7 @@ import net.codingwell.scalaguice.InjectorExtensions._
 class Controller @Inject() extends RoundState with ControllerInterface {
   val injector: Injector = Guice.createInjector(new ShoShogiModule)
   val fileIo: FileIOInterface = injector.instance[FileIOInterface]
-  override var board: BoardInterface = injector.instance[BoardInterface](Names.named("normal")).createNewBoard()
+  var board: BoardInterface = injector.instance[BoardInterface](Names.named("normal")).createNewBoard()
   val playerOnesTurn: RoundState = playerOneRound(this)
   val playerTwosTurn: RoundState = playerTwoRound(this)
   var player_1: Player = Player("Player1", first = true)
@@ -25,6 +25,7 @@ class Controller @Inject() extends RoundState with ControllerInterface {
   override def getPlayers: (Player, Player) = {
     (Player(player_1.name, player_1.first), Player(player_2.name, player_2.first))
   }
+
   var currentState: RoundState = playerOnesTurn
   override val boardSize = 9
 
@@ -38,14 +39,16 @@ class Controller @Inject() extends RoundState with ControllerInterface {
     board = board.setContainer(container)
   }
 
-  override def undoCommand(): Unit = {
-    undoManager.undoStep()
+  override def undoCommand(): Boolean = {
+    val returnValue = undoManager.undoStep()
     publish(new UpdateAll)
+    returnValue
   }
 
-  override def redoCommand(): Unit = {
-    undoManager.redoStep()
+  override def redoCommand(): Boolean = {
+    val returnValue = undoManager.redoStep()
     publish(new UpdateAll)
+    returnValue
   }
 
   override def save(): Unit = {
@@ -77,11 +80,11 @@ class Controller @Inject() extends RoundState with ControllerInterface {
 
   def replaceBoard(Board: BoardInterface): Unit = board = Board
 
-  def getBoardClone: BoardInterface = board.copyBoard()
+  override def getBoardClone: BoardInterface = board.copyBoard()
 
   override def createNewBoard(): Unit = {
     board = injector.instance[BoardInterface](Names.named("normal")).createNewBoard()
-
+    undoManager.clear()
     val col_0, row_0 = 0
     val col_1, row_1 = 1
     val col_2, row_2 = 2
@@ -184,5 +187,7 @@ class Controller @Inject() extends RoundState with ControllerInterface {
     currentState.changeState()
   }
 
-  def getState(state: RoundState): Boolean = if (state.isInstanceOf[playerOneRound]) true else false
+  override def getCurrentStat(): RoundState = currentState
+
+  override def setCurrentStat(newState: RoundState): Unit = currentState = newState
 }
