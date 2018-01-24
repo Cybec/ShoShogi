@@ -1,4 +1,4 @@
-package de.htwg.se.ShoShogi.model
+package de.htwg.se.ShoShogi.controller
 
 import de.htwg.se.ShoShogi.controller.controllerComponent.Simulator
 import de.htwg.se.ShoShogi.controller.controllerComponent.controllerBaseImpl.Controller

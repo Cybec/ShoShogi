@@ -1,4 +1,4 @@
-package de.htwg.se.ShoShogi.model
+package de.htwg.se.ShoShogi.controller
 
 import com.google.inject.name.Names
 import com.google.inject.{Guice, Injector}
