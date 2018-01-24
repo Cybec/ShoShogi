@@ -1,17 +1,19 @@
 package de.htwg.se.ShoShogi.controller
 
+import java.nio.file.{ Files, Paths }
+
 import com.google.inject.name.Names
-import com.google.inject.{Guice, Injector}
+import com.google.inject.{ Guice, Injector }
 import de.htwg.se.ShoShogi.ShoShogiModule
-import de.htwg.se.ShoShogi.controller.controllerComponent.controllerBaseImpl.{Controller, RoundState, playerOneRound, playerTwoRound}
-import de.htwg.se.ShoShogi.controller.controllerComponent.{ControllerInterface, MoveResult}
+import de.htwg.se.ShoShogi.controller.controllerComponent.controllerBaseImpl.{ Controller, RoundState, playerOneRound, playerTwoRound }
+import de.htwg.se.ShoShogi.controller.controllerComponent.{ ControllerInterface, MoveResult, Simulator }
 import de.htwg.se.ShoShogi.model.boardComponent.BoardInterface
 import de.htwg.se.ShoShogi.model.pieceComponent.PieceInterface
-import de.htwg.se.ShoShogi.model.pieceComponent.pieceBaseImpl.{PieceFactory, PiecesEnum}
+import de.htwg.se.ShoShogi.model.pieceComponent.pieceBaseImpl.{ PieceFactory, PiecesEnum }
 import net.codingwell.scalaguice.InjectorExtensions._
 import org.junit.runner.RunWith
 import org.scalatest.junit.JUnitRunner
-import org.scalatest.{Matchers, WordSpec}
+import org.scalatest.{ Matchers, WordSpec }
 
 import scala.language.reflectiveCalls
 
@@ -926,6 +928,108 @@ class ControllerSpec extends WordSpec with Matchers {
             "---------------------------------------------------------\n" +
             "Captured: \n"
         )
+      }
+    }
+
+    "called startSimulation" should {
+      "change the board to an before determined state" in {
+        newController.createNewBoard()
+        newController.startSimulation
+
+        while (!Simulator.threadEnd) {
+          Thread.sleep(1000)
+        }
+        val board2 = newController.boardToArray()
+
+        board2(0)(0) should be(PieceFactory.apply(PiecesEnum.Lancer, true))
+        board2(0)(1) should be(PieceFactory.apply(PiecesEnum.EmptyPiece, false))
+        board2(0)(2) should be(PieceFactory.apply(PiecesEnum.Pawn, true))
+        board2(0)(3) should be(PieceFactory.apply(PiecesEnum.EmptyPiece, false))
+        board2(0)(4) should be(PieceFactory.apply(PiecesEnum.EmptyPiece, false))
+        board2(0)(5) should be(PieceFactory.apply(PiecesEnum.EmptyPiece, false))
+        board2(0)(6) should be(PieceFactory.apply(PiecesEnum.Pawn, false))
+        board2(0)(7) should be(PieceFactory.apply(PiecesEnum.EmptyPiece, false))
+        board2(0)(8) should be(PieceFactory.apply(PiecesEnum.Lancer, false))
+
+        board2(1)(0) should be(PieceFactory.apply(PiecesEnum.Knight, true))
+        board2(1)(1) should be(PieceFactory.apply(PiecesEnum.Rook, true))
+        board2(1)(2) should be(PieceFactory.apply(PiecesEnum.EmptyPiece, false))
+        board2(1)(3) should be(PieceFactory.apply(PiecesEnum.Pawn, true))
+        board2(1)(4) should be(PieceFactory.apply(PiecesEnum.EmptyPiece, false))
+        board2(1)(5) should be(PieceFactory.apply(PiecesEnum.EmptyPiece, false))
+        board2(1)(6) should be(PieceFactory.apply(PiecesEnum.Pawn, false))
+        board2(1)(7) should be(PieceFactory.apply(PiecesEnum.EmptyPiece, false))
+        board2(1)(8) should be(PieceFactory.apply(PiecesEnum.Knight, false))
+
+        board2(2)(0) should be(PieceFactory.apply(PiecesEnum.SilverGeneral, true))
+        board2(2)(1) should be(PieceFactory.apply(PiecesEnum.EmptyPiece, false))
+        board2(2)(2) should be(PieceFactory.apply(PiecesEnum.Pawn, true))
+        board2(2)(3) should be(PieceFactory.apply(PiecesEnum.EmptyPiece, false))
+        board2(2)(4) should be(PieceFactory.apply(PiecesEnum.EmptyPiece, false))
+        board2(2)(5) should be(PieceFactory.apply(PiecesEnum.Pawn, false))
+        board2(2)(6) should be(PieceFactory.apply(PiecesEnum.EmptyPiece, false))
+        board2(2)(7) should be(PieceFactory.apply(PiecesEnum.GoldenGeneral, false))
+        board2(2)(8) should be(PieceFactory.apply(PiecesEnum.SilverGeneral, false))
+
+        board2(3)(0) should be(PieceFactory.apply(PiecesEnum.GoldenGeneral, true))
+        board2(3)(1) should be(PieceFactory.apply(PiecesEnum.EmptyPiece, false))
+        board2(3)(2) should be(PieceFactory.apply(PiecesEnum.Pawn, true))
+        board2(3)(3) should be(PieceFactory.apply(PiecesEnum.EmptyPiece, false))
+        board2(3)(4) should be(PieceFactory.apply(PiecesEnum.EmptyPiece, false))
+        board2(3)(5) should be(PieceFactory.apply(PiecesEnum.EmptyPiece, false))
+        board2(3)(6) should be(PieceFactory.apply(PiecesEnum.Pawn, false))
+        board2(3)(7) should be(PieceFactory.apply(PiecesEnum.EmptyPiece, false))
+        board2(3)(8) should be(PieceFactory.apply(PiecesEnum.EmptyPiece, false))
+
+        board2(4)(0) should be(PieceFactory.apply(PiecesEnum.King, true))
+        board2(4)(1) should be(PieceFactory.apply(PiecesEnum.EmptyPiece, false))
+        board2(4)(2) should be(PieceFactory.apply(PiecesEnum.Pawn, true))
+        board2(4)(3) should be(PieceFactory.apply(PiecesEnum.EmptyPiece, false))
+        board2(4)(4) should be(PieceFactory.apply(PiecesEnum.EmptyPiece, false))
+        board2(4)(5) should be(PieceFactory.apply(PiecesEnum.EmptyPiece, false))
+        board2(4)(6) should be(PieceFactory.apply(PiecesEnum.Pawn, false))
+        board2(4)(7) should be(PieceFactory.apply(PiecesEnum.EmptyPiece, false))
+        board2(4)(8) should be(PieceFactory.apply(PiecesEnum.King, false))
+
+        board2(5)(0) should be(PieceFactory.apply(PiecesEnum.EmptyPiece, false))
+        board2(5)(1) should be(PieceFactory.apply(PiecesEnum.EmptyPiece, false))
+        board2(5)(2) should be(PieceFactory.apply(PiecesEnum.Pawn, true))
+        board2(5)(3) should be(PieceFactory.apply(PiecesEnum.EmptyPiece, false))
+        board2(5)(4) should be(PieceFactory.apply(PiecesEnum.EmptyPiece, false))
+        board2(5)(5) should be(PieceFactory.apply(PiecesEnum.EmptyPiece, false))
+        board2(5)(6) should be(PieceFactory.apply(PiecesEnum.Pawn, false))
+        board2(5)(7) should be(PieceFactory.apply(PiecesEnum.EmptyPiece, false))
+        board2(5)(8) should be(PieceFactory.apply(PiecesEnum.GoldenGeneral, false))
+
+        board2(6)(0) should be(PieceFactory.apply(PiecesEnum.EmptyPiece, false))
+        board2(6)(1) should be(PieceFactory.apply(PiecesEnum.GoldenGeneral, true))
+        board2(6)(2) should be(PieceFactory.apply(PiecesEnum.PromotedBishop, false))
+        board2(6)(3) should be(PieceFactory.apply(PiecesEnum.Pawn, true))
+        board2(6)(4) should be(PieceFactory.apply(PiecesEnum.EmptyPiece, false))
+        board2(6)(5) should be(PieceFactory.apply(PiecesEnum.EmptyPiece, false))
+        board2(6)(6) should be(PieceFactory.apply(PiecesEnum.Pawn, false))
+        board2(6)(7) should be(PieceFactory.apply(PiecesEnum.EmptyPiece, false))
+        board2(6)(8) should be(PieceFactory.apply(PiecesEnum.SilverGeneral, false))
+
+        board2(7)(0) should be(PieceFactory.apply(PiecesEnum.Knight, true))
+        board2(7)(1) should be(PieceFactory.apply(PiecesEnum.SilverGeneral, true))
+        board2(7)(2) should be(PieceFactory.apply(PiecesEnum.Pawn, true))
+        board2(7)(3) should be(PieceFactory.apply(PiecesEnum.EmptyPiece, false))
+        board2(7)(4) should be(PieceFactory.apply(PiecesEnum.Pawn, false))
+        board2(7)(5) should be(PieceFactory.apply(PiecesEnum.EmptyPiece, false))
+        board2(7)(6) should be(PieceFactory.apply(PiecesEnum.EmptyPiece, false))
+        board2(7)(7) should be(PieceFactory.apply(PiecesEnum.Rook, false))
+        board2(7)(8) should be(PieceFactory.apply(PiecesEnum.Knight, false))
+
+        board2(8)(0) should be(PieceFactory.apply(PiecesEnum.Lancer, true))
+        board2(8)(1) should be(PieceFactory.apply(PiecesEnum.EmptyPiece, false))
+        board2(8)(2) should be(PieceFactory.apply(PiecesEnum.Pawn, true))
+        board2(8)(3) should be(PieceFactory.apply(PiecesEnum.EmptyPiece, false))
+        board2(8)(4) should be(PieceFactory.apply(PiecesEnum.EmptyPiece, false))
+        board2(8)(5) should be(PieceFactory.apply(PiecesEnum.EmptyPiece, false))
+        board2(8)(6) should be(PieceFactory.apply(PiecesEnum.Pawn, false))
+        board2(8)(7) should be(PieceFactory.apply(PiecesEnum.EmptyPiece, false))
+        board2(8)(8) should be(PieceFactory.apply(PiecesEnum.Lancer, false))
       }
     }
   }

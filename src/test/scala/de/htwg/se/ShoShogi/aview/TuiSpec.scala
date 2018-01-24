@@ -1,11 +1,11 @@
 package de.htwg.se.ShoShogi.aview
 
-import com.google.inject.{Guice, Injector}
+import com.google.inject.{ Guice, Injector }
 import de.htwg.se.ShoShogi.ShoShogiModule
 import de.htwg.se.ShoShogi.controller.controllerComponent.ControllerInterface
 import org.junit.runner.RunWith
 import org.scalatest.junit.JUnitRunner
-import org.scalatest.{Matchers, WordSpec}
+import org.scalatest.{ Matchers, WordSpec }
 
 @RunWith(classOf[JUnitRunner])
 class TuiSpec extends WordSpec with Matchers {

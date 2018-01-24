@@ -2,7 +2,7 @@ package de.htwg.se.ShoShogi.controller
 
 import de.htwg.se.ShoShogi.controller.controllerComponent.Simulator
 import de.htwg.se.ShoShogi.controller.controllerComponent.controllerBaseImpl.Controller
-import de.htwg.se.ShoShogi.model.pieceComponent.pieceBaseImpl.{PieceFactory, PiecesEnum}
+import de.htwg.se.ShoShogi.model.pieceComponent.pieceBaseImpl.{ PieceFactory, PiecesEnum }
 import org.junit.runner.RunWith
 import org.scalatest._
 import org.scalatest.junit.JUnitRunner

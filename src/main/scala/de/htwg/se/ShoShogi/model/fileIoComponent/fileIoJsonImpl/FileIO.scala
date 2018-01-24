@@ -1,15 +1,15 @@
 package de.htwg.se.ShoShogi.model.fileIoComponent.fileIoJsonImpl
 
-import java.nio.file.{Files, Paths}
+import java.nio.file.{ Files, Paths }
 
 import com.google.inject.name.Names
-import com.google.inject.{Guice, Injector}
+import com.google.inject.{ Guice, Injector }
 import de.htwg.se.ShoShogi.model.boardComponent.BoardInterface
 import de.htwg.se.ShoShogi.model.fileIoComponent.FileIOInterface
 import de.htwg.se.ShoShogi.model.pieceComponent.PieceInterface
-import de.htwg.se.ShoShogi.model.pieceComponent.pieceBaseImpl.{PieceFactory, PiecesEnum}
+import de.htwg.se.ShoShogi.model.pieceComponent.pieceBaseImpl.{ PieceFactory, PiecesEnum }
 import de.htwg.se.ShoShogi.model.playerComponent.Player
-import de.htwg.se.ShoShogi.{ShoShogiModule, ShoShogiModuleConf}
+import de.htwg.se.ShoShogi.{ ShoShogiModule, ShoShogiModuleConf }
 import net.codingwell.scalaguice.InjectorExtensions._
 import play.api.libs.json._
 
@@ -17,47 +17,46 @@ import scala.io.Source
 
 class FileIO extends FileIOInterface {
 
-  override def load: Option[(BoardInterface, Boolean, Player, Player)] =
-    if (!Files.exists(Paths.get("board.json"))) None else {
-      var loadReturnOption: Option[(BoardInterface, Boolean, Player, Player)] = None
-      val source: String = Source.fromFile("board.json").getLines.mkString
-      val json: JsValue = Json.parse(source)
-      val size = (json \ "board" \ "size").get.toString.toInt
-      val state = (json \ "board" \ "state").get.toString.toBoolean
-      val player1 = Player((json \ "board" \ "playerFirstName").get.toString, first = true)
-      val player2 = Player((json \ "board" \ "playerSecondName").get.toString, first = false)
-      val injector: Injector = Guice.createInjector(new ShoShogiModule)
+  override def load: Option[(BoardInterface, Boolean, Player, Player)] = {
+    var loadReturnOption: Option[(BoardInterface, Boolean, Player, Player)] = None
+    val source: String = Source.fromFile("board.json").getLines.mkString
+    val json: JsValue = Json.parse(source)
+    val size = (json \ "board" \ "size").get.toString.toInt
+    val state = (json \ "board" \ "state").get.toString.toBoolean
+    val player1 = Player((json \ "board" \ "playerFirstName").get.toString, first = true)
+    val player2 = Player((json \ "board" \ "playerSecondName").get.toString, first = false)
+    val injector: Injector = Guice.createInjector(new ShoShogiModule)
 
-      loadReturnOption = getBoardBySize(size, injector) match {
-        case Some(board) =>
-          val newBoard = board.setContainer(
-            getConqueredPieces((json \\ "playerFirstConquered").toArray),
-            getConqueredPieces((json \\ "playerSecondConquered").toArray)
-          )
-          Some((newBoard, state, player1, player2))
-        case _ => None
-      }
-
-      loadReturnOption match {
-        case Some((board, savedState, player_1, player_2)) =>
-          var _board = board
-          for (index <- 0 until size * size) {
-            val row = (json \\ "row")(index).as[Int]
-            val col = (json \\ "col")(index).as[Int]
-            val piece = (json \\ "piece")(index)
-            val pieceName = (piece \ "pieceName").as[String]
-            val firstPlayer = (piece \ "firstPlayer").as[Boolean]
-            PiecesEnum.withNameOpt(pieceName) match {
-              case Some(pieceEnum) =>
-                _board = _board.replaceCell(col, row, PieceFactory.apply(pieceEnum, firstPlayer))
-              case None =>
-            }
-          }
-          loadReturnOption = Some(_board, savedState, player_1, player_2)
-        case None =>
-      }
-      loadReturnOption
+    loadReturnOption = getBoardBySize(size, injector) match {
+      case Some(board) =>
+        val newBoard = board.setContainer(
+          getConqueredPieces((json \\ "playerFirstConquered").toArray),
+          getConqueredPieces((json \\ "playerSecondConquered").toArray)
+        )
+        Some((newBoard, state, player1, player2))
+      case _ => None
     }
+
+    loadReturnOption match {
+      case Some((board, savedState, player_1, player_2)) =>
+        var _board = board
+        for (index <- 0 until size * size) {
+          val row = (json \\ "row")(index).as[Int]
+          val col = (json \\ "col")(index).as[Int]
+          val piece = (json \\ "piece")(index)
+          val pieceName = (piece \ "pieceName").as[String]
+          val firstPlayer = (piece \ "firstPlayer").as[Boolean]
+          PiecesEnum.withNameOpt(pieceName) match {
+            case Some(pieceEnum) =>
+              _board = _board.replaceCell(col, row, PieceFactory.apply(pieceEnum, firstPlayer))
+            case None =>
+          }
+        }
+        loadReturnOption = Some(_board, savedState, player_1, player_2)
+      case None =>
+    }
+    loadReturnOption
+  }
 
   def getConqueredPieces(jsArray: Array[JsValue]): List[PieceInterface] = {
     var stringList: List[String] = List[String]()
