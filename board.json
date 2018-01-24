@@ -1,6 +1,6 @@
 {
   "board": {
-    "size": 6,
+    "size": 60,
     "state": true,
     "playerFirstName": "Player1",
     "playerSecondName": "Player2",

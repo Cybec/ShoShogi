@@ -1,19 +1,18 @@
 package de.htwg.se.ShoShogi.controller
 
-import java.nio.file.{ Files, Paths }
-
 import com.google.inject.name.Names
-import com.google.inject.{ Guice, Injector }
+import com.google.inject.{Guice, Injector}
 import de.htwg.se.ShoShogi.ShoShogiModule
-import de.htwg.se.ShoShogi.controller.controllerComponent.controllerBaseImpl.{ Controller, RoundState, playerOneRound, playerTwoRound }
-import de.htwg.se.ShoShogi.controller.controllerComponent.{ ControllerInterface, MoveResult, Simulator }
+import de.htwg.se.ShoShogi.controller.controllerComponent.controllerBaseImpl.{Controller, RoundState, playerOneRound, playerTwoRound}
+import de.htwg.se.ShoShogi.controller.controllerComponent.{ControllerInterface, MoveResult, Simulator}
 import de.htwg.se.ShoShogi.model.boardComponent.BoardInterface
+import de.htwg.se.ShoShogi.model.boardComponent.boardBaseImpl.Board
 import de.htwg.se.ShoShogi.model.pieceComponent.PieceInterface
-import de.htwg.se.ShoShogi.model.pieceComponent.pieceBaseImpl.{ PieceFactory, PiecesEnum }
+import de.htwg.se.ShoShogi.model.pieceComponent.pieceBaseImpl.{PieceFactory, PiecesEnum}
 import net.codingwell.scalaguice.InjectorExtensions._
 import org.junit.runner.RunWith
 import org.scalatest.junit.JUnitRunner
-import org.scalatest.{ Matchers, WordSpec }
+import org.scalatest.{Matchers, WordSpec}
 
 import scala.language.reflectiveCalls
 
@@ -925,6 +924,38 @@ class ControllerSpec extends WordSpec with Matchers {
             "|     | B   |     |     |     |     |     | R   |     | \th\n" +
             "---------------------------------------------------------\n " +
             "| L   | KN  | SG  | GG  | K   | GG  | SG  | KN  | L   | \ti\n" +
+            "---------------------------------------------------------\n" +
+            "Captured: \n"
+        )
+      }
+
+      "loading with unrealistic boardsize" in {
+        val board: BoardInterface = new Board(60, PieceFactory.apply(PiecesEnum.EmptyPiece, false))
+        val controller2: Controller = new Controller()
+        controller2.replaceBoard(board)
+        controller2.save
+        controller2.load
+        controller2.boardToString() should be(
+          "Captured: \n" +
+            "    0     1     2     3     4     5     6     7     8 \n \n" +
+            "---------------------------------------------------------\n " +
+            "|     |     |     |     |     |     |     |     |     | \ta\n" +
+            "---------------------------------------------------------\n " +
+            "|     |     |     |     |     |     |     |     |     | \tb\n" +
+            "---------------------------------------------------------\n " +
+            "|     |     |     |     |     |     |     |     |     | \tc\n" +
+            "---------------------------------------------------------\n " +
+            "|     |     |     |     |     |     |     |     |     | \td\n" +
+            "---------------------------------------------------------\n " +
+            "|     |     |     |     |     |     |     |     |     | \te\n" +
+            "---------------------------------------------------------\n " +
+            "|     |     |     |     |     |     |     |     |     | \tf\n" +
+            "---------------------------------------------------------\n " +
+            "|     |     |     |     |     |     |     |     |     | \tg\n" +
+            "---------------------------------------------------------\n " +
+            "|     |     |     |     |     |     |     |     |     | \th\n" +
+            "---------------------------------------------------------\n " +
+            "|     |     |     |     |     |     |     |     |     | \ti\n" +
             "---------------------------------------------------------\n" +
             "Captured: \n"
         )
