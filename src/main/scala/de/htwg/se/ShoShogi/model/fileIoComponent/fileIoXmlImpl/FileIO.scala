@@ -1,18 +1,16 @@
 package de.htwg.se.ShoShogi.model.fileIoComponent.fileIoXmlImpl
 
 import com.google.inject.name.Names
-import com.google.inject.{ Guice, Injector }
+import com.google.inject.{Guice, Injector}
 import de.htwg.se.ShoShogi.model.boardComponent.BoardInterface
 import de.htwg.se.ShoShogi.model.fileIoComponent.FileIOInterface
 import de.htwg.se.ShoShogi.model.pieceComponent.PieceInterface
-import de.htwg.se.ShoShogi.model.pieceComponent.pieceBaseImpl.{ PieceFactory, PiecesEnum }
+import de.htwg.se.ShoShogi.model.pieceComponent.pieceBaseImpl.{PieceFactory, PiecesEnum}
 import de.htwg.se.ShoShogi.model.playerComponent.Player
-import de.htwg.se.ShoShogi.{ ShoShogiModule, ShoShogiModuleConf }
+import de.htwg.se.ShoShogi.{ShoShogiModule, ShoShogiModuleConf}
 import net.codingwell.scalaguice.InjectorExtensions._
 
-import scala.xml.{ Node, NodeSeq, PrettyPrinter }
-
-//import scala.xml.PrettyPrinter
+import scala.xml.{Node, NodeSeq, PrettyPrinter}
 
 class FileIO extends FileIOInterface {
 
