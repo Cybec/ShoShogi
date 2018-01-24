@@ -179,4 +179,6 @@ trait ControllerInterface extends scala.swing.Publisher {
     * @return true if the piece has a promotion, false when not
     */
   def promotePiece(piecePosition: (Int, Int)): Boolean
+
+  def startSimulation: Unit
 }

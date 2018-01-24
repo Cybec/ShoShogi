@@ -26,6 +26,7 @@ class Controller @Inject() extends RoundState with ControllerInterface {
   override def getPlayers: (Player, Player) = {
     (Player(player_1.name, player_1.first), Player(player_2.name, player_2.first))
   }
+
   var currentState: RoundState = playerOnesTurn
   override val boardSize = 9
 
@@ -184,4 +185,6 @@ class Controller @Inject() extends RoundState with ControllerInterface {
   override def changeState(): Unit = {
     currentState.changeState()
   }
+
+  override def startSimulation: Unit = Simulator.start(this)
 }
