@@ -18,6 +18,7 @@ object MoveResult extends Enumeration {
  */
 trait ControllerInterface extends scala.swing.Publisher {
 
+  var board: BoardInterface
   /**
    * The typical size of a Shoshogi board is 9*9.
    */

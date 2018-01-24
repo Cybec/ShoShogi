@@ -1,17 +1,16 @@
 package de.htwg.se.ShoShogi.model
 
 import com.google.inject.name.Names
-import com.google.inject.{Guice, Injector}
+import com.google.inject.{ Guice, Injector }
 import de.htwg.se.ShoShogi.ShoShogiModule
-import de.htwg.se.ShoShogi.controller.controllerComponent.controllerBaseImpl.{RoundState, playerOneRound, playerTwoRound}
-import de.htwg.se.ShoShogi.controller.controllerComponent.{ControllerInterface, MoveResult}
+import de.htwg.se.ShoShogi.controller.controllerComponent.{ ControllerInterface, MoveResult }
 import de.htwg.se.ShoShogi.model.boardComponent.BoardInterface
 import de.htwg.se.ShoShogi.model.pieceComponent.PieceInterface
-import de.htwg.se.ShoShogi.model.pieceComponent.pieceBaseImpl.{PieceFactory, PiecesEnum}
+import de.htwg.se.ShoShogi.model.pieceComponent.pieceBaseImpl.{ PieceFactory, PiecesEnum }
 import net.codingwell.scalaguice.InjectorExtensions._
 import org.junit.runner.RunWith
 import org.scalatest.junit.JUnitRunner
-import org.scalatest.{Matchers, WordSpec}
+import org.scalatest.{ Matchers, WordSpec }
 
 import scala.language.reflectiveCalls
 
@@ -860,13 +859,13 @@ class ControllerSpec extends WordSpec with Matchers {
       }
     }
     //TODO: how to test changeState
-     //   "called changeState" should {
-     //     "change the state from PlayerOnesTurn to PlayerTwosTurn and the other way around" in {
-     //     controller.createNewBoard()
-     //       controller.get
+    //   "called changeState" should {
+    //     "change the state from PlayerOnesTurn to PlayerTwosTurn and the other way around" in {
+    //     controller.createNewBoard()
+    //       controller.get
 
-     //     }
-     //   }
+    //     }
+    //   }
     "called save and load" should {
       "save the board and load the saved board in second players turn" in {
         controller.createNewBoard()

@@ -15,13 +15,12 @@ import net.codingwell.scalaguice.InjectorExtensions._
 class Controller @Inject() extends RoundState with ControllerInterface {
   val injector: Injector = Guice.createInjector(new ShoShogiModule)
   val fileIo: FileIOInterface = injector.instance[FileIOInterface]
-  var board: BoardInterface = injector.instance[BoardInterface](Names.named("normal")).createNewBoard()
+  override var board: BoardInterface = injector.instance[BoardInterface](Names.named("normal")).createNewBoard()
   val playerOnesTurn: RoundState = playerOneRound(this)
   val playerTwosTurn: RoundState = playerTwoRound(this)
   var player_1: Player = Player("Player1", first = true)
-
-  private val undoManager = new UndoManager
   var player_2: Player = Player("Player2", first = false)
+  private val undoManager = new UndoManager
 
   override def getPlayers: (Player, Player) = {
     (Player(player_1.name, player_1.first), Player(player_2.name, player_2.first))
@@ -185,5 +184,5 @@ class Controller @Inject() extends RoundState with ControllerInterface {
     currentState.changeState()
   }
 
-  def getState(state: RoundState): Boolean = if(state.isInstanceOf[playerOneRound]) true else false
+  def getState(state: RoundState): Boolean = if (state.isInstanceOf[playerOneRound]) true else false
 }
