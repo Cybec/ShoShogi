@@ -1,15 +1,13 @@
 package de.htwg.se.ShoShogi.model.fileIoComponent.fileIoJsonImpl
 
-import java.nio.file.{ Files, Paths }
-
 import com.google.inject.name.Names
-import com.google.inject.{ Guice, Injector }
+import com.google.inject.{Guice, Injector}
 import de.htwg.se.ShoShogi.model.boardComponent.BoardInterface
 import de.htwg.se.ShoShogi.model.fileIoComponent.FileIOInterface
 import de.htwg.se.ShoShogi.model.pieceComponent.PieceInterface
-import de.htwg.se.ShoShogi.model.pieceComponent.pieceBaseImpl.{ PieceFactory, PiecesEnum }
+import de.htwg.se.ShoShogi.model.pieceComponent.pieceBaseImpl.{PieceFactory, PiecesEnum}
 import de.htwg.se.ShoShogi.model.playerComponent.Player
-import de.htwg.se.ShoShogi.{ ShoShogiModule, ShoShogiModuleConf }
+import de.htwg.se.ShoShogi.{ShoShogiModule, ShoShogiModuleConf}
 import net.codingwell.scalaguice.InjectorExtensions._
 import play.api.libs.json._
 
@@ -30,8 +28,8 @@ class FileIO extends FileIOInterface {
     loadReturnOption = getBoardBySize(size, injector) match {
       case Some(board) =>
         val newBoard = board.setContainer(
-          getConqueredPieces((json \\ "playerFirstConquered").toArray),
-          getConqueredPieces((json \\ "playerSecondConquered").toArray)
+          getConqueredPieces((json \\ "playerFirstConquered").toArray, true),
+          getConqueredPieces((json \\ "playerSecondConquered").toArray, false)
         )
         Some((newBoard, state, player1, player2))
       case _ => None
@@ -58,7 +56,7 @@ class FileIO extends FileIOInterface {
     loadReturnOption
   }
 
-  def getConqueredPieces(jsArray: Array[JsValue]): List[PieceInterface] = {
+  def getConqueredPieces(jsArray: Array[JsValue], istFirst: Boolean): List[PieceInterface] = {
     var stringList: List[String] = List[String]()
     var pieceList: List[PieceInterface] = List[PieceInterface]()
 
@@ -66,7 +64,7 @@ class FileIO extends FileIOInterface {
 
     for (x: String <- stringList) {
       PiecesEnum.withNameOpt(x) match {
-        case Some(pieceEnum) => pieceList = pieceList :+ PieceFactory.apply(pieceEnum, isFirstOwner = false)
+        case Some(pieceEnum) => pieceList = pieceList :+ PieceFactory.apply(pieceEnum, istFirst)
         case None =>
       }
     }

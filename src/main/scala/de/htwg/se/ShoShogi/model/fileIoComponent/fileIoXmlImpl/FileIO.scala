@@ -20,14 +20,14 @@ class FileIO extends FileIOInterface {
     val size = (file \\ "board" \ "@size").text.toInt
     val state = (file \\ "board" \ "@state").text.toString.toBoolean
     val player1 = Player((file \\ "board" \ "@playerFirstName").text.toString, first = true)
-    val player2 = Player((file \\ "board" \ "@playerSecondName").text.toString, first = true)
+    val player2 = Player((file \\ "board" \ "@playerSecondName").text.toString, first = false)
     val injector = Guice.createInjector(new ShoShogiModule)
 
     boardOption = getBoardBySize(size, injector) match {
       case Some(board) =>
         val newBoard = board.setContainer(
-          getConqueredPieces(file \\ "board" \ "playerFirstConquered"),
-          getConqueredPieces(file \\ "board" \ "playerSecondConquered")
+          getConqueredPieces(file \\ "board" \ "playerFirstConquered", true),
+          getConqueredPieces(file \\ "board" \ "playerSecondConquered", false)
         )
         Some((newBoard, state, player1, player2))
       case _ => None
@@ -66,7 +66,7 @@ class FileIO extends FileIOInterface {
     }
   }
 
-  def getConqueredPieces(nodeSeq: NodeSeq): List[PieceInterface] = {
+  def getConqueredPieces(nodeSeq: NodeSeq, first: Boolean): List[PieceInterface] = {
     var stringList: List[String] = List[String]()
     var pieceList: List[PieceInterface] = List[PieceInterface]()
 
@@ -74,7 +74,7 @@ class FileIO extends FileIOInterface {
 
     for (x: String <- stringList) {
       PiecesEnum.withNameOpt(x) match {
-        case Some(pieceEnum) => pieceList = pieceList :+ PieceFactory.apply(pieceEnum, isFirstOwner = false)
+        case Some(pieceEnum) => pieceList = pieceList :+ PieceFactory.apply(pieceEnum, first)
         case None =>
       }
     }

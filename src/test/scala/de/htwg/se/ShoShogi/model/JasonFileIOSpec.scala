@@ -28,13 +28,16 @@ class JasonFileIOSpec extends WordSpec with Matchers {
     val fileIo: FileIOInterface = injector.instance[FileIOInterface]
     "called save and load" should {
       "reload an board(normal) with in the state it was saved" in {
-        import java.io._
-        val fileTemp = new File("Z:/SE/ShoShogi/board.json")
         controller.createNewBoard()
         fileIo.save(controller.board, true, player_1, player_2)
         controller.movePiece((0, 2), (0, 3)) should be(MoveResult.validMove)
-        val result = fileIo.load.get
-        controller.board = result._1
+        val (board: BoardInterface, state: Boolean, p1, p2) = fileIo.load.getOrElse(controller.createEmptyBoard())
+        controller.replaceBoard(board)
+        controller.currentState = if (state) {
+          controller.playerOnesTurn
+        } else {
+          controller.playerTwosTurn
+        }
         controller.boardToString() should be(
           "Captured: \n" +
             "    0     1     2     3     4     5     6     7     8 \n \n" +
@@ -59,7 +62,53 @@ class JasonFileIOSpec extends WordSpec with Matchers {
             "---------------------------------------------------------\n" +
             "Captured: \n"
         )
+        controller.movePiece((0, 2), (0, 3)) should be(MoveResult.validMove)
+        controller.movePiece((0, 6), (0, 5)) should be(MoveResult.validMove)
+        controller.movePiece((0, 3), (0, 4)) should be(MoveResult.validMove)
+        controller.movePiece((0, 5), (0, 4)) should be(MoveResult.validMove)
+        controller.movePiece((0, 0), (0, 4)) should be(MoveResult.validMove)
+        val currentState: Boolean = if (controller.currentState == controller.playerOnesTurn) {
+          true
+        } else {
+          false
+        }
+        fileIo.save(controller.board, currentState, player_1, player_2)
+        controller.movePiece((8, 6), (8, 5)) should be(MoveResult.validMove)
+        val (board2: BoardInterface, state2: Boolean, p12, p22) = fileIo.load.getOrElse(controller.createEmptyBoard())
+        controller.replaceBoard(board2)
+        controller.currentState = if (state2) {
+          controller.playerOnesTurn
+        } else {
+          controller.playerTwosTurn
+        }
+        println(controller.boardToString())
+        controller.boardToString() should be(
+          "Captured: P°    \n" +
+            "    0     1     2     3     4     5     6     7     8 \n \n" +
+            "---------------------------------------------------------\n " +
+            "|     | KN° | SG° | GG° | K°  | GG° | SG° | KN° | L°  | \ta\n" +
+            "---------------------------------------------------------\n " +
+            "|     | R°  |     |     |     |     |     | B°  |     | \tb\n" +
+            "---------------------------------------------------------\n " +
+            "|     | P°  | P°  | P°  | P°  | P°  | P°  | P°  | P°  | \tc\n" +
+            "---------------------------------------------------------\n " +
+            "|     |     |     |     |     |     |     |     |     | \td\n" +
+            "---------------------------------------------------------\n " +
+            "| L°  |     |     |     |     |     |     |     |     | \te\n" +
+            "---------------------------------------------------------\n " +
+            "|     |     |     |     |     |     |     |     |     | \tf\n" +
+            "---------------------------------------------------------\n " +
+            "|     | P   | P   | P   | P   | P   | P   | P   | P   | \tg\n" +
+            "---------------------------------------------------------\n " +
+            "|     | B   |     |     |     |     |     | R   |     | \th\n" +
+            "---------------------------------------------------------\n " +
+            "| L   | KN  | SG  | GG  | K   | GG  | SG  | KN  | L   | \ti\n" +
+            "---------------------------------------------------------\n" +
+            "Captured: P     \n"
+        )
+
       }
+
       "reload an board(small) with in the state it was saved" in {
         fileIo.save(smallBoard, true, player_1, player_2)
         smallBoard.replaceCell(0, 2, PieceFactory.apply(PiecesEnum.King, player_1.first))
