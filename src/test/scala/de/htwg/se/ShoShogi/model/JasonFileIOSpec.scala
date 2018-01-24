@@ -16,7 +16,7 @@ import org.scalatest.junit.JUnitRunner
 import org.scalatest.{Matchers, WordSpec}
 
 @RunWith(classOf[JUnitRunner])
-class FileIOSpec extends WordSpec with Matchers {
+class JasonFileIOSpec extends WordSpec with Matchers {
   "A JasonFileIO" when {
     val injector: Injector = Guice.createInjector(new ShoShogiModule)
     val controller: Controller = new Controller()
@@ -60,11 +60,9 @@ class FileIOSpec extends WordSpec with Matchers {
             "Captured: \n"
         )
       }
-      "reload an board(small) with the state it was saved" in {
+      "reload an board(small) with in the state it was saved" in {
         fileIo.save(smallBoard, true, player_1, player_2)
         smallBoard.replaceCell(0, 2, PieceFactory.apply(PiecesEnum.King, player_1.first))
-        val result = fileIo.load.get
-        //        controller.board = result._1
         controller.load
         controller.boardToString() should be(
           "Captured: \n" +
@@ -95,8 +93,6 @@ class FileIOSpec extends WordSpec with Matchers {
       "reload an board(tiny) with the state it was saved" in {
         fileIo.save(tinyBoard, true, player_1, player_2)
         smallBoard.replaceCell(0, 0, PieceFactory.apply(PiecesEnum.King, player_1.first))
-        val result = fileIo.load.get
-        //        controller.board = result._1
         controller.load
         controller.boardToString() should be(
           "Captured: \n" +
