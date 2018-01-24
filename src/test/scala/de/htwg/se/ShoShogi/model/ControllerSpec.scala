@@ -876,11 +876,14 @@ class ControllerSpec extends WordSpec with Matchers {
         newController.getCurrentStat() should be(playerTwosTurn)
       }
     }
-    "called save and load" should {
-      "save the board and load the saved board in second players turn" in {
+    "called save/load" should {
+      "save the board in second players turn" in {
         controller.createNewBoard()
         controller.movePiece((0, 2), (0, 3)) should be(MoveResult.validMove)
         controller.save
+      }
+
+      "called load and overrite the current game with loaded content" in {
         controller.movePiece((0, 6), (0, 5)) should be(MoveResult.validMove)
         controller.load
         controller.boardToString() should be(
