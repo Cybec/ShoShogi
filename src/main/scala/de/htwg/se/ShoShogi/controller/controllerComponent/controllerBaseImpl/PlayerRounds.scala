@@ -90,18 +90,19 @@ case class playerOneRound(controller: Controller) extends RoundState {
     if (!piece.endsWith("°")) return possibleMoves
 
     def calculatePossibleMovesIfPawn(column: Int) = {
-      if (!controller.board.getPiecesInColumn(column, stateTurn = true).exists((x: PieceInterface) => x.typeEquals("P°"))
-        && !controller.board.getPiecesInColumn(column, stateTurn = true).exists((x: PieceInterface) => x.typeEquals("K°"))) {
-        possibleMoves = possibleMoves ::: controller.board.getEmptyCellsInColumn(column, (0, 7))
-      } else {
-        for (row <- 0 to 8) {
-          controller.board.cell(column, row) match {
-            case Some(pieceInCell) => if (PieceFactory.isInstanceOfPiece(PiecesEnum.EmptyPiece, pieceInCell)) {
-              possibleMoves = possibleMoves :+ (column, row)
-            } else if (PieceFactory.isInstanceOfPiece(PiecesEnum.King, pieceInCell) && !pieceInCell.isFirstOwner) {
-              possibleMoves = possibleMoves.filter(_ != (column, row - 1))
+      if (!controller.board.getPiecesInColumn(column, stateTurn = true).exists((x: PieceInterface) => x.typeEquals("P°"))) {
+        if (!controller.board.getPiecesInColumn(column, stateTurn = true).exists((x: PieceInterface) => x.typeEquals("K°"))) {
+          possibleMoves = possibleMoves ::: controller.board.getEmptyCellsInColumn(column, (0, 7))
+        } else {
+          for (row <- 0 to 8) {
+            controller.board.cell(column, row) match {
+              case Some(pieceInCell) => if (PieceFactory.isInstanceOfPiece(PiecesEnum.EmptyPiece, pieceInCell)) {
+                possibleMoves = possibleMoves :+ (column, row)
+              } else if (PieceFactory.isInstanceOfPiece(PiecesEnum.King, pieceInCell) && !pieceInCell.isFirstOwner) {
+                possibleMoves = possibleMoves.filter(_ != (column, row - 1))
+              }
+              case None =>
             }
-            case None =>
           }
         }
       }
@@ -188,20 +189,21 @@ case class playerTwoRound(controller: Controller) extends RoundState {
     var count = 0
 
     def calculatePossibleMovesIfPawn(column: Int) = {
-      if (!controller.board.getPiecesInColumn(column, stateTurn = false).exists((x: PieceInterface) => x.typeEquals("P")) &&
-        !controller.board.getPiecesInColumn(column, stateTurn = false).exists((x: PieceInterface) => x.typeEquals("K"))) {
-        possibleMoves = possibleMoves ::: controller.board.getEmptyCellsInColumn(column, (1, 8))
-      } else {
-        for (row <- 0 to 8) {
-          controller.board.cell(column, row + controller.board.size - 1 - count) match {
-            case Some(pieceInCell) => if (PieceFactory.isInstanceOfPiece(PiecesEnum.EmptyPiece, pieceInCell) && row != 8) {
-              possibleMoves = possibleMoves :+ (column, row + controller.board.size - 1 - count)
-            } else if (PieceFactory.isInstanceOfPiece(PiecesEnum.King, pieceInCell) && pieceInCell.isFirstOwner) {
-              possibleMoves = possibleMoves.filter(_ != (column, row + controller.board.size - count))
+      if (!controller.board.getPiecesInColumn(column, stateTurn = false).exists((x: PieceInterface) => x.typeEquals("P"))) {
+        if (!controller.board.getPiecesInColumn(column, stateTurn = false).exists((x: PieceInterface) => x.typeEquals("K"))) {
+          possibleMoves = possibleMoves ::: controller.board.getEmptyCellsInColumn(column, (1, 8))
+        } else {
+          for (row <- 0 to 8) {
+            controller.board.cell(column, row + controller.board.size - 1 - count) match {
+              case Some(pieceInCell) => if (PieceFactory.isInstanceOfPiece(PiecesEnum.EmptyPiece, pieceInCell) && row != 8) {
+                possibleMoves = possibleMoves :+ (column, row + controller.board.size - 1 - count)
+              } else if (PieceFactory.isInstanceOfPiece(PiecesEnum.King, pieceInCell) && pieceInCell.isFirstOwner) {
+                possibleMoves = possibleMoves.filter(_ != (column, row + controller.board.size - count))
+              }
+              case None =>
             }
-            case None =>
+            count = count + 2
           }
-          count = count + 2
         }
       }
     }
