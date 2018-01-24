@@ -877,39 +877,27 @@ class ControllerSpec extends WordSpec with Matchers {
       }
     }
     "called save/load" should {
-      "save the board in second players turn" in {
-        controller.createNewBoard()
-        controller.movePiece((0, 2), (0, 3)) should be(MoveResult.validMove)
-        controller.save
+      "save the board in first players turn" in {
+        newController.createNewBoard()
+        val oldState = newController.getCurrentStat() should be(playerOnesTurn)
+        newController.save
+        newController.movePiece((0, 2), (0, 3)) should be(MoveResult.validMove)
+        newController.getCurrentStat() should be(playerTwosTurn)
+        newController.load
+        newController.getCurrentStat() should be(playerOnesTurn)
       }
 
-      //      "called load and overrite the current game with loaded content" in {
+      //      "save the board in first players turn" in {
       //        controller.movePiece((0, 6), (0, 5)) should be(MoveResult.validMove)
+      //        controller.save
+      //      }
+
+      //      "called load and overwrite the current game with loaded content" in {
+      //        controller.movePiece((0, 6), (0, 5)) should be(MoveResult.validMove)
+      //        controller.getCurrentStat() should be(playerOnesTurn)
       //        controller.load
-      //        controller.boardToString() should be(
-      //          "Captured: \n" +
-      //            "    0     1     2     3     4     5     6     7     8 \n \n" +
-      //            "---------------------------------------------------------\n " +
-      //            "| L°  | KN° | SG° | GG° | K°  | GG° | SG° | KN° | L°  | \ta\n" +
-      //            "---------------------------------------------------------\n " +
-      //            "|     | R°  |     |     |     |     |     | B°  |     | \tb\n" +
-      //            "---------------------------------------------------------\n " +
-      //            "|     | P°  | P°  | P°  | P°  | P°  | P°  | P°  | P°  | \tc\n" +
-      //            "---------------------------------------------------------\n " +
-      //            "| P°  |     |     |     |     |     |     |     |     | \td\n" +
-      //            "---------------------------------------------------------\n " +
-      //            "|     |     |     |     |     |     |     |     |     | \te\n" +
-      //            "---------------------------------------------------------\n " +
-      //            "|     |     |     |     |     |     |     |     |     | \tf\n" +
-      //            "---------------------------------------------------------\n " +
-      //            "| P   | P   | P   | P   | P   | P   | P   | P   | P   | \tg\n" +
-      //            "---------------------------------------------------------\n " +
-      //            "|     | B   |     |     |     |     |     | R   |     | \th\n" +
-      //            "---------------------------------------------------------\n " +
-      //            "| L   | KN  | SG  | GG  | K   | GG  | SG  | KN  | L   | \ti\n" +
-      //            "---------------------------------------------------------\n" +
-      //            "Captured: \n"
-      //        )
+      //
+      //
       //      }
       //      "not saving the board load changes nothing" in {
       //        controller.createNewBoard()
