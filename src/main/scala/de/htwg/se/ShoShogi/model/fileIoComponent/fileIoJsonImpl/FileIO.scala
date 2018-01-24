@@ -1,15 +1,15 @@
 package de.htwg.se.ShoShogi.model.fileIoComponent.fileIoJsonImpl
 
-import java.nio.file.{Files, Paths}
+import java.nio.file.{ Files, Paths }
 
 import com.google.inject.name.Names
-import com.google.inject.{Guice, Injector}
+import com.google.inject.{ Guice, Injector }
 import de.htwg.se.ShoShogi.model.boardComponent.BoardInterface
 import de.htwg.se.ShoShogi.model.fileIoComponent.FileIOInterface
 import de.htwg.se.ShoShogi.model.pieceComponent.PieceInterface
-import de.htwg.se.ShoShogi.model.pieceComponent.pieceBaseImpl.{PieceFactory, PiecesEnum}
+import de.htwg.se.ShoShogi.model.pieceComponent.pieceBaseImpl.{ PieceFactory, PiecesEnum }
 import de.htwg.se.ShoShogi.model.playerComponent.Player
-import de.htwg.se.ShoShogi.{ShoShogiModule, ShoShogiModuleConf}
+import de.htwg.se.ShoShogi.{ ShoShogiModule, ShoShogiModuleConf }
 import net.codingwell.scalaguice.InjectorExtensions._
 import play.api.libs.json._
 
@@ -42,9 +42,9 @@ class FileIO extends FileIOInterface {
         case Some((board, savedState, player_1, player_2)) =>
           var _board = board
           for (index <- 0 until size * size) {
-            val row = (json \\ "row") (index).as[Int]
-            val col = (json \\ "col") (index).as[Int]
-            val piece = (json \\ "piece") (index)
+            val row = (json \\ "row")(index).as[Int]
+            val col = (json \\ "col")(index).as[Int]
+            val piece = (json \\ "piece")(index)
             val pieceName = (piece \ "pieceName").as[String]
             val firstPlayer = (piece \ "firstPlayer").as[Boolean]
             PiecesEnum.withNameOpt(pieceName) match {

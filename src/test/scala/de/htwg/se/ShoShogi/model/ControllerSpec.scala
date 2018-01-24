@@ -3,6 +3,7 @@ package de.htwg.se.ShoShogi.model
 import com.google.inject.name.Names
 import com.google.inject.{Guice, Injector}
 import de.htwg.se.ShoShogi.ShoShogiModule
+import de.htwg.se.ShoShogi.controller.controllerComponent.controllerBaseImpl.{RoundState, playerOneRound, playerTwoRound}
 import de.htwg.se.ShoShogi.controller.controllerComponent.{ControllerInterface, MoveResult}
 import de.htwg.se.ShoShogi.model.boardComponent.BoardInterface
 import de.htwg.se.ShoShogi.model.pieceComponent.PieceInterface
@@ -791,11 +792,8 @@ class ControllerSpec extends WordSpec with Matchers {
             "Captured: \n"
         )
       }
-      //      "give back nothing when no move was done till now" in {
-      //        controller.createNewBoard()
-      //        controller.undoCommand should be()
-      //      }
     }
+
     "called redoCommand" should {
       "redo the last undone Command and change the state back to the state before undo was applied" in {
         controller.createNewBoard()
@@ -827,11 +825,8 @@ class ControllerSpec extends WordSpec with Matchers {
             "Captured: \n"
         )
       }
-      //      "give back nothing when no undo was done till now" in {
-      //        controller.createNewBoard()
-      //        controller.redoCommand should be()
-      //      }
     }
+
     "called replaceBoard" should {
       "set the current Playboard to the board given" in {
         controller.createNewBoard()
@@ -865,17 +860,15 @@ class ControllerSpec extends WordSpec with Matchers {
       }
     }
     //TODO: how to test changeState
-    //    "called changeState" should {
-    //      "change the state from PlayerOnesTurn to PlayerTwosTurn and the other way around" in {
-    //        val playerOnesTurn: RoundState = new playerOneRound(controller)
-    //        val playerTwosTurn: RoundState = new playerTwoRound(controller)
-    //        var currentState: RoundState = playerOnesTurn
-    //        currentState.changeState() should be(playerTwosTurn)
+     //   "called changeState" should {
+     //     "change the state from PlayerOnesTurn to PlayerTwosTurn and the other way around" in {
+     //     controller.createNewBoard()
+     //       controller.get
 
-    //      }
-    //    }
+     //     }
+     //   }
     "called save and load" should {
-      "save the board and load the saved board" in {
+      "save the board and load the saved board in second players turn" in {
         controller.createNewBoard()
         controller.movePiece((0, 2), (0, 3)) should be(MoveResult.validMove)
         controller.save
@@ -905,8 +898,12 @@ class ControllerSpec extends WordSpec with Matchers {
             "---------------------------------------------------------\n" +
             "Captured: \n"
         )
+      }
+
+      "save the board and load the saved board in first players turn" in {
+        controller.createNewBoard()
         controller.save
-        controller.movePiece((0, 6), (0, 5)) should be(MoveResult.validMove)
+        controller.movePiece((0, 2), (0, 3)) should be(MoveResult.validMove)
         controller.load
         controller.boardToString() should be(
           "Captured: \n" +
@@ -916,9 +913,9 @@ class ControllerSpec extends WordSpec with Matchers {
             "---------------------------------------------------------\n " +
             "|     | R°  |     |     |     |     |     | B°  |     | \tb\n" +
             "---------------------------------------------------------\n " +
-            "|     | P°  | P°  | P°  | P°  | P°  | P°  | P°  | P°  | \tc\n" +
+            "| P°  | P°  | P°  | P°  | P°  | P°  | P°  | P°  | P°  | \tc\n" +
             "---------------------------------------------------------\n " +
-            "| P°  |     |     |     |     |     |     |     |     | \td\n" +
+            "|     |     |     |     |     |     |     |     |     | \td\n" +
             "---------------------------------------------------------\n " +
             "|     |     |     |     |     |     |     |     |     | \te\n" +
             "---------------------------------------------------------\n " +

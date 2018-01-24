@@ -4,16 +4,16 @@ import com.google.inject.Inject
 import com.google.inject.name.Named
 import de.htwg.se.ShoShogi.model.boardComponent.BoardInterface
 import de.htwg.se.ShoShogi.model.pieceComponent.PieceInterface
-import de.htwg.se.ShoShogi.model.pieceComponent.pieceBaseImpl.{PieceFactory, PiecesEnum}
+import de.htwg.se.ShoShogi.model.pieceComponent.pieceBaseImpl.{ PieceFactory, PiecesEnum }
 import de.htwg.se.ShoShogi.model.playerComponent.Player
 
-class BoardInj @Inject()(@Named("DefaultSize") boardSize: Int) extends Board(boardSize, PieceFactory.getEmptyPiece)
+class BoardInj @Inject() (@Named("DefaultSize") boardSize: Int) extends Board(boardSize, PieceFactory.getEmptyPiece)
 
 case class Board(
-                  board: Vector[Vector[PieceInterface]],
-                  containerPlayer_0: List[PieceInterface],
-                  containerPlayer_1: List[PieceInterface]
-                ) extends BoardInterface {
+    board: Vector[Vector[PieceInterface]],
+    containerPlayer_0: List[PieceInterface],
+    containerPlayer_1: List[PieceInterface]
+) extends BoardInterface {
   override def createNewBoard(): BoardInterface = new Board(size, PieceFactory.getEmptyPiece)
 
   def this(size: Int, filling: PieceInterface) =

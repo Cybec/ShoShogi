@@ -28,4 +28,12 @@ class UndoManager {
         undoStack = head :: undoStack
     }
   }
+
+  def getUndoStack(): List[Command] = {
+    undoStack
+  }
+
+  def getRedoStack(): List[Command] = {
+    redoStack
+  }
 }
