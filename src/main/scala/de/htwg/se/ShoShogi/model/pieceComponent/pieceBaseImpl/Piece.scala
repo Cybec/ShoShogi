@@ -34,7 +34,7 @@ abstract class Piece(_name: String, _isFirstOwner: Boolean) extends PieceInterfa
 /*Author:   Mert, Nick
 * Role:     Erstellt eine King-Figur */
 protected case class King(_isFirstOwner: Boolean)
-  extends Piece("King", _isFirstOwner) {
+    extends Piece("King", _isFirstOwner) {
   override val hasPromotion: Boolean = false
 
   /*Author:   Mert, Nick
@@ -80,7 +80,7 @@ protected case class King(_isFirstOwner: Boolean)
 /*Author:   Mert, Nick
 * Role:     Erstellt eine GoldenGeneral-Figur */
 protected case class GoldenGeneral(_isFirstOwner: Boolean)
-  extends Piece("GoldenGeneral", _isFirstOwner) {
+    extends Piece("GoldenGeneral", _isFirstOwner) {
   override val hasPromotion: Boolean = false
 
   /*Author:   Mert, Nick
@@ -133,7 +133,7 @@ protected case class GoldenGeneral(_isFirstOwner: Boolean)
 /*Author:   Mert, Nick
 * Role:     Erstellt eine SilverGeneral-Figur */
 protected case class SilverGeneral(_isFirstOwner: Boolean)
-  extends Piece("SilverGeneral", _isFirstOwner) {
+    extends Piece("SilverGeneral", _isFirstOwner) {
   override val hasPromotion: Boolean = true
 
   /*Author:   Mert, Nick
@@ -176,7 +176,7 @@ protected case class SilverGeneral(_isFirstOwner: Boolean)
 }
 
 protected case class PromotedSilver(_isFirstOwner: Boolean)
-  extends Piece("PromotedSilver", _isFirstOwner) {
+    extends Piece("PromotedSilver", _isFirstOwner) {
   override val hasPromotion: Boolean = false
 
   override def promotePiece: Option[PieceInterface] = {
@@ -224,7 +224,7 @@ protected case class PromotedSilver(_isFirstOwner: Boolean)
 /*Author:   Mert, Nick
 * Role:     Erstellt eine Knight-Figur */
 protected case class Knight(_isFirstOwner: Boolean)
-  extends Piece("Knight", _isFirstOwner) {
+    extends Piece("Knight", _isFirstOwner) {
   override val hasPromotion: Boolean = true
 
   /*Author:   Mert, Nick
@@ -262,7 +262,7 @@ protected case class Knight(_isFirstOwner: Boolean)
 }
 
 protected case class PromotedKnight(_isFirstOwner: Boolean)
-  extends Piece("PromotedKnight", _isFirstOwner) {
+    extends Piece("PromotedKnight", _isFirstOwner) {
   override val hasPromotion: Boolean = false
 
   override def promotePiece: Option[PieceInterface] = {
@@ -308,7 +308,7 @@ protected case class PromotedKnight(_isFirstOwner: Boolean)
 /*Author:   Mert, Nick
 * Role:     Erstellt eine Lancer-Figur */
 protected case class Lancer(_isFirstOwner: Boolean)
-  extends Piece("Lancer", _isFirstOwner) {
+    extends Piece("Lancer", _isFirstOwner) {
   override val hasPromotion: Boolean = true
 
   /*Author:   Mert, Nick
@@ -343,7 +343,7 @@ protected case class Lancer(_isFirstOwner: Boolean)
 }
 
 protected case class PromotedLancer(_isFirstOwner: Boolean)
-  extends Piece("PromotedLancer", _isFirstOwner) {
+    extends Piece("PromotedLancer", _isFirstOwner) {
   override val hasPromotion: Boolean = false
 
   override def promotePiece: Option[PieceInterface] = {
@@ -389,7 +389,7 @@ protected case class PromotedLancer(_isFirstOwner: Boolean)
 /*Author:   Mert, Nick
 * Role:     Erstellt eine Bishop-Figur */
 protected case class Bishop(_isFirstOwner: Boolean)
-  extends Piece("Bishop", _isFirstOwner) {
+    extends Piece("Bishop", _isFirstOwner) {
   override val hasPromotion: Boolean = true
 
   /*Author:   Mert, Nick
@@ -423,7 +423,7 @@ protected case class Bishop(_isFirstOwner: Boolean)
 }
 
 protected case class PromotedBishop(_isFirstOwner: Boolean)
-  extends Piece("PromotedBishop", _isFirstOwner) {
+    extends Piece("PromotedBishop", _isFirstOwner) {
   override val hasPromotion: Boolean = false
 
   override def promotePiece: Option[PieceInterface] = {
@@ -461,7 +461,7 @@ protected case class PromotedBishop(_isFirstOwner: Boolean)
 /*Author:   Mert, Nick
 * Role:     Erstellt eine Rook-Figur */
 protected case class Rook(_isFirstOwner: Boolean)
-  extends Piece("Rook", _isFirstOwner) {
+    extends Piece("Rook", _isFirstOwner) {
   override val hasPromotion: Boolean = true
 
   /*Author:   Mert, Nick
@@ -495,7 +495,7 @@ protected case class Rook(_isFirstOwner: Boolean)
 }
 
 protected case class PromotedRook(_isFirstOwner: Boolean)
-  extends Piece("PromotedRook", _isFirstOwner) {
+    extends Piece("PromotedRook", _isFirstOwner) {
   override val hasPromotion: Boolean = false
 
   override def promotePiece: Option[PieceInterface] = {
@@ -533,7 +533,7 @@ protected case class PromotedRook(_isFirstOwner: Boolean)
 /*Author:   Mert, Nick
 * Role:     Erstellt eine Pawn-Figur */
 protected case class Pawn(_isFirstOwner: Boolean)
-  extends Piece("Pawn", _isFirstOwner) {
+    extends Piece("Pawn", _isFirstOwner) {
   override val hasPromotion: Boolean = true
 
   /*Author:   Mert, Nick
@@ -568,7 +568,7 @@ protected case class Pawn(_isFirstOwner: Boolean)
 }
 
 protected case class PromotedPawn(_isFirstOwner: Boolean)
-  extends Piece("PromotedPawn", _isFirstOwner) {
+    extends Piece("PromotedPawn", _isFirstOwner) {
   override val hasPromotion: Boolean = false
 
   override def promotePiece: Option[PieceInterface] = {
@@ -611,7 +611,7 @@ protected case class PromotedPawn(_isFirstOwner: Boolean)
 
 //region EmptyPiece
 protected case class EmptyPiece()
-  extends Piece("", false) {
+    extends Piece("", false) {
   override val hasPromotion: Boolean = false
 
   /*Author:   Mert, Nick

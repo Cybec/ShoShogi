@@ -1,6 +1,6 @@
 package de.htwg.se.ShoShogi
 
-import com.google.inject.{Guice, Injector}
+import com.google.inject.{ Guice, Injector }
 import de.htwg.se.ShoShogi.aview.Tui
 import de.htwg.se.ShoShogi.controller.controllerComponent.ControllerInterface
 import de.htwg.se.ShoShogi.controller.controllerComponent.controllerBaseImpl.UpdateAll

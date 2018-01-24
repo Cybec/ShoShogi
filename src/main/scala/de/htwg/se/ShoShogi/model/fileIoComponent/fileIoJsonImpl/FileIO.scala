@@ -25,7 +25,7 @@ class FileIO extends FileIOInterface {
       val size = (json \ "board" \ "size").get.toString.toInt
       val state = (json \ "board" \ "state").get.toString.toBoolean
       val player1 = Player((json \ "board" \ "playerFirstName").get.toString, first = true)
-      val player2 = Player((json \ "board" \ "playerSecondName").get.toString, first = true)
+      val player2 = Player((json \ "board" \ "playerSecondName").get.toString, first = false)
       val injector: Injector = Guice.createInjector(new ShoShogiModule)
 
       loadReturnOption = getBoardBySize(size, injector) match {
@@ -42,9 +42,9 @@ class FileIO extends FileIOInterface {
         case Some((board, savedState, player_1, player_2)) =>
           var _board = board
           for (index <- 0 until size * size) {
-            val row = (json \\ "row") (index).as[Int]
-            val col = (json \\ "col") (index).as[Int]
-            val piece = (json \\ "piece") (index)
+            val row = (json \\ "row")(index).as[Int]
+            val col = (json \\ "col")(index).as[Int]
+            val piece = (json \\ "piece")(index)
             val pieceName = (piece \ "pieceName").as[String]
             val firstPlayer = (piece \ "firstPlayer").as[Boolean]
             PiecesEnum.withNameOpt(pieceName) match {

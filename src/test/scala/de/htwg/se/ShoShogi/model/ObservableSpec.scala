@@ -1,9 +1,9 @@
 package de.htwg.se.ShoShogi.model
 
-import de.htwg.se.ShoShogi.util.{Observable, Observer}
+import de.htwg.se.ShoShogi.util.{ Observable, Observer }
 import org.junit.runner.RunWith
 import org.scalatest.junit.JUnitRunner
-import org.scalatest.{Matchers, WordSpec}
+import org.scalatest.{ Matchers, WordSpec }
 
 import scala.language.reflectiveCalls
 

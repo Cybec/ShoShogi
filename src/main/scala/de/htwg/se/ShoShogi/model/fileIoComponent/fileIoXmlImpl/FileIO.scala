@@ -1,16 +1,16 @@
 package de.htwg.se.ShoShogi.model.fileIoComponent.fileIoXmlImpl
 
 import com.google.inject.name.Names
-import com.google.inject.{Guice, Injector}
+import com.google.inject.{ Guice, Injector }
 import de.htwg.se.ShoShogi.model.boardComponent.BoardInterface
 import de.htwg.se.ShoShogi.model.fileIoComponent.FileIOInterface
 import de.htwg.se.ShoShogi.model.pieceComponent.PieceInterface
-import de.htwg.se.ShoShogi.model.pieceComponent.pieceBaseImpl.{PieceFactory, PiecesEnum}
+import de.htwg.se.ShoShogi.model.pieceComponent.pieceBaseImpl.{ PieceFactory, PiecesEnum }
 import de.htwg.se.ShoShogi.model.playerComponent.Player
-import de.htwg.se.ShoShogi.{ShoShogiModule, ShoShogiModuleConf}
+import de.htwg.se.ShoShogi.{ ShoShogiModule, ShoShogiModuleConf }
 import net.codingwell.scalaguice.InjectorExtensions._
 
-import scala.xml.{Node, NodeSeq, PrettyPrinter}
+import scala.xml.{ Node, NodeSeq, PrettyPrinter }
 
 //import scala.xml.PrettyPrinter
 
@@ -97,24 +97,26 @@ class FileIO extends FileIOInterface {
   }
 
   def boardToXml(board: BoardInterface, state: Boolean, player_1: Player, player_2: Player): Node = {
-    <board size={board.size.toString} state={state.toString} playerFirstName={player_1.name} playerSecondName={player_2.name}>
+    <board size={ board.size.toString } state={ state.toString } playerFirstName={ player_1.name } playerSecondName={ player_2.name }>
       <playerFirstConquered>
-        {for (piece <- board.getContainer._1) yield conqueredToXml(piece)}
+        { for (piece <- board.getContainer._1) yield conqueredToXml(piece) }
       </playerFirstConquered>
       <playerSecondConquered>
-        {for (piece <- board.getContainer._2) yield conqueredToXml(piece)}
-      </playerSecondConquered>{for {
-      row <- 0 until board.size
-      col <- 0 until board.size
-    } yield cellToXml(board, row, col)}
+        { for (piece <- board.getContainer._2) yield conqueredToXml(piece) }
+      </playerSecondConquered>{
+        for {
+          row <- 0 until board.size
+          col <- 0 until board.size
+        } yield cellToXml(board, row, col)
+      }
     </board>
   }
 
   def cellToXml(board: BoardInterface, row: Int, col: Int): Node = {
     board.cell(col, row) match {
       case Some(piece) =>
-        <cell row={row.toString} col={col.toString}>
-          <piece pieceName={piece.name} firstPlayer={piece.isFirstOwner.toString}/>
+        <cell row={ row.toString } col={ col.toString }>
+          <piece pieceName={ piece.name } firstPlayer={ piece.isFirstOwner.toString }/>
         </cell>
       case None =>
         <cell row="Error" col="Error">
@@ -124,6 +126,6 @@ class FileIO extends FileIOInterface {
   }
 
   def conqueredToXml(piece: PieceInterface): Node = {
-      <piece pieceName={piece.name} firstPlayer={piece.isFirstOwner.toString}/>
+    <piece pieceName={ piece.name } firstPlayer={ piece.isFirstOwner.toString }/>
   }
 }
