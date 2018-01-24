@@ -1,5 +1,6 @@
 package de.htwg.se.ShoShogi.controller.controllerComponent
 
+import de.htwg.se.ShoShogi.controller.controllerComponent.controllerBaseImpl.RoundState
 import de.htwg.se.ShoShogi.model.boardComponent.BoardInterface
 import de.htwg.se.ShoShogi.model.pieceComponent.PieceInterface
 import de.htwg.se.ShoShogi.model.playerComponent.Player
