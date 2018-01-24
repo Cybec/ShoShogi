@@ -89,6 +89,12 @@ class SwingGui(controller: ControllerInterface) extends Frame {
         controller.redoCommand
       })
     }
+    contents += new Menu("Simulator") {
+      mnemonic = Key.S
+      contents += new MenuItem(Action("Start") {
+        controller.startSimulation
+      })
+    }
   }
 
   initPanel(Panels.All)

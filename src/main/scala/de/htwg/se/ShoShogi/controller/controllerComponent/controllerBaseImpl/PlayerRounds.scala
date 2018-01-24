@@ -218,4 +218,3 @@ case class playerTwoRound(controller: Controller) extends RoundState {
     possibleMoves
   }
 }
-
