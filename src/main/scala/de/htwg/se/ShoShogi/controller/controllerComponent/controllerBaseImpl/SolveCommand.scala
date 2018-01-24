@@ -9,8 +9,6 @@ class SolveCommand(controller: ControllerInterface) extends Command {
   var (mementoContainer1, mementoContainer2) = controller.getContainer
   var mementoState: RoundState = controller.getCurrentStat()
 
-  override def saveStep(): Unit = {}
-
   override def undoStep(): Unit = {
     val new_memento = controller.getBoardClone
     val (new_mementoContainer1, new_mementoContainer2) = controller.getContainer

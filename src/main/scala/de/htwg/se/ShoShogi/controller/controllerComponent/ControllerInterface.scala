@@ -15,12 +15,13 @@ object MoveResult extends Enumeration {
 }
 
 /**
- * A Interface to implement the controll unit for the game Shoshogi.
+  * An Interface to implement the controller unit for the game ShoShogi.
  */
 trait ControllerInterface extends scala.swing.Publisher {
 
   /**
    * Gets the Copy of the current game board
+    *
    * @return a game board
    */
   def getBoardClone: BoardInterface
@@ -187,16 +188,21 @@ trait ControllerInterface extends scala.swing.Publisher {
    */
   def promotePiece(piecePosition: (Int, Int)): Boolean
 
+  /**
+    * Starts a simulator which will move Pieces
+    */
   def startSimulation: Unit
 
   /**
    * returns the current state of the controller
+    *
    * @return the state of the controller
    */
   def getCurrentStat(): RoundState
 
   /**
    * changes the currentState to given State
+    *
    * @param newState is the state the controller should be
    */
   def setCurrentStat(newState: RoundState): Unit

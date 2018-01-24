@@ -86,28 +86,30 @@ case class playerOneRound(controller: Controller) extends RoundState {
   override def getPossibleMovesConqueredPiece(piece: String): List[(Int, Int)] = {
     var possibleMoves = List[(Int, Int)]()
 
-    if (!piece.endsWith("°")) {
-      return possibleMoves
+    //noinspection ScalaStyle
+    if (!piece.endsWith("°")) return possibleMoves
+
+    def calculatePossibleMovesIfPawn(column: Int) = {
+      if (!controller.board.getPiecesInColumn(column, stateTurn = true).exists((x: PieceInterface) => x.typeEquals("P°"))
+        && !controller.board.getPiecesInColumn(column, stateTurn = true).exists((x: PieceInterface) => x.typeEquals("K°"))) {
+        possibleMoves = possibleMoves ::: controller.board.getEmptyCellsInColumn(column, (0, 7))
+      } else {
+        for (row <- 0 to 8) {
+          controller.board.cell(column, row) match {
+            case Some(pieceInCell) => if (PieceFactory.isInstanceOfPiece(PiecesEnum.EmptyPiece, pieceInCell)) {
+              possibleMoves = possibleMoves :+ (column, row)
+            } else if (PieceFactory.isInstanceOfPiece(PiecesEnum.King, pieceInCell) && !pieceInCell.isFirstOwner) {
+              possibleMoves = possibleMoves.filter(_ != (column, row - 1))
+            }
+            case None =>
+          }
+        }
+      }
     }
 
     if (piece == "P°") {
       for (column: Int <- 0 until controller.board.size) {
-        if (!controller.board.getPiecesInColumn(column, stateTurn = true).exists((x: PieceInterface) => x.typeEquals("P°"))) {
-          if (!controller.board.getPiecesInColumn(column, stateTurn = true).exists((x: PieceInterface) => x.typeEquals("K°"))) {
-            possibleMoves = possibleMoves ::: controller.board.getEmptyCellsInColumn(column, (0, 7))
-          } else {
-            for (row <- 0 to 8) {
-              controller.board.cell(column, row) match {
-                case Some(pieceInCell) => if (PieceFactory.isInstanceOfPiece(PiecesEnum.EmptyPiece, pieceInCell)) {
-                  possibleMoves = possibleMoves :+ (column, row)
-                } else if (PieceFactory.isInstanceOfPiece(PiecesEnum.King, pieceInCell) && !pieceInCell.isFirstOwner) {
-                  possibleMoves = possibleMoves.filter(_ != (column, row - 1))
-                }
-                case None =>
-              }
-            }
-          }
-        }
+        calculatePossibleMovesIfPawn(column)
       }
     } else if (piece == "KN°" || piece == "L°") {
       for (x <- 0 until controller.board.size) {
@@ -183,29 +185,31 @@ case class playerTwoRound(controller: Controller) extends RoundState {
 
   override def getPossibleMovesConqueredPiece(piece: String): List[(Int, Int)] = {
     var possibleMoves = List[(Int, Int)]()
-
     var count = 0
-    if (piece == "P") {
-      for (column: Int <- 0 until controller.board.size) {
-        if (!controller.board.getPiecesInColumn(column, stateTurn = false).exists((x: PieceInterface) => x.typeEquals("P"))) {
-          if (!controller.board.getPiecesInColumn(column, stateTurn = false).exists((x: PieceInterface) => x.typeEquals("K"))) {
-            possibleMoves = possibleMoves ::: controller.board.getEmptyCellsInColumn(column, (1, 8))
-          } else {
-            for (row <- 0 to 8) {
-              controller.board.cell(column, row + controller.board.size - 1 - count) match {
-                case Some(pieceInCell) => if (PieceFactory.isInstanceOfPiece(PiecesEnum.EmptyPiece, pieceInCell) && row != 8) {
-                  possibleMoves = possibleMoves :+ (column, row + controller.board.size - 1 - count)
-                } else if (PieceFactory.isInstanceOfPiece(PiecesEnum.King, pieceInCell) && pieceInCell.isFirstOwner) {
-                  possibleMoves = possibleMoves.filter(_ != (column, row + controller.board.size - count))
-                }
-                case None =>
-              }
-              count = count + 2
+
+    def calculatePossibleMovesIfPawn(column: Int) = {
+      if (!controller.board.getPiecesInColumn(column, stateTurn = false).exists((x: PieceInterface) => x.typeEquals("P")) &&
+        !controller.board.getPiecesInColumn(column, stateTurn = false).exists((x: PieceInterface) => x.typeEquals("K"))) {
+        possibleMoves = possibleMoves ::: controller.board.getEmptyCellsInColumn(column, (1, 8))
+      } else {
+        for (row <- 0 to 8) {
+          controller.board.cell(column, row + controller.board.size - 1 - count) match {
+            case Some(pieceInCell) => if (PieceFactory.isInstanceOfPiece(PiecesEnum.EmptyPiece, pieceInCell) && row != 8) {
+              possibleMoves = possibleMoves :+ (column, row + controller.board.size - 1 - count)
+            } else if (PieceFactory.isInstanceOfPiece(PiecesEnum.King, pieceInCell) && pieceInCell.isFirstOwner) {
+              possibleMoves = possibleMoves.filter(_ != (column, row + controller.board.size - count))
             }
+            case None =>
           }
+          count = count + 2
         }
       }
+    }
 
+    if (piece == "P") {
+      for (column: Int <- 0 until controller.board.size) {
+        calculatePossibleMovesIfPawn(column)
+      }
     } else if (piece == "KN" || piece == "L") {
       for (x: Int <- 0 until controller.board.size) {
         possibleMoves = possibleMoves ::: controller.board.getEmptyCellsInColumn(x, (1, 8))
@@ -217,4 +221,5 @@ case class playerTwoRound(controller: Controller) extends RoundState {
     }
     possibleMoves
   }
+
 }
