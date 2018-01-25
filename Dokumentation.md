@@ -12,7 +12,7 @@
     - 9.1 [Projektanforderung](#projektanforderung)
     - 9.2 [Produktanforderung](#produktanforderung)
 10. [Look-and-Feel-Anforderungen](#look-and-feel-anforderungen)
-11. [Bedienbarkeit und Menschnliche Anforderungen](#bedienbarkeit-und-menschnliche-anforderungen)
+11. [Bedienbarkeit und Menschliche Anforderungen](#bedienbarkeit-und-menschliche-anforderungen)
 12. [Leistungsanforderungen](#leistungsanforderungen)
 13. [Betriebs- und Umweltanforderungen](#betriebs--und-umweltanforderungen)
 14. [Anforderungen an die Wartbarkeit und den Support](#anforderungen-an-die-wartbarkeit-und-den-support)
@@ -135,7 +135,7 @@ Um das Endprodukt ausführen zu können wird lediglich eine JRE oder JDK benöti
 
 Angelehnt wurde das Produkt an das echte Shogispiel und vermittelt die nötigsten Inhalte.
 
-# Bedienbarkeit und Menschnliche Anforderungen
+# Bedienbarkeit und Menschliche Anforderungen
 
 Das Ziel war es die Bedienung des Spiels so intuitiv wie möglich zu gestalten. Dies haben wir durch eine leicht zu benutzende Oberfläche erreicht.
 
