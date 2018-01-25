@@ -1,16 +1,16 @@
 package de.htwg.se.ShoShogi.aview.gui
 
 import java.io.File
-import javax.swing.{ Icon, ImageIcon, WindowConstants }
+import javax.swing.{Icon, ImageIcon, WindowConstants}
 
-import de.htwg.se.ShoShogi.controller.controllerComponent.controllerBaseImpl.{ StartNewGame, UpdateAll }
-import de.htwg.se.ShoShogi.controller.controllerComponent.{ ControllerInterface, MoveResult }
+import de.htwg.se.ShoShogi.controller.controllerComponent.controllerBaseImpl.{StartNewGame, UpdateAll}
+import de.htwg.se.ShoShogi.controller.controllerComponent.{ControllerInterface, MoveResult}
 import de.htwg.se.ShoShogi.model.pieceComponent.PieceInterface
 import de.htwg.se.ShoShogi.model.pieceComponent.pieceBaseImpl.PieceFactory
 
 import scala.swing.GridBagPanel.Anchor
 import scala.swing._
-import scala.swing.event.{ Key, MouseClicked, _ }
+import scala.swing.event.{Key, MouseClicked, _}
 
 class SwingGui(controller: ControllerInterface) extends Frame {
   listenTo(controller)
@@ -30,7 +30,7 @@ class SwingGui(controller: ControllerInterface) extends Frame {
   //noinspection ScalaStyle
   val containerBackgroundColor: Color = getColorFromRGB(246, 217, 157)
   val resourcesPath: String = new File(".").getCanonicalPath + "/src/main/scala/de/htwg/se/ShoShogi/zresources"
-  val backgroundPath: String = resourcesPath + "/images/background.jpg"
+  val organisationIcon: String = "./logo/c.png"
 
   def getBoardArray: Array[Array[PieceInterface]] = controller.boardToArray()
 
@@ -98,7 +98,7 @@ class SwingGui(controller: ControllerInterface) extends Frame {
   }
 
   initPanel(Panels.All)
-  iconImage = new ImageIcon(backgroundPath).getImage
+  iconImage = new ImageIcon(organisationIcon).getImage
 
   visible = true
   peer.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE)
@@ -127,7 +127,7 @@ class SwingGui(controller: ControllerInterface) extends Frame {
 
     override def paintComponent(g: java.awt.Graphics2D) {
       //noinspection ScalaStyle
-      g.drawImage(new ImageIcon(backgroundPath).getImage, 0, 0, null)
+      g.drawImage(new ImageIcon(organisationIcon).getImage, 0, 0, null)
     }
   }
 
