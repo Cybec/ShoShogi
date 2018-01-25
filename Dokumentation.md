@@ -1,3 +1,5 @@
+![GitHub Logo](./cybec.png)
+
 1. [Zweck des Projekts](#zweck-des-projekts)
 2. [Der Kunde und andere Stakeholder](#der-kunde-und-andere-stakeholder)
 3. [Benutzer des Produkts](#benutzer-des-produkts)
@@ -68,7 +70,7 @@ Die Einschränkungen umfassen folgende Punkte:
 	- Speichern und Laden Funktionen müssen Implementiert werden
 	- Das Projekt soll in Scala geschrieben werden
 	- Einbauen eines Loggers
-	- Folgende Prinizipien der Softwareentwicklung sollten eingehalten werden (SOLID
+	- Folgende Prinizipien der Softwareentwicklung sollten eingehalten werden (SOLID)
 		- Single Responsibility Principle (SRP)
 		- Open-Closed Principle (OCP)
 		- Liskov Substitution Principle (LSP)

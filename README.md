@@ -23,3 +23,20 @@ Mert Zeybek | me431zey
 Beschreibung
 =========================
 Dies ist ein Projekt welches für die Vorlesung "Software Technik" an der HTWG entwickelt wird.
+
+
+Hauptziel der Vorlesung ist es, die Entwicklung eines Softwareprojektes in einer agilen Entwicklungsmethodik zu erlernen.
+
+Es beinhaltet
+
+- Codeabdekkung
+- Pattern
+- Komponenten und Dependency Injection
+- Speichern und Laden Funktionen
+- Logger
+- Folgende Prinizipien der Softwareentwicklung (SOLID):
+	- Single Responsibility Principle (SRP)
+	- Open-Closed Principle (OCP)
+	- Liskov Substitution Principle (LSP)
+	- Interface Segregation Principle (ISP)
+	- Dependency Inversion Principle (DIP)
