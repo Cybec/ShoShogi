@@ -1,4 +1,4 @@
-![GitHub Logo](./cybec.png)
+![GitHub Logo](./cybec.png)  - *Organisation design created by Dennis Baldauf*
 
 1. [Zweck des Projekts](#zweck-des-projekts)
 2. [Der Kunde und andere Stakeholder](#der-kunde-und-andere-stakeholder)
