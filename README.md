@@ -18,6 +18,8 @@ Name         | Github Benutzer
 Nick Strehle | ni431str
 Mert Zeybek | me431zey
 
+Die Dokumentation zu diesem Projekt finden Sie [hier](./Dokumentation.md)
+
 
 
 Beschreibung

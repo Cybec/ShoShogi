@@ -8,7 +8,7 @@
 6. [Relevante Fakten und Annahmen](#relevante-fakten-und-annahmen)
 7. [Der Umfang des Werkes](#der-umfang-des-werkes)
 8. [Der Umfang des Produkts](#der-umfang-des-produkts)
-9. [Funktions- und Datenanforderungen](#funktions-und-datenanforderungen)
+9. [Funktions- und Datenanforderungen](#funktions--und-datenanforderungen)
     - 9.1 [Projektanforderung](#projektanforderung)
     - 9.2 [Produktanforderung](#produktanforderung)
 10. [Look-and-Feel-Anforderungen](#look-and-feel-anforderungen)
