@@ -17,22 +17,22 @@ import scala.io.Source
 
 class FileIO extends FileIOInterface {
 
-  override def load: Option[(BoardInterface, Boolean, Player, Player)] =
-    if (!Files.exists(Paths.get("board.json"))) None else {
+  override def load: Option[(BoardInterface, Boolean, Player, Player)] = {
+    if (Files.exists(Paths.get("board.json"))) {
       var loadReturnOption: Option[(BoardInterface, Boolean, Player, Player)] = None
       val source: String = Source.fromFile("board.json").getLines.mkString
       val json: JsValue = Json.parse(source)
       val size = (json \ "board" \ "size").get.toString.toInt
       val state = (json \ "board" \ "state").get.toString.toBoolean
       val player1 = Player((json \ "board" \ "playerFirstName").get.toString, first = true)
-      val player2 = Player((json \ "board" \ "playerSecondName").get.toString, first = true)
+      val player2 = Player((json \ "board" \ "playerSecondName").get.toString, first = false)
       val injector: Injector = Guice.createInjector(new ShoShogiModule)
 
       loadReturnOption = getBoardBySize(size, injector) match {
         case Some(board) =>
           val newBoard = board.setContainer(
-            getConqueredPieces((json \\ "playerFirstConquered").toArray),
-            getConqueredPieces((json \\ "playerSecondConquered").toArray)
+            getConqueredPieces((json \\ "playerFirstConquered").toArray, true),
+            getConqueredPieces((json \\ "playerSecondConquered").toArray, false)
           )
           Some((newBoard, state, player1, player2))
         case _ => None
@@ -57,9 +57,12 @@ class FileIO extends FileIOInterface {
         case None =>
       }
       loadReturnOption
+    } else {
+      None
     }
+  }
 
-  def getConqueredPieces(jsArray: Array[JsValue]): List[PieceInterface] = {
+  def getConqueredPieces(jsArray: Array[JsValue], istFirst: Boolean): List[PieceInterface] = {
     var stringList: List[String] = List[String]()
     var pieceList: List[PieceInterface] = List[PieceInterface]()
 
@@ -67,7 +70,7 @@ class FileIO extends FileIOInterface {
 
     for (x: String <- stringList) {
       PiecesEnum.withNameOpt(x) match {
-        case Some(pieceEnum) => pieceList = pieceList :+ PieceFactory.apply(pieceEnum, isFirstOwner = false)
+        case Some(pieceEnum) => pieceList = pieceList :+ PieceFactory.apply(pieceEnum, istFirst)
         case None =>
       }
     }

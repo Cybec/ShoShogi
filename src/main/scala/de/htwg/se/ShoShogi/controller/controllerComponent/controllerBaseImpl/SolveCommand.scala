@@ -1,23 +1,22 @@
 package de.htwg.se.ShoShogi.controller.controllerComponent.controllerBaseImpl
 
+import de.htwg.se.ShoShogi.controller.controllerComponent.ControllerInterface
 import de.htwg.se.ShoShogi.model.boardComponent.BoardInterface
 import de.htwg.se.ShoShogi.util.Command
 
-class SolveCommand(controller: Controller) extends Command {
+class SolveCommand(controller: ControllerInterface) extends Command {
   var mementoBoard: BoardInterface = controller.getBoardClone
   var (mementoContainer1, mementoContainer2) = controller.getContainer
-  var mementoState: RoundState = controller.currentState
-
-  override def saveStep(): Unit = {}
+  var mementoState: RoundState = controller.getCurrentStat()
 
   override def undoStep(): Unit = {
     val new_memento = controller.getBoardClone
     val (new_mementoContainer1, new_mementoContainer2) = controller.getContainer
-    val new_mementoState = controller.currentState
+    val new_mementoState = controller.getCurrentStat()
 
     controller.replaceBoard(mementoBoard)
     controller.setContainer((mementoContainer1, mementoContainer2))
-    controller.currentState = mementoState
+    controller.setCurrentStat(mementoState)
 
     mementoContainer1 = new_mementoContainer1
     mementoContainer2 = new_mementoContainer2
@@ -28,11 +27,11 @@ class SolveCommand(controller: Controller) extends Command {
   override def redoStep(): Unit = {
     val new_memento = controller.getBoardClone
     val (new_mementoContainer1, new_mementoContainer2) = controller.getContainer
-    val new_mementoState = controller.currentState
+    val new_mementoState = controller.getCurrentStat()
 
     controller.replaceBoard(mementoBoard)
     controller.setContainer((mementoContainer1, mementoContainer2))
-    controller.currentState = mementoState
+    controller.setCurrentStat(mementoState)
 
     mementoContainer1 = new_mementoContainer1
     mementoContainer2 = new_mementoContainer2

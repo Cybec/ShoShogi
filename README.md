@@ -1,4 +1,4 @@
-![GitHub Logo](./cybec.png) 
+![GitHub Logo](./cybec.png) - *Organisation design created by Dennis Baldauf* 
 
 
 Repo         | Travis   | Code-Coverage
@@ -18,8 +18,27 @@ Name         | Github Benutzer
 Nick Strehle | ni431str
 Mert Zeybek | me431zey
 
+Die Dokumentation zu diesem Projekt finden Sie [hier](./Dokumentation.md)
+
 
 
 Beschreibung
 =========================
 Dies ist ein Projekt welches für die Vorlesung "Software Technik" an der HTWG entwickelt wird.
+
+
+Hauptziel der Vorlesung ist es, die Entwicklung eines Softwareprojektes in einer agilen Entwicklungsmethodik zu erlernen.
+
+Es beinhaltet
+
+- Codeabdekkung
+- Pattern
+- Komponenten und Dependency Injection
+- Speichern und Laden Funktionen
+- Logger
+- Folgende Prinizipien der Softwareentwicklung (SOLID):
+	- Single Responsibility Principle (SRP)
+	- Open-Closed Principle (OCP)
+	- Liskov Substitution Principle (LSP)
+	- Interface Segregation Principle (ISP)
+	- Dependency Inversion Principle (DIP)

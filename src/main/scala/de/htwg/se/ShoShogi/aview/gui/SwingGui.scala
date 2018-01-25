@@ -30,7 +30,7 @@ class SwingGui(controller: ControllerInterface) extends Frame {
   //noinspection ScalaStyle
   val containerBackgroundColor: Color = getColorFromRGB(246, 217, 157)
   val resourcesPath: String = new File(".").getCanonicalPath + "/src/main/scala/de/htwg/se/ShoShogi/zresources"
-  val backgroundPath: String = resourcesPath + "/images/background.jpg"
+  val organisationIcon: String = "./logo/c.png"
 
   def getBoardArray: Array[Array[PieceInterface]] = controller.boardToArray()
 
@@ -89,10 +89,16 @@ class SwingGui(controller: ControllerInterface) extends Frame {
         controller.redoCommand
       })
     }
+    contents += new Menu("Simulator") {
+      mnemonic = Key.S
+      contents += new MenuItem(Action("Start") {
+        controller.startSimulation
+      })
+    }
   }
 
   initPanel(Panels.All)
-  iconImage = new ImageIcon(backgroundPath).getImage
+  iconImage = new ImageIcon(organisationIcon).getImage
 
   visible = true
   peer.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE)
@@ -121,7 +127,7 @@ class SwingGui(controller: ControllerInterface) extends Frame {
 
     override def paintComponent(g: java.awt.Graphics2D) {
       //noinspection ScalaStyle
-      g.drawImage(new ImageIcon(backgroundPath).getImage, 0, 0, null)
+      g.drawImage(new ImageIcon(organisationIcon).getImage, 0, 0, null)
     }
   }
 

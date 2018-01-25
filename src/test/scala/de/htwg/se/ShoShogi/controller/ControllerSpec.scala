@@ -1,10 +1,12 @@
-package de.htwg.se.ShoShogi.model
+package de.htwg.se.ShoShogi.controller
 
 import com.google.inject.name.Names
 import com.google.inject.{Guice, Injector}
 import de.htwg.se.ShoShogi.ShoShogiModule
-import de.htwg.se.ShoShogi.controller.controllerComponent.{ControllerInterface, MoveResult}
+import de.htwg.se.ShoShogi.controller.controllerComponent.controllerBaseImpl.{Controller, RoundState, playerOneRound, playerTwoRound}
+import de.htwg.se.ShoShogi.controller.controllerComponent.{ControllerInterface, MoveResult, Simulator}
 import de.htwg.se.ShoShogi.model.boardComponent.BoardInterface
+import de.htwg.se.ShoShogi.model.boardComponent.boardBaseImpl.Board
 import de.htwg.se.ShoShogi.model.pieceComponent.PieceInterface
 import de.htwg.se.ShoShogi.model.pieceComponent.pieceBaseImpl.{PieceFactory, PiecesEnum}
 import net.codingwell.scalaguice.InjectorExtensions._
@@ -20,6 +22,10 @@ class ControllerSpec extends WordSpec with Matchers {
 
   val injector: Injector = Guice.createInjector(new ShoShogiModule)
   val controller: ControllerInterface = injector.getInstance(classOf[ControllerInterface])
+  val newController = new Controller()
+  val playerOnesTurn: RoundState = new playerOneRound(newController)
+  val playerTwosTurn: RoundState = new playerTwoRound(newController)
+
   controller.createNewBoard()
   controller.changeNamePlayer1("Nick")
   controller.changeNamePlayer2("Mert")
@@ -72,7 +78,7 @@ class ControllerSpec extends WordSpec with Matchers {
         controller.getPossibleMoves(-1, 9) should be(List())
         controller.getPossibleMoves(9, -1) should be(List())
         controller.movePiece((0, 2), (0, 3)) should be(MoveResult.validMove)
-        controller.getPossibleMoves(-1, 0) should be(List())
+        controller.getPossibleMoves(-1, 8) should be(List())
       }
     }
 
@@ -762,10 +768,10 @@ class ControllerSpec extends WordSpec with Matchers {
     }
 
     "called undoCommand" should {
-      "undo the last move done and change the state of the game back" in {
+      "undo the last move done and return true" in {
         controller.createNewBoard()
         controller.movePiece((0, 2), (0, 3)) should be(MoveResult.validMove) // player_1
-        controller.undoCommand
+        controller.undoCommand should be(true)
         controller.boardToString() should be(
           "Captured: \n" +
             "    0     1     2     3     4     5     6     7     8 \n \n" +
@@ -791,18 +797,16 @@ class ControllerSpec extends WordSpec with Matchers {
             "Captured: \n"
         )
       }
-      "give back the Nil when no move was done till now" in {
-        controller.createNewBoard()
-        //TODO: Nick was soll das???
-        controller.undoCommand should be()
+      "return false if no command was done yet" in {
+        newController.undoCommand should be(false)
       }
     }
     "called redoCommand" should {
-      "redo the last undone Command and change the state back to the state before undo was applied" in {
+      "redo the last undone Command and return true" in {
         controller.createNewBoard()
         controller.movePiece((0, 2), (0, 3)) should be(MoveResult.validMove) // player_1
-        controller.undoCommand
-        controller.redoCommand
+        controller.undoCommand should be(true)
+        controller.redoCommand should be(true)
         controller.boardToString() should be(
           "Captured: \n" +
             "    0     1     2     3     4     5     6     7     8 \n \n" +
@@ -828,13 +832,12 @@ class ControllerSpec extends WordSpec with Matchers {
             "Captured: \n"
         )
       }
-      "give back Nil when no undo was done till now" in {
+      "return true when no undo was done yet" in {
         controller.createNewBoard()
-
-        //TODO: Nick was soll das???
-        controller.redoCommand should be()
+        controller.redoCommand should be(false)
       }
     }
+
     "called replaceBoard" should {
       "set the current Playboard to the board given" in {
         controller.createNewBoard()
@@ -867,22 +870,38 @@ class ControllerSpec extends WordSpec with Matchers {
         )
       }
     }
-    //TODO: how to test changeState
-    //    "called changeState" should {
-    //      "change the state from PlayerOnesTurn to PlayerTwosTurn and the other way around" in {
-    //        val playerOnesTurn: RoundState = new playerOneRound(controller)
-    //        val playerTwosTurn: RoundState = new playerTwoRound(controller)
-    //        var currentState: RoundState = playerOnesTurn
-    //        currentState.changeState() should be(playerTwosTurn)
+    "called changeState" should {
+      "change the state from PlayerOnesTurn to PlayerTwosTurn and the other way around" in {
+        newController.getCurrentStat() should be(playerOnesTurn)
+        newController.changeState()
+        newController.getCurrentStat() should be(playerTwosTurn)
+      }
+    }
+    "called save/load" should {
+      "save the board in first players turn" in {
+        newController.createNewBoard()
+        val oldState = newController.currentState
+        newController.save
+        newController.movePiece((0, 2), (0, 3)) should be(MoveResult.validMove)
+        newController.getCurrentStat() should be(playerTwosTurn)
+        newController.load
+        newController.getCurrentStat() should be(oldState)
+      }
 
-    //      }
-    //    }
-    "called save and load" should {
-      "save the board and load the saved board" in {
+      "save the board in second players turn" in {
+        newController.createNewBoard()
+        newController.movePiece((0, 2), (0, 3)) should be(MoveResult.validMove)
+        val oldState = newController.currentState
+        newController.save
+        newController.movePiece((0, 6), (0, 5)) should be(MoveResult.validMove)
+        newController.getCurrentStat() should be(playerOnesTurn)
+        newController.load
+        newController.getCurrentStat() should be(oldState)
+      }
+
+      "not saving, loading the board changes nothing" in {
         controller.createNewBoard()
         controller.movePiece((0, 2), (0, 3)) should be(MoveResult.validMove)
-        controller.save
-        controller.movePiece((0, 6), (0, 5)) should be(MoveResult.validMove)
         controller.load
         controller.boardToString() should be(
           "Captured: \n" +
@@ -909,34 +928,139 @@ class ControllerSpec extends WordSpec with Matchers {
             "Captured: \n"
         )
       }
-      "not saving the board load changes nothing" in {
-        controller.createNewBoard()
-        controller.movePiece((0, 2), (0, 3)) should be(MoveResult.validMove)
-        controller.load
-        controller.boardToString() should be(
+
+      "loading with unrealistic boardsize" in {
+        val board: BoardInterface = new Board(60, PieceFactory.apply(PiecesEnum.EmptyPiece, false))
+        val controller2: Controller = new Controller()
+        controller2.replaceBoard(board)
+        controller2.save
+        controller2.load
+        controller2.boardToString() should be(
           "Captured: \n" +
             "    0     1     2     3     4     5     6     7     8 \n \n" +
             "---------------------------------------------------------\n " +
-            "| L°  | KN° | SG° | GG° | K°  | GG° | SG° | KN° | L°  | \ta\n" +
+            "|     |     |     |     |     |     |     |     |     | \ta\n" +
             "---------------------------------------------------------\n " +
-            "|     | R°  |     |     |     |     |     | B°  |     | \tb\n" +
+            "|     |     |     |     |     |     |     |     |     | \tb\n" +
             "---------------------------------------------------------\n " +
-            "|     | P°  | P°  | P°  | P°  | P°  | P°  | P°  | P°  | \tc\n" +
+            "|     |     |     |     |     |     |     |     |     | \tc\n" +
             "---------------------------------------------------------\n " +
-            "| P°  |     |     |     |     |     |     |     |     | \td\n" +
+            "|     |     |     |     |     |     |     |     |     | \td\n" +
             "---------------------------------------------------------\n " +
             "|     |     |     |     |     |     |     |     |     | \te\n" +
             "---------------------------------------------------------\n " +
             "|     |     |     |     |     |     |     |     |     | \tf\n" +
             "---------------------------------------------------------\n " +
-            "| P   | P   | P   | P   | P   | P   | P   | P   | P   | \tg\n" +
+            "|     |     |     |     |     |     |     |     |     | \tg\n" +
             "---------------------------------------------------------\n " +
-            "|     | B   |     |     |     |     |     | R   |     | \th\n" +
+            "|     |     |     |     |     |     |     |     |     | \th\n" +
             "---------------------------------------------------------\n " +
-            "| L   | KN  | SG  | GG  | K   | GG  | SG  | KN  | L   | \ti\n" +
+            "|     |     |     |     |     |     |     |     |     | \ti\n" +
             "---------------------------------------------------------\n" +
             "Captured: \n"
         )
+      }
+    }
+
+    "called startSimulation" should {
+      "change the board to an before determined state" in {
+        newController.createNewBoard()
+        newController.startSimulation
+
+        while (!Simulator.threadEnd) {
+          Thread.sleep(1000)
+        }
+        val board2 = newController.boardToArray()
+
+        board2(0)(0) should be(PieceFactory.apply(PiecesEnum.Lancer, true))
+        board2(0)(1) should be(PieceFactory.apply(PiecesEnum.EmptyPiece, false))
+        board2(0)(2) should be(PieceFactory.apply(PiecesEnum.Pawn, true))
+        board2(0)(3) should be(PieceFactory.apply(PiecesEnum.EmptyPiece, false))
+        board2(0)(4) should be(PieceFactory.apply(PiecesEnum.EmptyPiece, false))
+        board2(0)(5) should be(PieceFactory.apply(PiecesEnum.EmptyPiece, false))
+        board2(0)(6) should be(PieceFactory.apply(PiecesEnum.Pawn, false))
+        board2(0)(7) should be(PieceFactory.apply(PiecesEnum.EmptyPiece, false))
+        board2(0)(8) should be(PieceFactory.apply(PiecesEnum.Lancer, false))
+
+        board2(1)(0) should be(PieceFactory.apply(PiecesEnum.Knight, true))
+        board2(1)(1) should be(PieceFactory.apply(PiecesEnum.Rook, true))
+        board2(1)(2) should be(PieceFactory.apply(PiecesEnum.EmptyPiece, false))
+        board2(1)(3) should be(PieceFactory.apply(PiecesEnum.Pawn, true))
+        board2(1)(4) should be(PieceFactory.apply(PiecesEnum.EmptyPiece, false))
+        board2(1)(5) should be(PieceFactory.apply(PiecesEnum.EmptyPiece, false))
+        board2(1)(6) should be(PieceFactory.apply(PiecesEnum.Pawn, false))
+        board2(1)(7) should be(PieceFactory.apply(PiecesEnum.EmptyPiece, false))
+        board2(1)(8) should be(PieceFactory.apply(PiecesEnum.Knight, false))
+
+        board2(2)(0) should be(PieceFactory.apply(PiecesEnum.SilverGeneral, true))
+        board2(2)(1) should be(PieceFactory.apply(PiecesEnum.EmptyPiece, false))
+        board2(2)(2) should be(PieceFactory.apply(PiecesEnum.Pawn, true))
+        board2(2)(3) should be(PieceFactory.apply(PiecesEnum.EmptyPiece, false))
+        board2(2)(4) should be(PieceFactory.apply(PiecesEnum.EmptyPiece, false))
+        board2(2)(5) should be(PieceFactory.apply(PiecesEnum.Pawn, false))
+        board2(2)(6) should be(PieceFactory.apply(PiecesEnum.EmptyPiece, false))
+        board2(2)(7) should be(PieceFactory.apply(PiecesEnum.GoldenGeneral, false))
+        board2(2)(8) should be(PieceFactory.apply(PiecesEnum.SilverGeneral, false))
+
+        board2(3)(0) should be(PieceFactory.apply(PiecesEnum.GoldenGeneral, true))
+        board2(3)(1) should be(PieceFactory.apply(PiecesEnum.EmptyPiece, false))
+        board2(3)(2) should be(PieceFactory.apply(PiecesEnum.Pawn, true))
+        board2(3)(3) should be(PieceFactory.apply(PiecesEnum.EmptyPiece, false))
+        board2(3)(4) should be(PieceFactory.apply(PiecesEnum.EmptyPiece, false))
+        board2(3)(5) should be(PieceFactory.apply(PiecesEnum.EmptyPiece, false))
+        board2(3)(6) should be(PieceFactory.apply(PiecesEnum.Pawn, false))
+        board2(3)(7) should be(PieceFactory.apply(PiecesEnum.EmptyPiece, false))
+        board2(3)(8) should be(PieceFactory.apply(PiecesEnum.EmptyPiece, false))
+
+        board2(4)(0) should be(PieceFactory.apply(PiecesEnum.King, true))
+        board2(4)(1) should be(PieceFactory.apply(PiecesEnum.EmptyPiece, false))
+        board2(4)(2) should be(PieceFactory.apply(PiecesEnum.Pawn, true))
+        board2(4)(3) should be(PieceFactory.apply(PiecesEnum.EmptyPiece, false))
+        board2(4)(4) should be(PieceFactory.apply(PiecesEnum.EmptyPiece, false))
+        board2(4)(5) should be(PieceFactory.apply(PiecesEnum.EmptyPiece, false))
+        board2(4)(6) should be(PieceFactory.apply(PiecesEnum.Pawn, false))
+        board2(4)(7) should be(PieceFactory.apply(PiecesEnum.EmptyPiece, false))
+        board2(4)(8) should be(PieceFactory.apply(PiecesEnum.King, false))
+
+        board2(5)(0) should be(PieceFactory.apply(PiecesEnum.EmptyPiece, false))
+        board2(5)(1) should be(PieceFactory.apply(PiecesEnum.EmptyPiece, false))
+        board2(5)(2) should be(PieceFactory.apply(PiecesEnum.Pawn, true))
+        board2(5)(3) should be(PieceFactory.apply(PiecesEnum.EmptyPiece, false))
+        board2(5)(4) should be(PieceFactory.apply(PiecesEnum.EmptyPiece, false))
+        board2(5)(5) should be(PieceFactory.apply(PiecesEnum.EmptyPiece, false))
+        board2(5)(6) should be(PieceFactory.apply(PiecesEnum.Pawn, false))
+        board2(5)(7) should be(PieceFactory.apply(PiecesEnum.EmptyPiece, false))
+        board2(5)(8) should be(PieceFactory.apply(PiecesEnum.GoldenGeneral, false))
+
+        board2(6)(0) should be(PieceFactory.apply(PiecesEnum.EmptyPiece, false))
+        board2(6)(1) should be(PieceFactory.apply(PiecesEnum.GoldenGeneral, true))
+        board2(6)(2) should be(PieceFactory.apply(PiecesEnum.PromotedBishop, false))
+        board2(6)(3) should be(PieceFactory.apply(PiecesEnum.Pawn, true))
+        board2(6)(4) should be(PieceFactory.apply(PiecesEnum.EmptyPiece, false))
+        board2(6)(5) should be(PieceFactory.apply(PiecesEnum.EmptyPiece, false))
+        board2(6)(6) should be(PieceFactory.apply(PiecesEnum.Pawn, false))
+        board2(6)(7) should be(PieceFactory.apply(PiecesEnum.EmptyPiece, false))
+        board2(6)(8) should be(PieceFactory.apply(PiecesEnum.SilverGeneral, false))
+
+        board2(7)(0) should be(PieceFactory.apply(PiecesEnum.Knight, true))
+        board2(7)(1) should be(PieceFactory.apply(PiecesEnum.SilverGeneral, true))
+        board2(7)(2) should be(PieceFactory.apply(PiecesEnum.Pawn, true))
+        board2(7)(3) should be(PieceFactory.apply(PiecesEnum.EmptyPiece, false))
+        board2(7)(4) should be(PieceFactory.apply(PiecesEnum.Pawn, false))
+        board2(7)(5) should be(PieceFactory.apply(PiecesEnum.EmptyPiece, false))
+        board2(7)(6) should be(PieceFactory.apply(PiecesEnum.EmptyPiece, false))
+        board2(7)(7) should be(PieceFactory.apply(PiecesEnum.Rook, false))
+        board2(7)(8) should be(PieceFactory.apply(PiecesEnum.Knight, false))
+
+        board2(8)(0) should be(PieceFactory.apply(PiecesEnum.Lancer, true))
+        board2(8)(1) should be(PieceFactory.apply(PiecesEnum.EmptyPiece, false))
+        board2(8)(2) should be(PieceFactory.apply(PiecesEnum.Pawn, true))
+        board2(8)(3) should be(PieceFactory.apply(PiecesEnum.EmptyPiece, false))
+        board2(8)(4) should be(PieceFactory.apply(PiecesEnum.EmptyPiece, false))
+        board2(8)(5) should be(PieceFactory.apply(PiecesEnum.EmptyPiece, false))
+        board2(8)(6) should be(PieceFactory.apply(PiecesEnum.Pawn, false))
+        board2(8)(7) should be(PieceFactory.apply(PiecesEnum.EmptyPiece, false))
+        board2(8)(8) should be(PieceFactory.apply(PiecesEnum.Lancer, false))
       }
     }
   }
