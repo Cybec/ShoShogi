@@ -81,14 +81,14 @@ Die Paketstruktur und Namengebung sollte wie Folgt aussehen:
 
 ```text
 de.htwg.se.ShoShogi
-			|
-    		|---aview
-			|
-    		|---controller
-			|
-    		|---model
-			|
-    		|---util
+            |
+            |---aview
+            |
+            |---controller
+            |
+            |---model
+            |
+            |---util
 ```
 
 Der Sinn dahinter ist, dass die Anordnung der Pakete dem Schichtenmodell gleicht.
