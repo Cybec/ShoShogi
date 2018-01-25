@@ -7,8 +7,8 @@
 7. [Der Umfang des Werkes](#der-umfang-des-werkes)
 8. [Der Umfang des Produkts](#der-umfang-des-produkts)
 9. [Funktions- und Datenanforderungen](#funktions--und-datenanforderungen)
-	9.1 [Projektanforderung](#projektanforderung)
-	9.2 [Produktanforderung](#produktanforderung)
+    9.1 [Projektanforderung](#projektanforderung)
+    9.2 [Produktanforderung](#produktanforderung)
 10. [Look-and-Feel-Anforderungen](#look-and-feel-anforderungen)
 11. [Bedienbarkeit und Menschnliche Anforderungen](#bedienbarkeit-und-menschnliche-anforderungen)
 12. [Leistungsanforderungen](#leistungsanforderungen)
@@ -25,8 +25,8 @@
 23. [Risiken](#risiken)
 24. [Kosten](#kosten)
 25. [Benutzerdokumentation und Schulung](#benutzerdokumentation-und-schulung)
-	25.1 [Spielregeln](#spielregeln)
-	25.2 [Erklärung der UI](#erklärung-der-ui)
+    25.1 [Spielregeln](#spielregeln)
+    25.2 [Erklärung der UI](#erklärung-der-ui)
 26. [Wartezimmer](#wartezimmer)
 
 
@@ -81,14 +81,14 @@ Die Paketstruktur und Namengebung sollte wie Folgt aussehen:
 
 ```text
 de.htwg.se.ShoShogi
-				|
-    			|---aview
-				|
-    			|---controller
-				|
-    			|---model
-				|
-    			|---util
+			|
+    		|---aview
+			|
+    		|---controller
+			|
+    		|---model
+			|
+    		|---util
 ```
 
 Der Sinn dahinter ist, dass die Anordnung der Pakete dem Schichtenmodell gleicht.
@@ -137,7 +137,8 @@ Angelehnt wurde das Produkt an das echte Shogispiel und vermittelt die nötigste
 
 Das Ziel war es die Bedienung des Spiels so intuitiv wie möglich zu gestalten. Dies haben wir durch eine leicht zu benutzende Oberfläche erreicht.
 
-Zum spielen wird von dem Benutzer lediglich Interresse und die Kompetenz zur Benutzung eines Computers erfordert. (☞ﾟヮﾟ)☞
+Zum spielen wird von dem Benutzer lediglich Interresse und die Kompetenz zur Benutzung eines Computers erfordert.
+(☞ﾟヮﾟ)☞
 
 # Leistungsanforderungen
 
