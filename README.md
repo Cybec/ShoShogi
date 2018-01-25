@@ -1,4 +1,4 @@
-![GitHub Logo](./cybec.png) 
+![GitHub Logo](./cybec.png) - *Organisation design created by Dennis Baldauf* 
 
 
 Repo         | Travis   | Code-Coverage
