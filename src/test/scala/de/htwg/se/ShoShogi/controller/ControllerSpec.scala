@@ -899,7 +899,7 @@ class ControllerSpec extends WordSpec with Matchers {
         newController.getCurrentStat() should be(oldState)
       }
 
-      "not saving the board load changes nothing" in {
+      "not saving, loading the board changes nothing" in {
         controller.createNewBoard()
         controller.movePiece((0, 2), (0, 3)) should be(MoveResult.validMove)
         controller.load
